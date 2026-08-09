@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #dfe4e0; font-family: 'Manrope', system-ui, sans-serif; -webkit-font-smoothing: antialiased; display: flex; justify-content: center; }
+  .msi { font-family: 'Material Symbols Rounded'; font-weight: 400; font-style: normal; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; direction: ltr; font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  a { color: #2f9169; text-decoration: none; }
+  a:hover { color: #1c6b47; }
+  .v360-scroll { scrollbar-width: none; }
+  .v360-scroll::-webkit-scrollbar { display: none; }
+</style>
+</helmet>
+
+<div style="position:relative;width:402px;height:{{ frameHeight }};background:#f4f6f4;display:flex;flex-direction:column;overflow:hidden;position:relative;">
+
+  <sc-if value="{{ notCommunity }}" hint-placeholder-val="{{ true }}">
+  <div style="flex:none;background:#fff;border-bottom:1px solid #e2e6e3;padding:10px 16px;display:flex;align-items:center;gap:10px;">
+    <div onClick="{{ goHome }}" style="width:36px;height:36px;border-radius:12px;background:#eef4f0;display:flex;align-items:center;justify-content:center;cursor:pointer;"><span class="msi" style="font-size:20px;color:#1c6b47;">{{ navIcon }}</span></div>
+    <div style="flex:1;min-width:0;">
+      <div style="font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#2f9169;line-height:14px;">{{ eyebrow }}</div>
+      <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ title }}</div>
+    </div>
+    <div style="width:36px;height:36px;border-radius:999px;background:#eef4f0;display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:20px;color:#1c6b47;">search</span></div>
+    <div style="width:36px;height:36px;border-radius:999px;background:#eef4f0;display:flex;align-items:center;justify-content:center;position:relative;"><span class="msi" style="font-size:20px;color:#1c6b47;">notifications</span><span style="position:absolute;top:4px;right:5px;width:8px;height:8px;border-radius:999px;background:#c0392b;border:2px solid #fff;"></span></div>
+    <sc-if value="{{ isIdeas }}" hint-placeholder-val="{{ false }}"><div onClick="{{ openCreate }}" style="width:36px;height:36px;flex:none;border-radius:999px;background:#1c6b47;display:flex;align-items:center;justify-content:center;cursor:pointer;"><span class="msi" style="font-size:22px;color:#fff;">add</span></div></sc-if>
+  </div>
+  </sc-if>
+
+  <div class="v360-scroll" style="flex:1;overflow-y:{{ scrollMode }};overflow-x:hidden;">
+
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <div style="padding:16px;display:flex;flex-direction:column;gap:14px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+        <div style="background:#fff;border:1px solid #e2e6e3;border-radius:16px;padding:14px;">
+          <div style="width:30px;height:30px;border-radius:10px;background:{{ k.tint }};display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:18px;color:{{ k.iconFg }};">{{ k.icon }}</span></div>
+          <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:16px;margin-top:10px;">{{ k.label }}</div>
+          <div style="font-size:20px;font-weight:800;color:#182420;line-height:25px;letter-spacing:-.4px;">{{ k.value }}</div>
+          <div style="font-size:11px;font-weight:600;color:#8b978f;line-height:15px;">{{ k.sub }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="background:#fff;border:1px solid #e2e6e3;border-radius:16px;padding:14px;display:flex;align-items:center;gap:10px;">
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:16px;">Your parliamentary area</div>
+        <div style="font-size:18px;font-weight:800;color:#1c6b47;line-height:23px;letter-spacing:-.4px;">{{ areaName }}</div>
+      </div>
+      <span style="font-size:12px;font-weight:800;color:#1c6b47;background:#e2f1e9;border-radius:999px;padding:6px 10px;display:flex;align-items:center;gap:4px;"><span class="msi" style="font-size:15px;">verified</span> Verified</span>
+      <span class="msi" style="font-size:20px;color:#8b978f;">expand_more</span>
+    </div>
+
+    <div style="font-size:17px;font-weight:800;color:#182420;letter-spacing:-.3px;">Explore your area</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <sc-for list="{{ flows }}" as="f" hint-placeholder-count="4">
+        <div onClick="{{ f.open }}" style="background:#fff;border:1px solid #e2e6e3;border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;">
+          <div style="width:40px;height:40px;flex:none;border-radius:13px;background:{{ f.tint }};display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:21px;color:{{ f.metricColor }};">{{ f.icon }}</span></div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;">{{ f.title }}</div>
+            <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:16px;">{{ f.sub }}</div>
+            <div style="font-size:12px;font-weight:800;color:{{ f.metricColor }};line-height:16px;margin-top:2px;">{{ f.metric }}</div>
+          </div>
+          <span class="msi" style="font-size:20px;color:#c4ccc7;">chevron_right</span>
+        </div>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ showAssistant }}" hint-placeholder-val="{{ true }}">
+    <div style="background:#f4f1ff;border:1px solid #e2dcfb;border-radius:20px;padding:16px;">
+      <div onClick="{{ b.P01 }}" style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+        <div style="width:28px;height:28px;border-radius:9px;background:#7a5af5;display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:17px;color:#fff;">auto_awesome</span></div>
+        <div style="font-size:16px;font-weight:800;color:#221a45;line-height:20px;">AI Area Assistant</div>
+        <span style="font-size:10px;font-weight:800;color:#5b3fd1;background:#e7e0ff;border-radius:999px;padding:4px 8px;letter-spacing:.8px;">BETA</span>
+      </div>
+      <div onClick="{{ b.P01 }}" style="font-size:12px;font-weight:600;color:#6b6489;line-height:17px;margin-top:6px;cursor:pointer;">Ask anything about your constituency.</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
+        <sc-for list="{{ aiPrompts }}" as="p" hint-placeholder-count="4">
+          <div onClick="{{ b.P02 }}" style="background:#fff;border:1px solid #e6e1f8;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;">
+            <div style="flex:1;font-size:13px;font-weight:600;color:#221a45;line-height:18px;">{{ p.text }}</div>
+            <span class="msi" style="font-size:17px;color:#7a5af5;">arrow_forward</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <div style="flex:1;height:44px;background:#fff;border:1px solid #e6e1f8;border-radius:12px;display:flex;align-items:center;padding:0 14px;font-size:13px;font-weight:600;color:#9a94b5;">Type your question...</div>
+        <div style="width:44px;height:44px;flex:none;border-radius:12px;background:#7a5af5;display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:20px;color:#fff;">send</span></div>
+      </div>
+    </div>
+    </sc-if>
+
+    <div style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:16px;">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;">
+        <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">Latest in your area</div>
+        <div style="font-size:12px;font-weight:800;color:#2f9169;">View all</div>
+      </div>
+      <sc-for list="{{ activity }}" as="a" hint-placeholder-count="4">
+        <div onClick="{{ d.post }}" style="display:flex;gap:10px;padding:12px 0;border-bottom:1px solid #f2f4f2;cursor:pointer;">
+          <div style="width:34px;height:34px;flex:none;border-radius:11px;background:{{ a.tint }};display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:18px;color:{{ a.tagColor }};">{{ a.icon }}</span></div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:14px;font-weight:800;color:#182420;line-height:19px;">{{ a.title }}</div>
+            <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:16px;">{{ a.meta }}</div>
+          </div>
+          <div style="flex:none;font-size:11px;font-weight:800;color:{{ a.tagColor }};background:{{ a.tagBg }};border-radius:999px;padding:5px 9px;height:22px;line-height:12px;">{{ a.tag }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div>
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;display:flex;align-items:center;gap:6px;"><span class="msi" style="font-size:18px;color:#a3760e;">star</span> Famous places</div>
+        <div style="font-size:12px;font-weight:800;color:#2f9169;">View all</div>
+      </div>
+      <div class="v360-scroll" style="display:flex;gap:10px;overflow-x:auto;margin:0 -16px;padding:0 16px 4px;">
+        <sc-for list="{{ places }}" as="p" hint-placeholder-count="4">
+          <div onClick="{{ d.place }}" style="width:170px;flex:none;background:#fff;border:1px solid #e2e6e3;border-radius:16px;overflow:hidden;cursor:pointer;">
+            <div style="height:96px;background:{{ p.tint }};display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:26px;color:#8b978f;">{{ p.icon }}</span></div>
+            <div style="padding:12px;">
+              <div style="font-size:14px;font-weight:800;color:#182420;line-height:18px;">{{ p.name }}</div>
+              <div style="font-size:11px;font-weight:600;color:#6b7973;line-height:15px;margin-top:4px;">{{ p.desc }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:16px;">
+      <div style="display:flex;gap:8px;">
+        <sc-for list="{{ dirTabs }}" as="t" hint-placeholder-count="3">
+          <div onClick="{{ t.pick }}" style="flex:1;height:34px;border-radius:10px;background:{{ t.bg }};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:{{ t.fg }};cursor:pointer;">{{ t.label }}</div>
+        </sc-for>
+      </div>
+      <sc-for list="{{ dirItems }}" as="d" hint-placeholder-count="4">
+        <div onClick="{{ d.dir }}" style="display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #f2f4f2;cursor:pointer;">
+          <div style="width:32px;height:32px;flex:none;border-radius:10px;background:#eef4f0;display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:17px;color:#1c6b47;">{{ d.icon }}</span></div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:14px;font-weight:800;color:#182420;line-height:19px;">{{ d.name }}</div>
+            <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:16px;">{{ d.meta }}</div>
+          </div>
+          <span class="msi" style="font-size:19px;color:#c4ccc7;">chevron_right</span>
+        </div>
+      </sc-for>
+      <div style="font-size:14px;font-weight:800;color:#2f9169;padding-top:14px;">View full local directory →</div>
+    </div>
+
+    <div style="background:#182420;border-radius:20px;padding:18px;">
+      <div style="font-size:11px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#7fd0ac;">Together for a better area</div>
+      <div style="font-size:18px;font-weight:800;color:#fff;line-height:24px;margin-top:8px;">Your voice matters. Support issues and ideas to help your area grow.</div>
+      <div style="display:flex;gap:8px;margin-top:14px;">
+        <div onClick="{{ openIdeas }}" style="flex:1;height:44px;background:#2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;cursor:pointer;">Report an issue</div>
+        <div onClick="{{ openElections }}" style="flex:1;height:44px;border:1px solid #3f5349;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;cursor:pointer;">See candidates</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;font-size:11px;font-weight:600;color:#8b978f;padding:4px 0 6px;">© 2026 Voice 360. All rights reserved.</div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isVoters }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:16px;display:flex;flex-direction:column;gap:14px;">
+    <div style="background:#eef4f0;border:1px solid #dfe9e3;border-radius:20px;padding:16px;">
+      <div style="font-size:17px;font-weight:800;color:#182420;letter-spacing:-.3px;">Constituency snapshot</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;">
+        <sc-for list="{{ voterSnapshot }}" as="v" hint-placeholder-count="6">
+          <div style="background:#fff;border-radius:14px;padding:12px 14px;">
+            <div style="font-size:18px;font-weight:800;color:#182420;line-height:23px;letter-spacing:-.4px;">{{ v.value }}</div>
+            <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:16px;">{{ v.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:16px;">
+      <div style="height:46px;border:1px solid #e2e6e3;border-radius:12px;display:flex;align-items:center;gap:10px;padding:0 14px;"><span class="msi" style="font-size:19px;color:#8b978f;">search</span><span style="font-size:13px;font-weight:600;color:#9aa8a1;">Search by name, NID or phone...</span></div>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <div style="flex:1;height:44px;border:1px solid #e2e6e3;border-radius:12px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-size:13px;font-weight:800;color:#182420;">Division <span class="msi" style="font-size:18px;color:#8b978f;">expand_more</span></div>
+        <div style="flex:1;height:44px;border:1px solid #e2e6e3;border-radius:12px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-size:13px;font-weight:800;color:#182420;">District <span class="msi" style="font-size:18px;color:#8b978f;">expand_more</span></div>
+        <div style="width:44px;height:44px;flex:none;border:1px solid #e2e6e3;border-radius:12px;display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:19px;color:#5c6b64;">tune</span></div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:16px;">
+      <sc-for list="{{ voters }}" as="v" hint-placeholder-count="5">
+        <div onClick="{{ d.profile }}" style="padding:14px 0;border-bottom:1px solid #f2f4f2;cursor:pointer;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:42px;height:42px;flex:none;border-radius:999px;background:#eef4f0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#1c6b47;">{{ v.initials }}</div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;">{{ v.name }}</div>
+              <div style="font-size:12px;font-weight:600;color:#8b978f;line-height:16px;">NID {{ v.nid }} · {{ v.phone }}</div>
+            </div>
+            <div style="flex:none;font-size:11px;font-weight:800;color:{{ v.statusColor }};background:{{ v.statusBg }};border-radius:999px;padding:5px 10px;">{{ v.status }}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:#6b7973;margin:8px 0 0 52px;"><span class="msi" style="font-size:16px;color:#8b978f;">place</span> {{ v.address }}</div>
+          <div style="display:flex;gap:8px;margin:10px 0 0 52px;">
+            <div style="flex:1;height:40px;border:1px solid #e2e6e3;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#2f6fb1;">Message</div>
+            <div style="flex:1;height:40px;border:1px solid #e2e6e3;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#182420;">Call</div>
+          </div>
+        </div>
+      </sc-for>
+      <div style="text-align:center;font-size:12px;font-weight:600;color:#8b978f;padding-top:14px;">No more voters</div>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ oldCommunities }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:16px;display:flex;flex-direction:column;gap:14px;">
+    <div style="background:#fff;border:1px solid #e2e6e3;border-radius:14px;height:44px;display:flex;align-items:center;gap:8px;padding:0 12px;">
+      <span class="msi" style="font-size:20px;color:#8b978f;">search</span>
+      <span style="font-size:14px;font-weight:600;color:#8b978f;">Search communities</span>
+    </div>
+
+    <div style="display:flex;gap:8px;">
+      <sc-for list="{{ commFilters }}" as="f" hint-placeholder-count="4">
+        <div onClick="{{ f.pick }}" style="background:{{ f.bg }};border-radius:999px;padding:8px 14px;font-size:13px;font-weight:800;color:{{ f.fg }};cursor:pointer;white-space:nowrap;">{{ f.label }}</div>
+      </sc-for>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-size:17px;font-weight:800;color:#182420;letter-spacing:-.3px;">Your communities</div>
+      <div style="font-size:13px;font-weight:800;color:#2f9169;">3 joined</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <sc-for list="{{ myCommunities }}" as="c" hint-placeholder-count="3">
+        <div onClick="{{ c.open }}" style="background:#fff;border:1px solid #e2e6e3;border-radius:18px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;">
+          <div style="width:50px;height:50px;flex:none;border-radius:16px;background:{{ c.tint }};display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:{{ c.fg }};">{{ c.code }}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:5px;">
+              <span style="font-size:15px;font-weight:800;color:#182420;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ c.name }}</span>
+              <span class="msi" style="font-size:15px;color:#2f9169;">verified</span>
+            </div>
+            <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:16px;margin-top:2px;">{{ c.meta }}</div>
+            <div style="font-size:11px;font-weight:800;color:{{ c.fg }};line-height:15px;margin-top:3px;">{{ c.activity }}</div>
+          </div>
+          <span class="msi" style="font-size:20px;color:#b6c2bb;">chevron_right</span>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="font-size:17px;font-weight:800;color:#182420;letter-spacing:-.3px;margin-top:2px;">Discover communities</div>
+
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <sc-for list="{{ discoverCommunities }}" as="c" hint-placeholder-count="4">
+        <div onClick="{{ c.open }}" style="background:#fff;border:1px solid #e2e6e3;border-radius:18px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;">
+          <div style="width:46px;height:46px;flex:none;border-radius:14px;background:{{ c.tint }};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:{{ c.fg }};">{{ c.code }}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:15px;font-weight:800;color:#182420;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ c.name }}</div>
+            <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:16px;margin-top:2px;">{{ c.meta }}</div>
+          </div>
+          <div style="flex:none;height:34px;border:1px solid #2f9169;border-radius:10px;padding:0 14px;display:flex;align-items:center;font-size:13px;font-weight:800;color:#1c6b47;">Join</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isCommunity }}" hint-placeholder-val="{{ false }}">
+  <dc-import name="Parliamentary Community Home" screen="hub" on-back="{{ goHome }}" on-nav="{{ pcNav }}" hint-size="402px,874px"></dc-import>
+  </sc-if>
+
+  <sc-if value="{{ oldCommunity }}" hint-placeholder-val="{{ false }}">
+  <div style="display:flex;flex-direction:column;">
+    <div style="height:120px;background:#dfe7e2;display:flex;align-items:flex-end;padding:12px 16px;"><span style="font-size:12px;font-weight:800;color:#fff;">24,568 members · 1,248 online</span></div>
+    <div style="padding:16px;display:flex;flex-direction:column;gap:14px;margin-top:-34px;">
+      <div style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:16px;">
+        <div style="display:flex;align-items:center;gap:6px;"><span style="font-size:20px;font-weight:800;color:#182420;letter-spacing:-.4px;">Dhaka-10 Parliamentary Community</span><span class="msi" style="font-size:19px;color:#2f9169;">verified</span></div>
+        <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:17px;margin-top:4px;">Every address-verified voter in Dhaka-10 is a member automatically. One constituency, one community.</div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <div onClick="{{ openInvite }}" style="flex:1;height:44px;background:#2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:800;color:#fff;cursor:pointer;"><span class="msi" style="font-size:18px;">person_add</span> Invite members</div>
+          <div style="width:44px;height:44px;flex:none;border:1px solid #d8e2dc;border-radius:12px;display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:20px;color:#5c6b64;">more_horiz</span></div>
+        </div>
+        <sc-for list="{{ communityAbout }}" as="a" hint-placeholder-count="5">
+          <div style="display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #f2f4f2;"><span style="font-size:13px;font-weight:600;color:#6b7973;">{{ a.label }}</span><span style="font-size:13px;font-weight:800;color:#182420;">{{ a.value }}</span></div>
+        </sc-for>
+      </div>
+
+      <div style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:14px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:36px;height:36px;flex:none;border-radius:999px;background:#eef4f0;"></div>
+          <div style="flex:1;height:40px;background:#f4f6f4;border-radius:999px;display:flex;align-items:center;padding:0 14px;font-size:13px;font-weight:600;color:#9aa8a1;">Share something...</div>
+        </div>
+        <div style="display:flex;gap:16px;margin-top:12px;">
+          <span style="font-size:12px;font-weight:800;color:#5c6b64;display:flex;align-items:center;gap:5px;"><span class="msi" style="font-size:17px;color:#2f9169;">image</span> Photo</span>
+          <span style="font-size:12px;font-weight:800;color:#5c6b64;display:flex;align-items:center;gap:5px;"><span class="msi" style="font-size:17px;color:#a3760e;">bar_chart</span> Poll</span>
+          <span style="font-size:12px;font-weight:800;color:#5c6b64;display:flex;align-items:center;gap:5px;"><span class="msi" style="font-size:17px;color:#2f6fb1;">sell</span> Tag</span>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;">
+        <sc-for list="{{ feedTabs }}" as="t" hint-placeholder-count="4">
+          <div onClick="{{ t.pick }}" style="flex:1;height:34px;border-radius:10px;background:{{ t.bg }};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:{{ t.fg }};cursor:pointer;">{{ t.label }}</div>
+        </sc-for>
+      </div>
+
+      <sc-for list="{{ posts }}" as="p" hint-placeholder-count="2">
+        <div onClick="{{ d.post }}" style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:16px;cursor:pointer;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:38px;height:38px;flex:none;border-radius:999px;background:{{ p.tint }};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#1c6b47;">{{ p.initials }}</div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:6px;"><span style="font-size:14px;font-weight:800;color:#182420;">{{ p.author }}</span><span style="font-size:10px;font-weight:800;color:#1c6b47;background:#e2f1e9;border-radius:999px;padding:3px 8px;">{{ p.role }}</span></div>
+              <div style="font-size:11px;font-weight:600;color:#8b978f;line-height:15px;">{{ p.meta }}</div>
+            </div>
+          </div>
+          <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;margin-top:12px;">{{ p.title }}</div>
+          <div style="font-size:13px;font-weight:600;color:#5c6b64;line-height:19px;margin-top:4px;">{{ p.body }}</div>
+          <div style="height:150px;border-radius:14px;background:{{ p.imgTint }};display:flex;align-items:center;justify-content:center;margin-top:12px;"><span class="msi" style="font-size:28px;color:#9fb0a8;">{{ p.imgIcon }}</span></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;">
+            <span style="font-size:12px;font-weight:800;color:#5c6b64;display:flex;align-items:center;gap:5px;"><span class="msi" style="font-size:16px;color:#2f6fb1;">thumb_up</span> {{ p.reactions }}</span>
+            <span style="font-size:12px;font-weight:600;color:#8b978f;">{{ p.comments }} comments · {{ p.shares }} shares</span>
+          </div>
+          <div style="display:flex;border-top:1px solid #f2f4f2;margin-top:12px;padding-top:10px;">
+            <div style="flex:1;text-align:center;font-size:13px;font-weight:800;color:#5c6b64;">Like</div>
+            <div style="flex:1;text-align:center;font-size:13px;font-weight:800;color:#5c6b64;">Comment</div>
+            <div style="flex:1;text-align:center;font-size:13px;font-weight:800;color:#5c6b64;">Share</div>
+          </div>
+        </div>
+      </sc-for>
+
+      <div style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:16px;">
+        <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;">Which issue should be our top priority?</div>
+        <div style="font-size:11px;font-weight:600;color:#8b978f;line-height:15px;margin-top:2px;">Mariam Akter · 1 day ago · 2,936 votes</div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:14px;">
+          <sc-for list="{{ poll }}" as="o" hint-placeholder-count="4">
+            <div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:13px;font-weight:800;color:#182420;">{{ o.label }}</span><span style="font-size:13px;font-weight:800;color:#1c6b47;">{{ o.pct }}</span></div>
+              <div style="height:7px;border-radius:999px;background:#f2f4f2;margin-top:6px;overflow:hidden;"><div style="height:7px;border-radius:999px;background:#2f9169;width:{{ o.width }};"></div></div>
+              <div style="font-size:11px;font-weight:600;color:#8b978f;margin-top:4px;">{{ o.votes }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:16px;">
+        <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">Upcoming events</div>
+        <sc-for list="{{ events }}" as="e" hint-placeholder-count="2">
+          <div onClick="{{ b.P15 }}" style="display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #f2f4f2;cursor:pointer;">
+            <div style="width:48px;flex:none;background:#e2f1e9;border-radius:12px;padding:8px 0;text-align:center;"><div style="font-size:16px;font-weight:800;color:#1c6b47;line-height:20px;">{{ e.day }}</div><div style="font-size:10px;font-weight:800;color:#1c6b47;letter-spacing:.6px;">{{ e.month }}</div></div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:14px;font-weight:800;color:#182420;line-height:19px;">{{ e.title }}</div>
+              <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:16px;">{{ e.place }}</div>
+              <div style="font-size:12px;font-weight:600;color:#8b978f;line-height:16px;">{{ e.when }}</div>
+            </div>
+          </div>
+        </sc-for>
+        <div style="height:44px;border:1px solid #d8e2dc;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:800;color:#182420;margin-top:14px;"><span class="msi" style="font-size:18px;color:#2f9169;">event</span> Create event</div>
+      </div>
+
+      <div style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:16px;">
+        <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">Local groups</div>
+        <sc-for list="{{ groups }}" as="g" hint-placeholder-count="4">
+          <div onClick="{{ d.group }}" style="display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #f2f4f2;cursor:pointer;">
+            <div style="width:34px;height:34px;flex:none;border-radius:11px;background:#eef4f0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#1c6b47;">{{ g.tag }}</div>
+            <div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:800;color:#182420;line-height:18px;">{{ g.name }}</div><div style="font-size:11px;font-weight:600;color:#8b978f;line-height:15px;">{{ g.members }}</div></div>
+            <div style="flex:none;height:32px;border:1px solid #2f9169;border-radius:10px;display:flex;align-items:center;padding:0 16px;font-size:12px;font-weight:800;color:#1c6b47;">Join</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <sc-for list="{{ highlights }}" as="h" hint-placeholder-count="4">
+          <div style="background:{{ h.bg }};border-radius:16px;padding:14px;">
+            <div style="font-size:20px;font-weight:800;color:{{ h.fg }};line-height:25px;letter-spacing:-.4px;">{{ h.value }}</div>
+            <div style="font-size:12px;font-weight:800;color:{{ h.fg }};line-height:16px;">{{ h.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:16px;">
+        <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">Popular topics</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;">
+          <sc-for list="{{ topics }}" as="t" hint-placeholder-count="5">
+            <span style="font-size:12px;font-weight:800;color:#1c6b47;background:#eef4f0;border-radius:999px;padding:8px 12px;">#{{ t.tag }} {{ t.count }}</span>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isIdeas }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:16px 16px 20px;display:flex;flex-direction:column;gap:14px;">
+    <div style="font-size:14px;font-weight:600;color:#5c6b64;line-height:19px;">Report issues, suggest ideas and track what’s happening in {{ areaName }}.</div>
+
+    <div style="display:flex;">
+      <sc-for list="{{ ideaTabsU }}" as="t" hint-placeholder-count="2">
+        <div onClick="{{ t.pick }}" style="flex:1;text-align:center;padding:10px 0;font-size:15px;font-weight:800;color:{{ t.fg }};border-bottom:{{ t.border }};cursor:pointer;">{{ t.label }}</div>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ isAllIssues }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div onClick="{{ b.P08 }}" style="background:#f4f1ff;border:1px solid #e2dcfb;border-radius:18px;padding:16px;cursor:pointer;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:36px;height:36px;border-radius:11px;background:#e7e0ff;display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:20px;color:#5b3fd1;">auto_awesome</span></div>
+          <div style="font-size:17px;font-weight:800;color:#221a45;line-height:22px;">AI smart suggestions</div>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:#6b6489;line-height:18px;margin-top:10px;">AI analyses issues and ideas and suggests the best actions.</div>
+        <div style="height:46px;background:#6f4ff0;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;margin-top:12px;">See AI suggestions</div>
+      </div>
+
+      <sc-for list="{{ submissions }}" as="s" hint-placeholder-count="5">
+        <div onClick="{{ d.issue }}" style="background:#fff;border:1px solid #e2e6e3;border-radius:18px;padding:14px;cursor:pointer;">
+          <div style="display:flex;gap:10px;">
+            <div style="width:38px;height:38px;flex:none;border-radius:12px;background:{{ s.tint }};display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:20px;color:{{ s.tagColor }};">{{ s.icon }}</span></div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;">{{ s.title }}</div>
+              <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:17px;margin-top:2px;">{{ s.meta }}</div>
+            </div>
+            <div style="flex:none;font-size:12px;font-weight:800;color:{{ s.tagColor }};background:{{ s.tagBg }};border-radius:999px;padding:5px 10px;height:24px;line-height:14px;">{{ s.tag }}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;margin-top:12px;">
+            <span style="font-size:13px;font-weight:800;color:#1c6b47;display:flex;align-items:center;gap:5px;"><span class="msi" style="font-size:17px;">thumb_up</span> {{ s.support }}</span>
+            <span style="font-size:13px;font-weight:600;color:#6b7973;display:flex;align-items:center;gap:5px;"><span class="msi" style="font-size:17px;">chat_bubble</span> {{ s.comments }}</span>
+            <span style="font-size:13px;font-weight:800;color:#2f9169;margin-left:auto;">View details →</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isMyIssues }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-size:20px;font-weight:800;color:#182420;letter-spacing:-.4px;">4 Items</div>
+        <div style="width:38px;height:38px;border-radius:11px;background:#fff;border:1px solid #e2e6e3;display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:20px;color:#5c6b64;">tune</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <sc-for list="{{ projects }}" as="p" hint-placeholder-count="4">
+          <div onClick="{{ d.project }}" style="background:#fff;border:1px solid #e2e6e3;border-radius:16px;overflow:hidden;cursor:pointer;">
+            <div style="height:96px;background:{{ p.tint }};display:flex;align-items:flex-start;padding:10px;">
+              <span style="font-size:12px;font-weight:800;color:{{ p.tagColor }};background:#fff;border-radius:999px;padding:5px 10px;">{{ p.status }}</span>
+            </div>
+            <div style="padding:12px;">
+              <div style="font-size:14px;font-weight:800;color:#182420;line-height:19px;">{{ p.title }}</div>
+              <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:16px;margin-top:6px;display:flex;align-items:center;gap:4px;"><span class="msi" style="font-size:15px;color:#8b978f;">place</span> {{ p.place }}</div>
+              <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:16px;">{{ p.date }}</div>
+              <div style="height:38px;border:1px solid #d8e2dc;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#182420;margin-top:10px;">{{ p.cta }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isElections }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:16px 16px 20px;display:flex;flex-direction:column;gap:14px;">
+    <div style="font-size:14px;font-weight:600;color:#5c6b64;line-height:19px;">Stay informed about your current representatives and upcoming elections in Dhaka-10.</div>
+
+    <div style="display:flex;">
+      <sc-for list="{{ elecTabsU }}" as="t" hint-placeholder-count="2">
+        <div onClick="{{ t.pick }}" style="flex:1;text-align:center;padding:10px 0;font-size:15px;font-weight:800;color:{{ t.fg }};border-bottom:{{ t.border }};cursor:pointer;">{{ t.label }}</div>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ isCurrentReps }}" hint-placeholder-val="{{ true }}">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <sc-for list="{{ repsGrid }}" as="r" hint-placeholder-count="8">
+        <div onClick="{{ d.rep }}" style="background:#fff;border:1px solid #e2e6e3;border-radius:16px;padding:14px;text-align:center;cursor:pointer;">
+          <div style="font-size:12px;font-weight:800;color:{{ r.tagColor }};background:{{ r.tagBg }};border-radius:999px;padding:5px 10px;display:inline-block;">{{ r.role }}</div>
+          <div style="width:58px;height:58px;border-radius:999px;background:#eef4f0;margin:12px auto 0;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#1c6b47;">{{ r.initials }}</div>
+          <div style="font-size:14px;font-weight:800;color:#182420;line-height:19px;margin-top:10px;">{{ r.name }}</div>
+          <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:16px;margin-top:2px;">{{ r.area }}</div>
+          <div style="height:38px;border:1px solid #d8e2dc;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#182420;margin-top:12px;">View profile</div>
+        </div>
+      </sc-for>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isNominated }}" hint-placeholder-val="{{ false }}">
+    <div style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:16px;">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;">
+        <div style="font-size:13px;font-weight:600;color:#6b7973;line-height:18px;">Support the leader who will create real change.</div>
+        <div style="font-size:13px;font-weight:800;color:#2f9169;">Compare</div>
+      </div>
+      <sc-for list="{{ candidates }}" as="c" hint-placeholder-count="5">
+        <div onClick="{{ d.candidate }}" style="padding:14px 0;border-bottom:1px solid #f2f4f2;cursor:pointer;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:26px;height:26px;flex:none;border-radius:999px;background:{{ c.color }};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;">{{ c.rank }}</div>
+            <div style="width:42px;height:42px;flex:none;border-radius:999px;background:#eef4f0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#1c6b47;">{{ c.initials }}</div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;">{{ c.name }}</div>
+              <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:16px;">{{ c.party }}</div>
+            </div>
+            <div style="flex:none;text-align:right;">
+              <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">{{ c.supporters }}</div>
+              <div style="font-size:11px;font-weight:600;color:#8b978f;line-height:14px;">supporters</div>
+            </div>
+          </div>
+          <div style="height:7px;border-radius:999px;background:#f2f4f2;margin:10px 0 0 36px;overflow:hidden;">
+            <div style="height:7px;border-radius:999px;background:{{ c.color }};width:{{ c.width }};"></div>
+          </div>
+          <div style="display:flex;gap:8px;margin:10px 0 0 36px;">
+            <div style="flex:1;height:40px;border:1px solid #2f9169;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#1c6b47;">Support</div>
+            <div style="flex:1;height:40px;border:1px solid #d8e2dc;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#182420;">View profile</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    </sc-if>
+
+    <div style="background:#e8f3ee;border:1px solid #cfe6da;border-radius:20px;padding:16px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">Next national election 2026</div>
+        <div style="font-size:11px;font-weight:800;color:#1c6b47;background:#d3ecdf;border-radius:999px;padding:4px 8px;">ACTIVE</div>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:#4a5a52;line-height:17px;margin-top:4px;">Expected date: Monday, 16 February 2026</div>
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <sc-for list="{{ countdown }}" as="c" hint-placeholder-count="4">
+          <div style="flex:1;background:#fff;border-radius:12px;padding:10px 0;text-align:center;">
+            <div style="font-size:18px;font-weight:800;color:#182420;line-height:22px;">{{ c.value }}</div>
+            <div style="font-size:10px;font-weight:800;color:#8b978f;line-height:13px;letter-spacing:.6px;">{{ c.unit }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div onClick="{{ b.P24 }}" style="height:46px;background:#2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:15px;gap:8px;font-weight:800;color:#fff;margin-top:12px;cursor:pointer;"><span class="msi" style="font-size:18px;">notifications_active</span> Remind me</div>
+    </div>
+
+    <div style="background:#182420;border-radius:20px;padding:18px;">
+      <div style="font-size:18px;font-weight:800;color:#fff;line-height:24px;">Your vote. Your voice. Your future.</div>
+      <div style="font-size:14px;font-weight:600;color:#9fada7;line-height:19px;margin-top:6px;">Stay informed, compare candidates and vote for the leader who can build a better Bangladesh.</div>
+      <div onClick="{{ b.P25 }}" style="height:46px;background:#2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:15px;gap:8px;font-weight:800;color:#fff;margin-top:14px;cursor:pointer;"><span class="msi" style="font-size:18px;">how_to_vote</span> I will vote</div>
+    </div>
+  </div>
+  </sc-if>
+
+  </div>
+
+  <sc-if value="{{ isBoard }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;z-index:6;background:#f4f6f4;overflow-y:auto;">
+    <dc-import name="Parliamentary Board Screens" screen="{{ boardScreen }}" on-back="{{ boardBack }}" hint-size="402px,874px"></dc-import>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isDest }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;background:#f4f6f4;display:flex;flex-direction:column;z-index:5;">
+    <div style="flex:none;background:#fff;border-bottom:1px solid #e2e6e3;padding:10px 16px;display:flex;align-items:center;gap:10px;">
+      <div onClick="{{ destBack }}" style="width:36px;height:36px;border-radius:12px;background:#eef4f0;display:flex;align-items:center;justify-content:center;cursor:pointer;"><span class="msi" style="font-size:20px;color:#1c6b47;">arrow_back</span></div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#2f9169;line-height:14px;">Parliamentary</div>
+        <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">{{ destTitle }}</div>
+      </div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 34px;text-align:center;gap:12px;">
+      <div style="width:62px;height:62px;border-radius:20px;background:{{ destBg }};border:1px solid {{ destBorder }};display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:30px;color:{{ destFg }};">{{ destIcon }}</span></div>
+      <div style="font-size:19px;font-weight:800;color:#182420;letter-spacing:-.3px;line-height:25px;">{{ destHead }}</div>
+      <div style="font-size:12.5px;font-weight:600;color:#5c6b64;line-height:19px;">{{ destNote }}</div>
+      <div style="font-size:9px;font-weight:800;letter-spacing:.9px;color:{{ destTagFg }};background:{{ destTagBg }};border-radius:999px;padding:5px 10px;margin-top:2px;">{{ destTag }}</div>
+      <div onClick="{{ destBack }}" style="margin-top:8px;height:42px;padding:0 20px;border-radius:14px;background:#182420;display:flex;align-items:center;cursor:pointer;"><span style="font-size:12.5px;font-weight:800;color:#fff;">Go back</span></div>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}">
+  <div style="flex:none;background:#fff;border-top:1px solid #e2e6e3;padding:8px 6px 10px;display:flex;">
+    <sc-for list="{{ tabbar }}" as="b" hint-placeholder-count="6">
+      <div onClick="{{ b.pick }}" style="flex:1;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;">
+        <span class="msi" style="font-size:22px;line-height:22px;color:{{ b.fg }};">{{ b.icon }}</span>
+        <span style="font-size:12px;font-weight:800;color:{{ b.fg }};line-height:11px;">{{ b.label }}</span>
+      </div>
+    </sc-for>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ showInvite }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;left:0;right:0;top:0;bottom:0;background:rgba(13,21,18,.42);"></div>
+  <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:26px 26px 0 0;box-shadow:0 -12px 40px rgba(13,21,18,.2);padding:14px 20px 26px;">
+    <div style="width:44px;height:5px;border-radius:999px;background:#e2e6e3;margin:0 auto 16px;"></div>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+      <div><div style="font-size:24px;font-weight:800;color:#182420;letter-spacing:-.6px;line-height:30px;">Invite Members</div><div style="font-size:14px;font-weight:600;color:#6b7973;line-height:20px;margin-top:4px;">Invite people to Voice 360 — share the link anywhere</div></div>
+      <div onClick="{{ closeSheet }}" style="width:38px;height:38px;flex:none;border-radius:999px;background:#f2f4f2;display:flex;align-items:center;justify-content:center;cursor:pointer;"><span class="msi" style="font-size:20px;color:#5c6b64;">close</span></div>
+    </div>
+
+    <div style="background:#f4f6f4;border-radius:16px;padding:12px 12px 12px 14px;display:flex;align-items:center;gap:10px;margin-top:18px;">
+      <span class="msi" style="font-size:20px;color:#2f9169;">link</span>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#8b978f;line-height:14px;">Invite link</div>
+        <div style="font-size:13px;font-weight:700;color:#182420;line-height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">voice360.app/c/dhaka-10</div>
+      </div>
+      <div style="flex:none;height:36px;background:#182420;border-radius:10px;padding:0 14px;display:flex;align-items:center;gap:5px;font-size:13px;font-weight:800;color:#fff;"><span class="msi" style="font-size:16px;">content_copy</span> Copy</div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <div onClick="{{ openQr }}" style="flex:1;height:44px;border:1px solid #d8e2dc;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:800;color:#1c6b47;cursor:pointer;"><span class="msi" style="font-size:18px;">qr_code_2</span> QR code</div>
+      <div onClick="{{ openContacts }}" style="flex:1;height:44px;border:1px solid #d8e2dc;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:800;color:#1c6b47;cursor:pointer;"><span class="msi" style="font-size:18px;">contacts</span> Contacts</div>
+    </div>
+
+    <div style="font-size:13px;font-weight:800;color:#182420;letter-spacing:-.1px;margin-top:20px;">Share to</div>
+    <div style="display:flex;gap:10px;margin-top:10px;">
+      <sc-for list="{{ shareTargets }}" as="t" hint-placeholder-count="5">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <div style="width:100%;aspect-ratio:1;border-radius:16px;background:{{ t.bg }};border:1px solid {{ t.border }};box-sizing:border-box;display:flex;align-items:center;justify-content:center;"><img src="{{ t.src }}" alt="{{ t.label }}" style="width:22px;height:22px;display:block;"></div>
+          <div style="font-size:10.5px;font-weight:700;color:#6b7973;">{{ t.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:20px;">
+      <div style="font-size:13px;font-weight:800;color:#182420;letter-spacing:-.1px;">Suggested from your area</div>
+      <div style="font-size:12px;font-weight:800;color:#2f9169;">Invite all</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+      <sc-for list="{{ inviteSuggestions }}" as="p" hint-placeholder-count="3">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:38px;height:38px;flex:none;border-radius:999px;background:{{ p.tint }};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:{{ p.fg }};">{{ p.initials }}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:14px;font-weight:800;color:#182420;line-height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ p.name }}</div>
+            <div style="font-size:11.5px;font-weight:600;color:#8b978f;line-height:16px;">{{ p.meta }}</div>
+          </div>
+          <div style="flex:none;height:32px;background:#e2f1e9;border-radius:10px;padding:0 14px;display:flex;align-items:center;font-size:12.5px;font-weight:800;color:#1c6b47;">Invite</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="height:52px;background:#2f9169;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:7px;font-size:16px;font-weight:800;color:#fff;margin-top:20px;"><span class="msi" style="font-size:20px;">send</span> Send invites</div>
+    <div style="font-size:11.5px;font-weight:600;color:#8b978f;text-align:center;margin-top:10px;">Invites bring people to Voice 360 — constituency membership follows their verified address</div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ showQr }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;left:0;right:0;top:0;bottom:0;background:rgba(13,21,18,.42);"></div>
+  <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:26px 26px 0 0;box-shadow:0 -12px 40px rgba(13,21,18,.2);padding:14px 20px 26px;">
+    <div style="width:44px;height:5px;border-radius:999px;background:#e2e6e3;margin:0 auto 16px;"></div>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div onClick="{{ openInvite }}" style="width:34px;height:34px;flex:none;border-radius:999px;background:#f2f4f2;display:flex;align-items:center;justify-content:center;cursor:pointer;"><span class="msi" style="font-size:19px;color:#5c6b64;">arrow_back</span></div>
+        <div><div style="font-size:22px;font-weight:800;color:#182420;letter-spacing:-.5px;line-height:28px;">Community QR</div><div style="font-size:13px;font-weight:600;color:#6b7973;line-height:18px;">Anyone can scan this to join</div></div>
+      </div>
+      <div onClick="{{ closeSheet }}" style="width:38px;height:38px;flex:none;border-radius:999px;background:#f2f4f2;display:flex;align-items:center;justify-content:center;cursor:pointer;"><span class="msi" style="font-size:20px;color:#5c6b64;">close</span></div>
+    </div>
+
+    <div style="background:#0d1512;border-radius:22px;padding:22px;margin-top:18px;display:flex;flex-direction:column;align-items:center;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:34px;height:34px;border-radius:11px;background:#2f9169;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;">D10</div>
+        <div style="text-align:left;">
+          <div style="font-size:15px;font-weight:800;color:#fff;line-height:19px;">Dhaka-10 Parliamentary Community</div>
+          <div style="font-size:11.5px;font-weight:600;color:#9fb0a8;line-height:15px;">24,568 members · automatic</div>
+        </div>
+      </div>
+      <div style="background:#fff;border-radius:16px;padding:14px;margin-top:16px;">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&amp;margin=0&amp;data=https%3A%2F%2Fvoice360.app%2Fc%2Fdhaka-10" alt="Join Dhaka-10 Parliamentary Community" style="width:180px;height:180px;display:block;">
+      </div>
+      <div style="font-size:12.5px;font-weight:700;color:#7fd0ac;margin-top:14px;letter-spacing:.4px;">voice360.app/c/dhaka-10</div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <div style="flex:1;height:48px;border:1px solid #d8e2dc;border-radius:13px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:800;color:#1c6b47;"><span class="msi" style="font-size:19px;">download</span> Save image</div>
+      <div style="flex:1;height:48px;background:#2f9169;border-radius:13px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:800;color:#fff;"><span class="msi" style="font-size:19px;">share</span> Share QR</div>
+    </div>
+    <div style="height:48px;background:#f4f6f4;border-radius:13px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:800;color:#182420;margin-top:10px;"><span class="msi" style="font-size:18px;color:#5c6b64;">qr_code_scanner</span> Scan a community QR</div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ showContacts }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;left:0;right:0;top:0;bottom:0;background:rgba(13,21,18,.42);"></div>
+  <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:26px 26px 0 0;box-shadow:0 -12px 40px rgba(13,21,18,.2);padding:14px 20px 26px;">
+    <div style="width:44px;height:5px;border-radius:999px;background:#e2e6e3;margin:0 auto 16px;"></div>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div onClick="{{ openInvite }}" style="width:34px;height:34px;flex:none;border-radius:999px;background:#f2f4f2;display:flex;align-items:center;justify-content:center;cursor:pointer;"><span class="msi" style="font-size:19px;color:#5c6b64;">arrow_back</span></div>
+        <div><div style="font-size:22px;font-weight:800;color:#182420;letter-spacing:-.5px;line-height:28px;">From your contacts</div><div style="font-size:13px;font-weight:600;color:#6b7973;line-height:18px;">3 selected · 412 contacts synced</div></div>
+      </div>
+      <div onClick="{{ closeSheet }}" style="width:38px;height:38px;flex:none;border-radius:999px;background:#f2f4f2;display:flex;align-items:center;justify-content:center;cursor:pointer;"><span class="msi" style="font-size:20px;color:#5c6b64;">close</span></div>
+    </div>
+
+    <div style="background:#f4f6f4;border-radius:14px;height:44px;display:flex;align-items:center;gap:8px;padding:0 12px;margin-top:16px;">
+      <span class="msi" style="font-size:19px;color:#8b978f;">search</span>
+      <span style="font-size:14px;font-weight:600;color:#8b978f;">Search name or number</span>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:2px;margin-top:12px;">
+      <sc-for list="{{ contactRows }}" as="c" hint-placeholder-count="6">
+        <div onClick="{{ d.profile }}" style="display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid #f2f4f2;cursor:pointer;">
+          <div style="width:40px;height:40px;flex:none;border-radius:999px;background:{{ c.tint }};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:{{ c.fg }};">{{ c.initials }}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:14.5px;font-weight:800;color:#182420;line-height:19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ c.name }}</div>
+            <div style="font-size:11.5px;font-weight:600;color:#8b978f;line-height:16px;">{{ c.meta }}</div>
+          </div>
+          <div style="flex:none;height:32px;background:{{ c.ctaBg }};border:1px solid {{ c.ctaBorder }};border-radius:10px;padding:0 13px;display:flex;align-items:center;gap:4px;font-size:12.5px;font-weight:800;color:{{ c.ctaFg }};"><span class="msi" style="font-size:15px;">{{ c.ctaIcon }}</span> {{ c.cta }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="height:52px;background:#2f9169;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:7px;font-size:16px;font-weight:800;color:#fff;margin-top:16px;"><span class="msi" style="font-size:20px;">send</span> Invite 3 selected</div>
+    <div style="font-size:11.5px;font-weight:600;color:#8b978f;text-align:center;margin-top:10px;">Contacts are matched on your device — numbers are never uploaded</div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ showCreate }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;left:0;right:0;top:0;bottom:0;background:rgba(13,21,18,.42);"></div>
+  <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:26px 26px 0 0;box-shadow:0 -12px 40px rgba(13,21,18,.2);padding:14px 20px 26px;">
+    <div style="width:44px;height:5px;border-radius:999px;background:#e2e6e3;margin:0 auto 16px;"></div>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+      <div><div style="font-size:24px;font-weight:800;color:#182420;letter-spacing:-.6px;line-height:30px;">Create</div><div style="font-size:14px;font-weight:600;color:#6b7973;line-height:20px;margin-top:4px;">Report issue, Share your ideas</div></div>
+      <div onClick="{{ closeSheet }}" style="width:38px;height:38px;flex:none;border-radius:999px;background:#f2f4f2;display:flex;align-items:center;justify-content:center;cursor:pointer;"><span class="msi" style="font-size:20px;color:#5c6b64;">close</span></div>
+    </div>
+    <div style="background:#eaf5ef;border:1.5px dashed #2f9169;border-radius:16px;padding:16px;margin-top:18px;text-align:center;">
+      <div style="font-size:19px;font-weight:800;color:#182420;letter-spacing:-.3px;">Report an issue</div>
+      <div style="font-size:13px;font-weight:600;color:#5c6b64;line-height:19px;margin-top:6px;">Facing a problem in your area? Report it and get it resolved.</div>
+      <div style="height:48px;background:#2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;margin-top:14px;">Report issue</div>
+    </div>
+    <div style="background:#eaf5ef;border:1.5px dashed #2f9169;border-radius:16px;padding:16px;margin-top:14px;text-align:center;">
+      <div style="font-size:19px;font-weight:800;color:#182420;letter-spacing:-.3px;">Share an idea</div>
+      <div style="font-size:13px;font-weight:600;color:#5c6b64;line-height:19px;margin-top:6px;">Have a solution or idea to improve our area? Share it.</div>
+      <div style="height:48px;background:#2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;margin-top:14px;">Share idea</div>
+    </div>
+  </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:402,&quot;height&quot;:874},&quot;screen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;home&quot;,&quot;voters&quot;,&quot;communities&quot;,&quot;community&quot;,&quot;ideas&quot;,&quot;elections&quot;],&quot;default&quot;:&quot;home&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;tab&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;&quot;,&quot;my&quot;,&quot;nominated&quot;],&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;State&quot;},&quot;sheet&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;&quot;,&quot;invite&quot;,&quot;invite-qr&quot;,&quot;invite-contacts&quot;,&quot;create&quot;],&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;State&quot;},&quot;areaName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Dhaka-10 (Mirpur)&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;fullLength&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;showAssistant&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;hideNav&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = { dest: null, board: null,  screen: null, dirTab: 0, feedTab: 0, ideaTab: 0, ideasTab: null, elecTab: null, sheet: null, commFilter: 0 };
+
+  go(s) { return () => this.setState({ screen: s }); }
+
+  utab(labels, active, key) {
+    return labels.map((label, i) => ({
+      label,
+      fg: i === active ? '#1c6b47' : '#5c6b64',
+      border: i === active ? '2px solid #2f9169' : '2px solid #e2e6e3',
+      pick: () => this.setState({ [key]: i })
+    }));
+  }
+
+  DEST = {
+    place: { t: "Place page", r: 1, n: "Opens the existing Voice 360 place page for famous places and landmarks." },
+    dir: { t: "Directory entry", r: 1, n: "Opens the existing business page or service provider profile, filtered to this constituency." },
+    profile: { t: "Voter profile", r: 1, n: "Opens the global Voice 360 profile. Call and Message run through the existing modules." },
+    post: { t: "Post detail", r: 1, n: "Opens the global post detail screen with reactions, comments and share." },
+    group: { t: "Group page", r: 1, n: "Opens the existing Voice 360 group module." },
+    issue: { t: "Issue status & response", r: 0, n: "The status and official response view depends on the admin console — phase 2." },
+    project: { t: "Project detail", r: 0, n: "Development project detail has no frame yet." },
+    rep: { t: "Representative profile", r: 0, n: "Profile and performance record for a representative are not designed yet." },
+    candidate: { t: "Candidate manifesto", r: 0, n: "Candidate manifesto and the compare view are not designed yet." }
+  };
+  renderVals() {
+    const area = this.props.areaName ?? 'Dhaka-10 (Mirpur)';
+    const sRaw = this.state.screen ?? this.props.screen ?? 'home';
+    const dk = this.state.dest;
+    const dd = this.DEST[dk] || {};
+    const dReuse = dd.r === 1;
+    const dSet = {};
+    Object.keys(this.DEST).forEach(k => { dSet[k] = () => this.setState({ dest: k }); });
+    const s = sRaw === 'communities' ? 'community' : sRaw;
+    const it = this.state.ideasTab ?? (this.props.tab === 'my' ? 1 : 0);
+    const et = this.state.elecTab ?? (this.props.tab === 'nominated' ? 1 : 0);
+    const sheet = this.state.sheet ?? this.props.sheet ?? '';
+    const titles = { home: 'Area Overview', voters: 'Voter Directory', communities: 'Communities', community: area, ideas: 'Development & Ideas', elections: 'Elections & Representatives' };
+
+    const dirSets = [
+      [ { icon: 'school', name: 'Dhaka International University', meta: 'University · Mirpur-10' },
+        { icon: 'school', name: 'Govt. Bangla College, Mirpur', meta: 'College · Mirpur-1' },
+        { icon: 'school', name: 'Daffodil International University', meta: 'University · Dhanmondi' },
+        { icon: 'school', name: 'Bangladesh University of Professionals', meta: 'University · Mirpur Cantonment' } ],
+      [ { icon: 'local_hospital', name: 'Ibrahim Medical College Hospital', meta: 'Hospital · 24 hours' },
+        { icon: 'local_hospital', name: 'Kurmitola General Hospital', meta: 'Hospital · Emergency' },
+        { icon: 'monitor_heart', name: 'Popular Diagnostic Center', meta: 'Diagnostics · Mirpur-2' },
+        { icon: 'local_hospital', name: 'Delta Medical College Hospital', meta: 'Hospital · Mirpur-1' } ],
+      [ { icon: 'storefront', name: 'Mirpur-10 Shopping Center', meta: 'Market · Open now' },
+        { icon: 'shopping_basket', name: 'Kazipara Market', meta: 'Kitchen market · Daily' },
+        { icon: 'storefront', name: 'Mirpur-10 Round Market', meta: 'Market · Daily' },
+        { icon: 'shopping_cart', name: 'Shewrapara Market', meta: 'Kitchen market · Daily' } ]
+    ];
+
+    const tab = (labels, active, key) => labels.map((label, i) => ({
+      label, bg: i === active ? '#e2f1e9' : '#f4f6f4', fg: i === active ? '#1c6b47' : '#6b7973',
+      pick: () => this.setState({ [key]: i })
+    }));
+
+    const bars = [
+      { issue: 'Improve roads & transport', marks: ['y','y','y','y','y'] },
+      { issue: 'Quality education for all', marks: ['y','y','y','y','y'] },
+      { issue: 'Affordable healthcare', marks: ['y','y','y','p','y'] },
+      { issue: 'Youth employment', marks: ['y','y','p','n','y'] },
+      { issue: 'Women empowerment', marks: ['y','y','p','p','y'] },
+      { issue: 'Digital Dhaka-10', marks: ['y','y','y','n','p'] },
+      { issue: 'Safe & clean environment', marks: ['y','y','y','p','y'] }
+    ];
+    const markStyle = { y: { mark: '✓', color: '#2f9169' }, p: { mark: '●', color: '#d99b12' }, n: { mark: '–', color: '#b6c2bb' } };
+
+    return {
+      title: titles[s], areaName: area,
+      eyebrow: s === 'community' ? 'Parliamentary Community' : 'Parliamentary',
+      oldCommunity: false, oldCommunities: false, notCommunity: s !== 'community',
+      pcNav: (k) => { const m = { reps: "elections", elections: "elections", issues: "ideas" }; if (m[k]) this.setState({ screen: m[k], dest: null }); else this.setState({ board: /^P\d/.test(k) ? k : "P01" }); },
+      b: ["P01","P02","P03","P04","P06","P08","P11","P12","P13","P14","P15","P16","P17","P18","P24","P25"].reduce((o, k) => { o[k] = () => this.setState({ board: k }); return o; }, {}),
+      isBoard: !!this.state.board, boardScreen: this.state.board || "P01", boardBack: () => this.setState({ board: null }),
+      d: dSet, isDest: !!dk, destBack: () => this.setState({ dest: null }),
+      destTitle: dd.t || "", destNote: dd.n || "",
+      destHead: dReuse ? (dd.t || "") + " already exists" : (dd.t || "") + " isn\u2019t designed yet",
+      destTag: dReuse ? "DO NOT BUILD \u00b7 REUSE" : "DESIGN FIRST",
+      destTagFg: dReuse ? "#1e2f4d" : "#7a5407", destTagBg: dReuse ? "#e3eaf7" : "#f8ebd2",
+      destBg: dReuse ? "#e6eefa" : "#fdf3df", destBorder: dReuse ? "#cfdcf1" : "#f4e3bd",
+      destFg: dReuse ? "#33569b" : "#c9942c", destIcon: dReuse ? "recycling" : "draw",
+      frameHeight: this.props.fullLength ? 'auto' : '874px',
+      scrollMode: this.props.fullLength ? 'visible' : 'auto',
+      isHome: s === 'home', isVoters: s === 'voters', isCommunities: s === 'communities', isCommunity: s === 'community', isIdeas: s === 'ideas', isElections: s === 'elections',
+      shareTargets: [].concat([
+        { label: 'WhatsApp', bg: '#25D366', src: 'https://cdn.simpleicons.org/whatsapp/ffffff' },
+        { label: 'Messenger', bg: '#0084FF', src: 'https://cdn.simpleicons.org/messenger/ffffff' },
+        { label: 'Facebook', bg: '#1877F2', src: 'https://cdn.simpleicons.org/facebook/ffffff' },
+        { label: 'Telegram', bg: '#26A5E4', src: 'https://cdn.simpleicons.org/telegram/ffffff' },
+        { label: 'Gmail', bg: '#fff', src: 'https://cdn.simpleicons.org/gmail' }
+      ]).map(t => ({ ...t, border: t.bg === '#fff' ? '#e2e6e3' : 'transparent' })),
+      inviteSuggestions: [
+        { initials: 'AR', tint: '#e2f1e9', fg: '#1c6b47', name: 'Ayesha Rahman', meta: 'Mirpur-10 · 6 mutual members' },
+        { initials: 'TK', tint: '#e8f0f8', fg: '#2f6fb1', name: 'Tanvir Khan', meta: 'Ward 7 · 4 mutual members' },
+        { initials: 'NS', tint: '#fdf3e0', fg: '#a3760e', name: 'Nusrat Sultana', meta: 'Kazipara · 2 mutual members' }
+      ],
+      commFilters: ['All', 'Parliamentary', 'Local area', 'Nearby'].map((label, i) => ({
+        label, bg: i === (this.state.commFilter ?? 0) ? '#e2f1e9' : '#fff', fg: i === (this.state.commFilter ?? 0) ? '#1c6b47' : '#6b7973',
+        pick: () => this.setState({ commFilter: i })
+      })),
+      myCommunities: [
+        { code: 'D10', tint: '#e2f1e9', fg: '#1c6b47', name: 'Dhaka-10 Parliamentary Community', meta: 'Automatic membership · 24,568 members', activity: '12 new posts today', open: this.go('community') },
+        { code: 'M10', tint: '#e8f0f8', fg: '#2f6fb1', name: 'Mirpur-10 Residents', meta: 'Local area · 8,412 members', activity: '4 new posts today', open: this.go('community') },
+        { code: 'W07', tint: '#fdf3e0', fg: '#a3760e', name: 'Ward 7 Development Forum', meta: 'Local area · 3,190 members', activity: 'Poll closing tomorrow', open: this.go('community') }
+      ],
+      discoverCommunities: [
+        { code: 'D12', tint: '#f0ecfd', fg: '#5b3fd1', name: 'Dhaka-12 Community', meta: 'Parliamentary zone · 12.8K members', open: this.go('community') },
+        { code: 'J2', tint: '#e2f1e9', fg: '#1c6b47', name: 'Jessore-2 Community', meta: 'Parliamentary zone · 8.4K members', open: this.go('community') },
+        { code: 'C9', tint: '#e8f0f8', fg: '#2f6fb1', name: 'Chattogram-9 Community', meta: 'Parliamentary zone · 6.7K members', open: this.go('community') },
+        { code: 'R3', tint: '#fdf3e0', fg: '#a3760e', name: 'Rajshahi-3 Community', meta: 'Parliamentary zone · 5.1K members', open: this.go('community') }
+      ],
+      navIcon: s === 'home' ? 'menu' : 'arrow_back',
+      ideaTabsU: this.utab(['All Issues', 'My Issues'], it, 'ideasTab'),
+      elecTabsU: this.utab(['Current Representatives', 'Nominated Candidates'], et, 'elecTab'),
+      isAllIssues: it === 0, isMyIssues: it === 1,
+      isCurrentReps: et === 0, isNominated: et === 1,
+      showInvite: sheet === 'invite', showCreate: sheet === 'create',
+      showQr: sheet === 'invite-qr', showContacts: sheet === 'invite-contacts',
+      openQr: () => this.setState({ sheet: 'invite-qr' }),
+      openContacts: () => this.setState({ sheet: 'invite-contacts' }),
+      contactRows: [
+        { initials: 'RA', tint: '#e2f1e9', fg: '#1c6b47', name: 'Rafiq Ahmed', meta: '+880 1711 204 118 · on Voice 360', cta: 'Selected', ctaIcon: 'check', ctaBg: '#2f9169', ctaFg: '#fff', ctaBorder: '#2f9169' },
+        { initials: 'SB', tint: '#e8f0f8', fg: '#2f6fb1', name: 'Sumaiya Begum', meta: '+880 1913 776 902 · on Voice 360', cta: 'Selected', ctaIcon: 'check', ctaBg: '#2f9169', ctaFg: '#fff', ctaBorder: '#2f9169' },
+        { initials: 'MH', tint: '#fdf3e0', fg: '#a3760e', name: 'Mahin Hossain', meta: '+880 1616 330 545 · on Voice 360', cta: 'Selected', ctaIcon: 'check', ctaBg: '#2f9169', ctaFg: '#fff', ctaBorder: '#2f9169' },
+        { initials: 'FK', tint: '#f0ecfd', fg: '#5b3fd1', name: 'Farhana Kabir', meta: '+880 1521 118 470 · not on Voice 360', cta: 'Add', ctaIcon: 'add', ctaBg: '#fff', ctaFg: '#1c6b47', ctaBorder: '#d8e2dc' },
+        { initials: 'JI', tint: '#e2f1e9', fg: '#1c6b47', name: 'Jahid Islam', meta: '+880 1799 245 663 · not on Voice 360', cta: 'Add', ctaIcon: 'add', ctaBg: '#fff', ctaFg: '#1c6b47', ctaBorder: '#d8e2dc' },
+        { initials: 'NA', tint: '#e8f0f8', fg: '#2f6fb1', name: 'Nadia Akter', meta: 'Already a member', cta: 'Member', ctaIcon: 'done_all', ctaBg: '#f2f4f2', ctaFg: '#8b978f', ctaBorder: '#f2f4f2' }
+      ],
+
+      openCreate: () => this.setState({ sheet: 'create' }),
+      openInvite: () => this.setState({ sheet: 'invite' }),
+      closeSheet: () => this.setState({ sheet: '' }),
+      showAssistant: this.props.showAssistant ?? true,
+      showNav: !(this.props.hideNav ?? false),
+      goHome: this.go('home'), openIdeas: this.go('ideas'), openElections: this.go('elections'),
+
+      areaFacts: [
+        { label: 'Area', value: '31.2 km²' },
+        { label: 'Population', value: '556,842' },
+        { label: 'Registered voters', value: '312,104' },
+        { label: 'Unions / Wards', value: '8 / 54' },
+        { label: 'Upazilas', value: '1' },
+        { label: 'Communities', value: '12' }
+      ],
+
+      kpis: [
+        { icon: 'groups', iconFg: '#1c6b47', tint: '#eef4f0', label: 'Total voters', value: '312,104', sub: '298,542 verified' },
+        { icon: 'place', iconFg: '#2f6fb1', tint: '#e8f0f8', label: 'This area', value: '12,842', sub: 'From 4 wards' },
+        { icon: 'verified', iconFg: '#1c6b47', tint: '#e2f1e9', label: 'Verified voters', value: '95.6%', sub: 'Of all records' },
+        { icon: 'person_add', iconFg: '#a3760e', tint: '#fdf3e0', label: 'New (30 days)', value: '256', sub: 'Last 30 days' }
+      ],
+
+      flows: [
+        { icon: 'contacts', tint: '#eef4f0', title: 'Voter Directory', sub: 'Search, message and call voters', metric: '312,104 records · 95.6% verified', metricColor: '#1c6b47', open: this.go('voters') },
+        { icon: 'diversity_3', tint: '#e8f0f8', title: 'My Parliamentary Community', sub: 'Your constituency community — feed, polls, events', metric: '24,568 members · automatic', metricColor: '#2f6fb1', open: this.go('community') },
+        { icon: 'lightbulb', tint: '#fdf3e0', title: 'Development & Ideas', sub: 'Report issues and track projects', metric: '1,248 submissions · 5 in progress', metricColor: '#a3760e', open: this.go('ideas') },
+        { icon: 'account_balance', tint: '#f0ecfd', title: 'Elections & Representatives', sub: 'Candidates, promises and results', metric: 'Voting in 10 days · 5 candidates', metricColor: '#5b3fd1', open: this.go('elections') }
+      ],
+
+      aiPrompts: [
+        { text: 'What are the main problems in Mirpur?' },
+        { text: 'Show me development projects' },
+        { text: 'Which areas need the most attention?' },
+        { text: 'What is the population of Dhaka-10?' }
+      ],
+
+      activity: [
+        { icon: 'construction', tint: '#fdf3e0', title: 'Road repair started in Mirpur DOHS', meta: 'Development & Ideas · 2 hours ago', tag: 'In progress', tagColor: '#a3760e', tagBg: '#fdf3e0' },
+        { icon: 'how_to_vote', tint: '#e8f0f8', title: 'Nomination closed for Dhaka-10', meta: 'Elections · 5 hours ago', tagColor: '#17838a', tagBg: '#e5f2f3', tag: 'Election' },
+        { icon: 'water_drop', tint: '#e8f0f8', title: 'Drainage petition reached 892 supporters', meta: 'Parliamentary Community · yesterday', tag: 'Trending', tagColor: '#2f6fb1', tagBg: '#e8f0f8' },
+        { icon: 'verified', tint: '#e2f1e9', title: '256 new voters verified this month', meta: 'Voter Directory · 2 days ago', tag: 'Verified', tagColor: '#1c6b47', tagBg: '#e2f1e9' }
+      ],
+
+      places: [
+        { icon: 'apartment', tint: '#eef4f0', name: 'Mirpur DOHS', desc: 'Planned residential area with modern facilities.' },
+        { icon: 'water', tint: '#e8f0f8', name: 'Mirpur Lake', desc: 'A popular spot for recreation and relaxation.' },
+        { icon: 'pets', tint: '#fdf3e0', name: 'National Zoo', desc: 'One of the largest zoos in Bangladesh.' },
+        { icon: 'storefront', tint: '#f0ecfd', name: 'Mirpur-10 Center', desc: 'A popular shopping destination for daily needs.' }
+      ],
+
+      dirTabs: tab(['Education', 'Health', 'Markets'], this.state.dirTab, 'dirTab'),
+      dirItems: dirSets[this.state.dirTab],
+
+      voterSnapshot: [
+        { value: '556,842', label: 'Total population' },
+        { value: '312,104', label: 'Registered voters' },
+        { value: '8 / 54', label: 'Unions / wards' },
+        { value: '1', label: 'Upazila' },
+        { value: '12', label: 'Active communities' },
+        { value: '95.6%', label: 'Verified records' }
+      ],
+
+      voters: [
+        { initials: 'AH', name: 'Ashiqul Habib', nid: '—', phone: '—', address: 'Dhaka-11', status: 'Unverified', statusColor: '#a3760e', statusBg: '#fdf3e0' },
+        { initials: 'MR', name: 'Md Raihan Hossin', nid: '1234**789', phone: '01740*****29', address: 'Ward 17, Dhaka North City Corporation', status: 'Verified', statusColor: '#1c6b47', statusBg: '#e2f1e9' },
+        { initials: 'AF', name: 'Atik Foysal', nid: '1233****828', phone: '01795*****05', address: 'Ward 4, Jhikargacha, Jashore', status: 'Verified', statusColor: '#1c6b47', statusBg: '#e2f1e9' },
+        { initials: 'SR', name: 'Sadia Rahman', nid: '1987****145', phone: '01711*****83', address: 'Ward 7, Mirpur-10, Dhaka', status: 'Verified', statusColor: '#1c6b47', statusBg: '#e2f1e9' },
+        { initials: 'MA', name: 'Mariam Akter', nid: '1660****902', phone: '01521*****17', address: 'Kazipara, Mirpur-2, Dhaka', status: 'Pending', statusColor: '#2f6fb1', statusBg: '#e8f0f8' }
+      ],
+
+      communityAbout: [
+        { label: 'Parliamentary zone', value: 'Dhaka-10 (Mirpur)' },
+        { label: 'Created on', value: 'Jan 10, 2024' },
+        { label: 'Members', value: '24,568' },
+        { label: 'Type', value: 'Parliamentary constituency' },
+        { label: 'Membership', value: 'Automatic · address-verified' }
+      ],
+
+      feedTabs: tab(['All', 'Discussions', 'Events', 'Polls'], this.state.feedTab, 'feedTab'),
+
+      posts: [
+        { initials: 'SR', tint: '#e2f1e9', author: 'Sadia Rahman', role: 'Admin', meta: '2 hours ago · Dhaka-10', title: 'Road repair work started in Mirpur DOHS area', body: 'Great news! The much needed road repair work in Mirpur DOHS has officially begun today. Thank you everyone for your continuous support.', imgTint: '#fdf3e0', imgIcon: 'construction', reactions: '256', comments: '32', shares: '18' },
+        { initials: 'HM', tint: '#e8f0f8', author: 'Hasan Mahmud', role: 'Member', meta: '5 hours ago · Mirpur-10', title: 'Need better drainage system in Ward 7', body: 'Every time it rains, our streets go underwater. We need a permanent drainage solution. Please raise this issue in the next community meeting.', imgTint: '#e8f0f8', imgIcon: 'water_drop', reactions: '198', comments: '45', shares: '12' }
+      ],
+
+      poll: [
+        { label: 'Road repair & maintenance', pct: '42%', width: '42%', votes: '1,245 votes' },
+        { label: 'Drainage & waterlogging', pct: '28%', width: '28%', votes: '832 votes' },
+        { label: 'Healthcare facilities', pct: '17%', width: '17%', votes: '502 votes' },
+        { label: 'Education & schools', pct: '13%', width: '13%', votes: '357 votes' }
+      ],
+
+      events: [
+        { day: '24', month: 'MAY', title: 'Community meeting', place: 'Ward 7 Community Center', when: 'Friday, 4:00 PM · 146 going' },
+        { day: '30', month: 'MAY', title: 'Clean Dhaka-10 campaign', place: 'Mirpur DOHS Area', when: 'Thursday, 8:00 AM · 89 going' }
+      ],
+
+      groups: [
+        { tag: 'D12', name: 'Dhaka-12', members: '12.8K members' },
+        { tag: 'J2', name: 'Jessore-2', members: '8.4K members' },
+        { tag: 'C9', name: 'Chattogram-9', members: '6.7K members' },
+        { tag: 'R3', name: 'Rajshahi-3', members: '5.1K members' }
+      ],
+
+      highlights: [
+        { value: '18.6K', label: 'Active members', bg: '#e8f0f8', fg: '#1d4f7c' },
+        { value: '2.4K', label: 'Posts this month', bg: '#fdf3e0', fg: '#7a5806' },
+        { value: '6.7K', label: 'Comments', bg: '#e2f1e9', fg: '#1c6b47' },
+        { value: '3.1K', label: 'Reactions', bg: '#fdecec', fg: '#8f2c1e' }
+      ],
+
+      topics: [
+        { tag: 'RoadRepair', count: '1.2K' },
+        { tag: 'DrainageProblem', count: '892' },
+        { tag: 'Healthcare', count: '672' },
+        { tag: 'Education', count: '545' },
+        { tag: 'CleanDhaka15', count: '432' }
+      ],
+
+      ideaActions: [
+        { icon: 'report', iconFg: '#2f6fb1', iconBg: '#e8f0f8', bg: '#fff', border: '#e2e6e3', fg: '#182420', subFg: '#6b7973', title: 'Report an issue', sub: 'Facing a problem in your area? Report it and get it resolved.', cta: 'Report issue', btnBg: '#2f9169' },
+        { icon: 'lightbulb', iconFg: '#a3760e', iconBg: '#fdf3e0', bg: '#fff', border: '#e2e6e3', fg: '#182420', subFg: '#6b7973', title: 'Share an idea', sub: 'Have a solution or idea to improve our area? Share it.', cta: 'Share idea', btnBg: '#2f9169' },
+        { icon: 'auto_awesome', iconFg: '#5b3fd1', iconBg: '#e7e0ff', bg: '#f4f1ff', border: '#e2dcfb', fg: '#221a45', subFg: '#6b6489', title: 'AI smart suggestions', sub: 'AI analyses issues and ideas and suggests the best actions.', cta: 'See AI suggestions', btnBg: '#7a5af5' }
+      ],
+
+      ideaTabs: tab(['All', 'Issues', 'Ideas', 'Requirements'], this.state.ideaTab, 'ideaTab'),
+
+      submissions: [
+        { icon: 'construction', tint: '#fdecec', title: 'Repair broken road in Ward 15', meta: 'Roads & Transport · Ward 15 · 2 days ago', support: '128', comments: '18', tag: 'High priority', tagColor: '#8f2c1e', tagBg: '#fdecec' },
+        { icon: 'water_drop', tint: '#e8f0f8', title: 'Improve drainage system in Block A', meta: 'Drainage & Water · Mirpur-10 · 3 days ago', support: '112', comments: '12', tag: 'In progress', tagColor: '#2f6fb1', tagBg: '#e8f0f8' },
+        { icon: 'park', tint: '#e2f1e9', title: 'Build a children’s park in Ward 11', meta: 'Parks & Recreation · Ward 11 · 4 days ago', support: '95', comments: '9', tag: 'Medium', tagColor: '#a3760e', tagBg: '#fdf3e0' },
+        { icon: 'lightbulb', tint: '#fdf3e0', title: 'Install more street lights in dark area', meta: 'Electricity & Energy · Darus Salam · 5 days ago', support: '86', comments: '7', tag: 'Planned', tagColor: '#17838a', tagBg: '#e5f2f3' },
+        { icon: 'delete', tint: '#eef4f0', title: 'Garbage collection irregular', meta: 'Public Services · Kazipara · 1 week ago', support: '64', comments: '6', tag: 'Open', tagColor: '#8f2c1e', tagBg: '#fdecec' }
+      ],
+
+      projects: [
+        { tint: '#e8f0f8', status: 'In progress', tagColor: '#2f6fb1', title: 'Drainage system improvement in Block A', place: 'Block A, Mirpur-10', date: 'Started 10 May 2026', cta: 'View progress' },
+        { tint: '#fdf3e0', status: 'In progress', tagColor: '#a3760e', title: 'Road repair in Ward 15', place: 'Ward 15, Mirpur', date: 'Started 8 May 2026', cta: 'View progress' },
+        { tint: '#f0ecfd', status: 'Planned', tagColor: '#5b3fd1', title: 'Street light installation in Darus Salam', place: 'Darus Salam', date: 'Expected June 2026', cta: 'View details' },
+        { tint: '#e2f1e9', status: 'Completed', tagColor: '#1c6b47', title: 'New classroom at Mirpur Govt. School', place: 'Mirpur-10', date: 'Completed 12 Apr 2026', cta: 'View details' }
+      ],
+
+      aiSuggestions: [
+        { icon: 'water_drop', title: 'Drainage system', note: 'Most reported issue. High impact in rainy season.' },
+        { icon: 'construction', title: 'Road repair', note: 'High traffic areas need immediate attention.' },
+        { icon: 'lightbulb', title: 'Street lighting', note: 'Improve safety in dark areas.' },
+        { icon: 'delete', title: 'Waste management', note: 'Irregular collection causing pollution.' }
+      ],
+
+      repsGrid: [
+        { role: 'Mayor', tagColor: '#8a6a10', tagBg: '#fdf3e0', initials: 'SA', name: 'Sumaiya Akter', area: 'Dhamrai Municipality' },
+        { role: 'Commissioner', tagColor: '#17838a', tagBg: '#e5f2f3', initials: 'RK', name: 'Engr. Rashedul Karim', area: 'Dhamrai Pourashava' },
+        { role: 'Mayor', tagColor: '#8a6a10', tagBg: '#fdf3e0', initials: 'SA', name: 'Sumaiya Akter', area: 'Dhamrai Municipality' },
+        { role: 'Commissioner', tagColor: '#17838a', tagBg: '#e5f2f3', initials: 'RK', name: 'Engr. Rashedul Karim', area: 'Dhamrai Pourashava' },
+        { role: 'Commissioner', tagColor: '#17838a', tagBg: '#e5f2f3', initials: 'SA', name: 'Sumaiya Akter', area: 'Dhamrai Municipality' },
+        { role: 'Commissioner', tagColor: '#17838a', tagBg: '#e5f2f3', initials: 'RK', name: 'Engr. Rashedul Karim', area: 'Dhamrai Pourashava' },
+        { role: 'Commissioner', tagColor: '#17838a', tagBg: '#e5f2f3', initials: 'SA', name: 'Sumaiya Akter', area: 'Dhamrai Municipality' },
+        { role: 'Commissioner', tagColor: '#17838a', tagBg: '#e5f2f3', initials: 'RK', name: 'Engr. Rashedul Karim', area: 'Dhamrai Pourashava' }
+      ],
+
+      reps: [
+        { role: 'MP', tagColor: '#1c6b47', tagBg: '#e2f1e9', initials: 'NS', name: 'Hon. Nurul Islam Sujan', title: 'Member of Parliament', area: 'Dhaka-10 Constituency' },
+        { role: 'Chairman', tagColor: '#2f6fb1', tagBg: '#e8f0f8', initials: 'JA', name: 'Md. Jahangir Alam', title: 'Upazila Parishad Chairman', area: 'Dhamrai Upazila' },
+        { role: 'Mayor', tagColor: '#a3760e', tagBg: '#fdf3e0', initials: 'SA', name: 'Sumaiya Akter', title: 'Mayor', area: 'Dhamrai Municipality' },
+        { role: 'Commissioner', tagColor: '#17838a', tagBg: '#e5f2f3', initials: 'RK', name: 'Engr. Rashedul Karim', title: 'Commissioner', area: 'Dhamrai Pourashava' }
+      ],
+
+      countdown: [
+        { value: '10', unit: 'DAYS' }, { value: '14', unit: 'HOURS' }, { value: '36', unit: 'MINS' }, { value: '21', unit: 'SECS' }
+      ],
+
+      candidates: [
+        { rank: '1', color: '#2f9169', initials: 'RH', name: 'Rahidul Hasan', party: 'Independent candidate', supporters: '3,824', width: '100%' },
+        { rank: '2', color: '#c0392b', initials: 'KA', name: 'Khaled Ahmed', party: 'Bangladesh Nationalist Party (BNP)', supporters: '2,456', width: '64%' },
+        { rank: '3', color: '#2f6fb1', initials: 'SA', name: 'Dr. Sarwar Alam', party: 'Awami League (AL)', supporters: '2,134', width: '56%' },
+        { rank: '4', color: '#d99b12', initials: 'TA', name: 'Tahmina Akter', party: 'Jatiya Party (JP)', supporters: '1,245', width: '33%' },
+        { rank: '5', color: '#7a5af5', initials: 'AF', name: 'Atik Foysal', party: 'Islami Andolan Bangladesh (IAB)', supporters: '786', width: '21%' }
+      ],
+
+      promises: bars.map(b => ({ issue: b.issue, marks: b.marks.map(m => markStyle[m]) })),
+
+      insights: [
+        { color: '#2f6fb1', label: 'Active voters', value: '278,320' },
+        { color: '#2f9169', label: 'Pledged to vote (58.8%)', value: '163,842' },
+        { color: '#b6c2bb', label: 'Undecided (41.2%)', value: '114,478' }
+      ],
+
+      tabbar: [
+        { icon: 'home', label: 'Home', key: 'home' },
+        { icon: 'diversity_3', label: 'Community', key: 'community' },
+        { icon: 'storefront', label: 'Business', key: 'business' },
+        { icon: 'add_circle', label: 'Create', key: 'create' },
+        { icon: 'credit_card', label: 'Pay 360', key: 'pay' },
+        { icon: 'account_circle', label: 'Profile', key: 'profile' }
+      ].map(b => {
+        const active = (b.key === 'home' && s !== 'community' && s !== 'communities') || (b.key === 'community' && (s === 'community' || s === 'communities'));
+        return { icon: b.icon, label: b.label, fg: active ? '#1c6b47' : '#5c6b64', opacity: active ? '1' : '.55',
+          pick: b.key === 'community' ? this.go('community') : this.go('home') };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>
