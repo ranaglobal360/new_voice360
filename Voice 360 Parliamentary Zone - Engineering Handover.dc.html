@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; font-family:'Manrope',sans-serif; }
+  a { color:#1c6b47; text-decoration:none; }
+  a:hover { color:#0f4a30; }
+  doc-page:not(:defined) { visibility:hidden; }
+  table { break-inside:auto; }
+  tr { break-inside:avoid; }
+  h2, h3 { break-after:avoid; }
+</style>
+<script src="./doc-page.js"></script>
+</helmet>
+
+<doc-page margin="0.7in">
+
+<div style="border-bottom:4px solid #0d1512;padding-bottom:18px;margin-bottom:26px;">
+  <div style="font-size:12pt;font-weight:800;letter-spacing:2.6px;text-transform:uppercase;color:#1c6b47;">Voice 360 · Engineering handover</div>
+  <h1 style="font-size:30pt;font-weight:800;letter-spacing:-1.4px;color:#0d1512;line-height:1.05;margin:10px 0 0;">Parliamentary Zone</h1>
+  <div style="font-size:13pt;font-weight:600;color:#5c6b64;line-height:1.5;margin-top:10px;">Information architecture, data sources, permissions, state machines and corner cases. Written so backend and frontend can build and make decisions without further briefing.</div>
+  <div style="display:flex;flex-wrap:wrap;gap:22px;margin-top:18px;font-size:12pt;font-weight:700;color:#5c6b64;">
+    <div>Version 1.0 · 9 August 2026</div>
+    <div>32 screens · PC-01 – PC-07.5</div>
+    <div>Demo seat: Dhaka-10 (Mirpur)</div>
+  </div>
+</div>
+
+<div style="background:#f6f8f7;border:1px solid #e2e6e3;border-radius:12px;padding:18px 20px;margin-bottom:26px;break-inside:avoid;">
+  <div style="font-size:13pt;font-weight:800;color:#0d1512;">How to read this document</div>
+  <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.6;margin-top:6px;">Sections 1–4 are the architecture: rules, site map, routes and screens. Sections 5–8 are the contract: data model, ownership, permissions and state machines. Sections 9–12 are the build: corner cases, notifications, API surface and sequencing. Section 13 is the decision register — every item there blocks something, and each carries the options so you can decide in the room rather than wait.</div>
+  <div style="font-size:12pt;font-weight:600;color:#8a6410;background:#fdf3df;border-radius:8px;padding:12px 14px;line-height:1.6;margin-top:12px;">Anything marked <strong>OPEN</strong> is a decision we have not been given. It is stated with the options and the consequence of each, never guessed silently. Anything marked <strong>ASSUMED</strong> is our inference from the designs — safe to build, but push back if it contradicts a business rule you hold.</div>
+</div>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;">1 · The rules that govern everything</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:14px;">Nine invariants. Every screen, endpoint and permission in this document derives from them. If a requirement contradicts one of these, the requirement is wrong or the rule has changed — escalate rather than special-case.</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+  <div style="border-left:4px solid #2f9169;background:#f6f8f7;border-radius:0 10px 10px 0;padding:13px 16px;break-inside:avoid;">
+    <div style="font-size:12pt;font-weight:800;color:#0d1512;">R1 · Membership is automatic</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.55;margin-top:3px;">Verified profile + constituency = membership. There is no join request, no approval queue and no pending state anywhere in this module. Source: CEO revised scope, "Membership is automatic · 300 communities".</div>
+  </div>
+  <div style="border-left:4px solid #2f9169;background:#f6f8f7;border-radius:0 10px 10px 0;padding:13px 16px;break-inside:avoid;">
+    <div style="font-size:12pt;font-weight:800;color:#0d1512;">R2 · One seat per citizen, 300 seats total</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.55;margin-top:3px;">One community per parliamentary seat, titled by its area. A citizen is a member of exactly one at a time. Membership is derived state, never a row a user creates.</div>
+  </div>
+  <div style="border-left:4px solid #2f9169;background:#f6f8f7;border-radius:0 10px 10px 0;padding:13px 16px;break-inside:avoid;">
+    <div style="font-size:12pt;font-weight:800;color:#0d1512;">R3 · Viewing is open, participation is scoped</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.55;margin-top:3px;">Any citizen may view and follow any of the 300. Posting, commenting, voting in polls, reporting issues and pledging are available only in their own seat. The other 299 render the same screen in visitor state (PC-03.V).</div>
+  </div>
+  <div style="border-left:4px solid #2f9169;background:#f6f8f7;border-radius:0 10px 10px 0;padding:13px 16px;break-inside:avoid;">
+    <div style="font-size:12pt;font-weight:800;color:#0d1512;">R4 · One template, 300 instances</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.55;margin-top:3px;">PC-03 is a single build parameterised by seat. Nothing is authored per constituency except its content. No per-seat forks in code or design.</div>
+  </div>
+  <div style="border-left:4px solid #2f9169;background:#f6f8f7;border-radius:0 10px 10px 0;padding:13px 16px;break-inside:avoid;">
+    <div style="font-size:12pt;font-weight:800;color:#0d1512;">R5 · Two doors, one room</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.55;margin-top:3px;">Voter Directory, Development &amp; Ideas and Elections &amp; Representatives are reachable both as Area Overview cards and as Community Home tabs. These are <strong>one page rendered in two entry contexts</strong> — never two implementations. Frontend: one route, one component, entry recorded for analytics only.</div>
+  </div>
+  <div style="border-left:4px solid #5b3fd1;background:#f7f5fe;border-radius:0 10px 10px 0;padding:13px 16px;break-inside:avoid;">
+    <div style="font-size:12pt;font-weight:800;color:#0d1512;">R6 · AI is advisory and grounded, never authoritative</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.55;margin-top:3px;">Every AI answer carries its source manifest with freshness stamps. Ranked ordering comes from the platform's own priority score, not model opinion. Place names are lifted from source records, never generated. Where an area has no published data the assistant says so (PC-07.5) — it never substitutes national or neighbouring figures.</div>
+  </div>
+  <div style="border-left:4px solid #5b3fd1;background:#f7f5fe;border-radius:0 10px 10px 0;padding:13px 16px;break-inside:avoid;">
+    <div style="font-size:12pt;font-weight:800;color:#0d1512;">R7 · Violet is AI-only</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.55;margin-top:3px;"><span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">#5b3fd1</span> and its tints are reserved for AI surfaces across the whole product. Non-AI features that previously used violet were moved to teal <span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">#17838a</span> or blue <span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">#33569b</span>. Do not reintroduce violet outside PC-07.x and PC-04.4.</div>
+  </div>
+  <div style="border-left:4px solid #2f9169;background:#f6f8f7;border-radius:0 10px 10px 0;padding:13px 16px;break-inside:avoid;">
+    <div style="font-size:12pt;font-weight:800;color:#0d1512;">R8 · The app never casts a vote</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.55;margin-top:3px;">PC-05.4 "I will vote" is a public pledge. Voice 360 informs and reminds; the ballot happens at the polling centre. No endpoint, label or notification may imply otherwise. Community polls (PC-03.6V) are a separate, non-electoral mechanism.</div>
+  </div>
+  <div style="border-left:4px solid #2f9169;background:#f6f8f7;border-radius:0 10px 10px 0;padding:13px 16px;break-inside:avoid;">
+    <div style="font-size:12pt;font-weight:800;color:#0d1512;">R9 · Nothing is published without an accountable author</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.55;margin-top:3px;">Announcements carry an official role. Issues carry a citizen. AI drafts are always reviewed by a human before submission (PC-07.4 → PC-04.3). The assistant cannot create an issue on its own.</div>
+  </div>
+</div>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;break-before:page;">2 · Site map</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:14px;">PC-01 is the entry. Four destinations hang off it; PC-03 is the community hub with nine tabs; PC-07 is the AI assistant, reachable from both PC-01 and PC-03. Indentation is containment, not navigation depth — several nodes are reachable from more than one parent (R5).</div>
+
+<div style="background:#0d1512;border-radius:12px;padding:18px 8px;box-sizing:border-box;font-family:'JetBrains Mono',monospace;font-size:12pt;line-height:1.85;color:#cfe8dc;white-space:pre;width:0;min-width:100%;">PC-01  Area Overview                     <span style="color:#7f9c8f;">entry - bottom nav</span>
++-- PC-02   Voter Directory              <span style="color:#7f9c8f;">also tab .8</span>
++-- PC-03   Community Network            <span style="color:#7f9c8f;">the Community Home</span>
+|   +-- .V   Visitor state               <span style="color:#7f9c8f;">state of PC-03</span>
+|   +-- .1   Feed
+|   +-- .2   Discussion
+|   +-- .3   Announcements               <span style="color:#e0a53c;">needs admin console</span>
+|   +-- .4   Elections &amp; Reps            <span style="color:#7f9c8f;">-> PC-05</span>
+|   +-- .5   Issues                      <span style="color:#7f9c8f;">-> PC-04</span>
+|   +-- .6   Polls
+|   |   +-- .6V  Poll Voting
+|   |   +-- .6R  Poll Results
+|   |   `-- .6C  Create Poll             <span style="color:#e0a53c;">admin only</span>
+|   +-- .7   Events
+|   |   +-- .7D  Event Details
+|   |   `-- .7C  Create Event            <span style="color:#e0a53c;">admin only</span>
+|   +-- .8   Members                     <span style="color:#7f9c8f;">-> PC-02</span>
+|   +-- .9   About &amp; statistics
+|   `-- (Petitions)                      <span style="color:#e0a53c;">5 screens - separate</span>
++-- PC-04   Development &amp; Ideas          <span style="color:#7f9c8f;">also tab .5</span>
+|   +-- .1   All Issues
+|   +-- .2   My Issues
+|   +-- .3   Create Issue                <span style="color:#7f9c8f;">takes AI drafts</span>
+|   `-- .4   AI Smart Suggestions        <span style="color:#a58bff;">AI</span>
++-- PC-05   Elections &amp; Reps             <span style="color:#7f9c8f;">also tab .4</span>
+|   +-- .1   Current Representatives
+|   +-- .2   Nominated Candidates        <span style="color:#7f9c8f;">-> Candidate flow (13)</span>
+|   +-- .3   Election countdown
+|   `-- .4   I will vote                 <span style="color:#7f9c8f;">pledge, not a ballot</span>
++-- PC-06   Invite Members               <span style="color:#7f9c8f;">platform-level</span>
+|   +-- .1   Community QR
+|   `-- .2   From your contacts
++-- PC-01.L Latest in your area          <span style="color:#7f9c8f;">push target</span>
+`-- PC-07   AI Assistant                 <span style="color:#a58bff;">AI - violet only</span>
+    +-- .1   Assistant Home
+    +-- .2   Conversation                <span style="color:#7f9c8f;">sources + wizard</span>
+    +-- .3   Recommendation Detail
+    +-- .4   Issue Generator             <span style="color:#7f9c8f;">-> PC-04.3 prefilled</span>
+    `-- .5   No-Data State               <span style="color:#7f9c8f;">the trust guarantee</span></div>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;">3 · Proposed routes</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:12px;"><strong>ASSUMED</strong> — no route scheme was given. This one is seat-addressable so any screen is deep-linkable and shareable, which the invite and notification flows both require. <span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">:seat</span> is the seat slug (<span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">dhaka-10</span>), defaulting to the citizen's own seat when omitted.</div>
+
+<table style="width:100%;table-layout:fixed;border-collapse:collapse;font-size:12pt;">
+  <thead><tr style="border-bottom:2px solid #0d1512;">
+    <th style="text-align:left;padding:8px 10px 8px 0;font-weight:800;color:#0d1512;width:22%;">Code</th>
+    <th style="text-align:left;padding:8px 10px;font-weight:800;color:#0d1512;">Route</th>
+    <th style="text-align:left;padding:8px 0 8px 10px;font-weight:800;color:#0d1512;width:26%;">Auth</th>
+  </tr></thead>
+  <tbody style="font-weight:600;color:#2a3733;">
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-01</td><td style="padding:7px 10px;font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">/parliamentary</td><td style="padding:7px 0 7px 10px;">Verified</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-01.L</td><td style="padding:7px 10px;font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">/parliamentary/latest</td><td style="padding:7px 0 7px 10px;">Verified</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-02</td><td style="padding:7px 10px;font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">/parliamentary/:seat/voters</td><td style="padding:7px 0 7px 10px;">Member only</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-03</td><td style="padding:7px 10px;font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">/parliamentary/:seat</td><td style="padding:7px 0 7px 10px;">Any verified · state varies</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-03.1–.9</td><td style="padding:7px 10px;font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">/parliamentary/:seat/ + feed · discussion · announcements · elections · issues · polls · events · members · about</td><td style="padding:7px 0 7px 10px;">Any verified · state varies</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-03.6V/.6R</td><td style="padding:7px 10px;font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">/parliamentary/:seat/polls/:pollId[/results]</td><td style="padding:7px 0 7px 10px;">Vote: member only</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-03.7D</td><td style="padding:7px 10px;font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">/parliamentary/:seat/events/:eventId</td><td style="padding:7px 0 7px 10px;">RSVP: member only</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-04.1/.2</td><td style="padding:7px 10px;font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">/parliamentary/:seat/issues[?scope=mine]</td><td style="padding:7px 0 7px 10px;">Member to create</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-04.3</td><td style="padding:7px 10px;font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">/parliamentary/:seat/issues/new</td><td style="padding:7px 0 7px 10px;">Member only</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-04.4</td><td style="padding:7px 10px;font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">/parliamentary/:seat/issues/suggestions</td><td style="padding:7px 0 7px 10px;">Any member</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-05.1/.2</td><td style="padding:7px 10px;font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">/parliamentary/:seat/elections[?tab=candidates]</td><td style="padding:7px 0 7px 10px;">Any verified</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-05.4</td><td style="padding:7px 10px;font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">/parliamentary/:seat/elections/pledge</td><td style="padding:7px 0 7px 10px;">Member only</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-06</td><td style="padding:7px 10px;font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">/invite</td><td style="padding:7px 0 7px 10px;">Verified · platform-level</td></tr>
+    <tr><td style="padding:7px 10px 7px 0;font-weight:800;">PC-07.1–.5</td><td style="padding:7px 10px;font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">/parliamentary/:seat/assistant[/:conversationId]</td><td style="padding:7px 0 7px 10px;">Member only</td></tr>
+  </tbody>
+</table>
+
+<div style="background:#fdf3df;border:1px solid #f4e3bd;border-radius:10px;padding:14px 16px;margin-top:14px;font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;break-inside:avoid;"><strong style="color:#8a6410;">Frontend note.</strong> Because of R5, <span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">/parliamentary/:seat/issues</span> is reached from an Area Overview card and from Community Home tab .5. Do not build a separate tab-embedded variant — render the same route inside the tab shell, and pass entry context as a query param for analytics only.</div>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;break-before:page;">4 · Screen inventory</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:12px;">All 32 designed screens. "State of" means the screen is a rendering state of another screen and must not be built separately. Element-level definitions for every screen — what each element means, where its data comes from and when it updates — are in the companion deck <em>Parliamentary — All Screens &amp; Definitions</em> (78 pages, 216 element rows).</div>
+
+<table style="width:100%;table-layout:fixed;border-collapse:collapse;font-size:12pt;">
+  <thead><tr style="border-bottom:2px solid #0d1512;">
+    <th style="text-align:left;padding:8px 10px 8px 0;font-weight:800;color:#0d1512;width:16%;">Code</th>
+    <th style="text-align:left;padding:8px 10px;font-weight:800;color:#0d1512;width:32%;">Screen</th>
+    <th style="text-align:left;padding:8px 0 8px 10px;font-weight:800;color:#0d1512;">Notes for build</th>
+  </tr></thead>
+  <tbody style="font-weight:600;color:#2a3733;">
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-01</td><td style="padding:7px 10px;">Area Overview</td><td style="padding:7px 0 7px 10px;">13 elements. Famous places, local directory, Latest in your area are existing platform modules — connect, do not rebuild.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-02</td><td style="padding:7px 10px;">Voter Directory</td><td style="padding:7px 0 7px 10px;">EC roll, read-only. Message and Call hand off to existing modules.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-03</td><td style="padding:7px 10px;">Community Network (Home)</td><td style="padding:7px 0 7px 10px;">12 elements. One template, 300 instances. Nine tabs.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-03.V</td><td style="padding:7px 10px;">Visitor state</td><td style="padding:7px 0 7px 10px;"><strong>State of PC-03.</strong> Amber banner, Follow only, no composer.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-03.1</td><td style="padding:7px 10px;">Feed</td><td style="padding:7px 0 7px 10px;">Global composer with seat pre-set as audience.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-03.3</td><td style="padding:7px 10px;">Announcements</td><td style="padding:7px 0 7px 10px;">Read-only for members. Authoring route is <strong>OPEN</strong> — see D-2.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-03.6</td><td style="padding:7px 10px;">Polls</td><td style="padding:7px 0 7px 10px;">Citizens answer; only admins ask.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-03.6V</td><td style="padding:7px 10px;">Poll Voting</td><td style="padding:7px 0 7px 10px;">One member one vote, verified from seat mapping before acceptance. Results hidden until voted.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-03.6R</td><td style="padding:7px 10px;">Poll Results</td><td style="padding:7px 0 7px 10px;">Outcome posts back to Feed.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-03.6C</td><td style="padding:7px 10px;">Create Poll</td><td style="padding:7px 0 7px 10px;">Admin/moderator. Full authoring belongs to admin console — Phase 2.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-03.7</td><td style="padding:7px 10px;">Events</td><td style="padding:7px 0 7px 10px;">Should route into Events 360 (18 screens) rather than duplicate — <strong>OPEN</strong>, see D-5.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-03.7D / .7C</td><td style="padding:7px 10px;">Event Details / Create Event</td><td style="padding:7px 0 7px 10px;">RSVP inline on detail. Create is admin/moderator.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-03.8 / .9</td><td style="padding:7px 10px;">Members / About</td><td style="padding:7px 0 7px 10px;">Members shares people with PC-02, different lens.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-04.1 / .2</td><td style="padding:7px 10px;">All Issues / My Issues</td><td style="padding:7px 0 7px 10px;">Priority score drives ordering everywhere, including AI answers.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-04.3</td><td style="padding:7px 10px;">Create Issue</td><td style="padding:7px 0 7px 10px;">Also the landing point for AI-prefilled drafts. Always editable.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-04.4</td><td style="padding:7px 10px;">AI Smart Suggestions</td><td style="padding:7px 0 7px 10px;">Regenerated on open, never cached. Nothing sent automatically.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-05.1 / .2</td><td style="padding:7px 10px;">Representatives / Candidates</td><td style="padding:7px 0 7px 10px;">One destination, two tabs. Same fields per candidate, no promoted placement.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-05.3 / .4</td><td style="padding:7px 10px;">Countdown / I will vote</td><td style="padding:7px 0 7px 10px;">Pledge only (R8).</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-06 / .1 / .2</td><td style="padding:7px 10px;">Invite · QR · Contacts</td><td style="padding:7px 0 7px 10px;">Platform-level. Invitee lands in the seat <em>their</em> address decides, not the inviter's.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">PC-01.L</td><td style="padding:7px 10px;">Latest in your area</td><td style="padding:7px 0 7px 10px;">Deep-link target for all push notifications.</td></tr>
+    <tr><td style="padding:7px 10px 7px 0;font-weight:800;">PC-07.1 – .5</td><td style="padding:7px 10px;">AI Assistant (5 screens)</td><td style="padding:7px 0 7px 10px;">PC-07.2 carries 43 defined elements including the 4-step follow-up wizard.</td></tr>
+  </tbody>
+</table>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;break-before:page;">5 · Data model</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:14px;">Entities implied by the 32 screens. Field lists are the minimum the designs require, not an exhaustive schema. <strong>Derived</strong> entities must never be user-writable.</div>
+
+<div style="display:flex;flex-direction:column;gap:12px;">
+
+  <div style="border:1px solid #e2e6e3;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">Seat <span style="font-size:12pt;font-weight:700;color:#1c6b47;background:#eef4f0;border-radius:5px;padding:2px 8px;margin-left:6px;">EC · reference data</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.55;margin-top:4px;"><span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">id · code (Dhaka-10) · name · slug · division · district · wards[] · population · registeredVoters · verifiedVoters · boundaryVersion</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.5;margin-top:5px;">Exactly 300 rows. Read-only from the EC import. <span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">boundaryVersion</span> exists so delimitation can be handled without rewriting history — see C-4.</div>
+  </div>
+
+  <div style="border:1px solid #e2e6e3;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">Citizen <span style="font-size:12pt;font-weight:700;color:#1c6b47;background:#eef4f0;border-radius:5px;padding:2px 8px;margin-left:6px;">EC + USER</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.55;margin-top:4px;"><span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">id · nid · name · phone · email · address · verificationState · seatId · wardId · roles[] · verifiedAt</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.5;margin-top:5px;"><span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">seatId</span> is set at verification. It is the single input to every permission decision in this module.</div>
+  </div>
+
+  <div style="border:1px solid #e2e6e3;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">Membership <span style="font-size:12pt;font-weight:700;color:#8a6410;background:#fdf3e0;border-radius:5px;padding:2px 8px;margin-left:6px;">CALC · derived</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.55;margin-top:4px;"><span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">citizenId · seatId · since · state</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.5;margin-top:5px;">Derived from <span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">Citizen.verificationState == verified &amp;&amp; Citizen.seatId</span> (R1). No create or join endpoint may exist. Materialise it if you need the index, but never expose a writer.</div>
+  </div>
+
+  <div style="border:1px solid #e2e6e3;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">Follow <span style="font-size:12pt;font-weight:700;color:#2f6fb1;background:#e8f0f8;border-radius:5px;padding:2px 8px;margin-left:6px;">USER</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.55;margin-top:4px;"><span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">citizenId · seatId · createdAt</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.5;margin-top:5px;">The only relationship a visitor may create. Following is explicitly not membership and grants no write permission.</div>
+  </div>
+
+  <div style="border:1px solid #e2e6e3;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">Issue <span style="font-size:12pt;font-weight:700;color:#2f6fb1;background:#e8f0f8;border-radius:5px;padding:2px 8px;margin-left:6px;">USER</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.55;margin-top:4px;"><span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">id · seatId · authorId · category · wardId · title · description · attachments[] · existingSince · state · priorityScore · clusterId · votes · createdAt</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.5;margin-top:5px;"><span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">clusterId</span> groups duplicate reports so twenty drainage complaints read as one problem. <span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">priorityScore</span> is the single ordering authority — PC-04.1 and the AI answers must both read it (R6).</div>
+  </div>
+
+  <div style="border:1px solid #e2e6e3;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">Poll · PollVote <span style="font-size:12pt;font-weight:700;color:#5b3fd1;background:#f0ecfd;border-radius:5px;padding:2px 8px;margin-left:6px;">ADMIN + USER</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.55;margin-top:4px;"><span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">Poll: id · seatId · authorId · question · options[] · state · opensAt · closesAt</span><br><span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">PollVote: pollId · citizenId · optionId · castAt</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.5;margin-top:5px;">Unique constraint on <span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">(pollId, citizenId)</span>. Seat membership must be re-checked server-side at cast time, not trusted from the client.</div>
+  </div>
+
+  <div style="border:1px solid #e2e6e3;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">Announcement · Post · Event · RSVP <span style="font-size:12pt;font-weight:700;color:#2f6fb1;background:#e8f0f8;border-radius:5px;padding:2px 8px;margin-left:6px;">USER / ADMIN</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.55;margin-top:4px;"><span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">Announcement: id · seatId · authorId · authorRole · title · body · publishedAt</span><br><span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">Event: id · seatId · title · startsAt · venue · createdBy · state</span> · <span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">RSVP: eventId · citizenId · state</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.5;margin-top:5px;"><span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">authorRole</span> is stored on the announcement, not looked up at read time — a role change must not rewrite history (R9, C-8).</div>
+  </div>
+
+  <div style="border:1px solid #e2e6e3;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">Representative · Candidate · VotePledge <span style="font-size:12pt;font-weight:700;color:#5b3fd1;background:#f0ecfd;border-radius:5px;padding:2px 8px;margin-left:6px;">ADMIN + EC</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.55;margin-top:4px;"><span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">Representative: id · seatId · office · name · party · termStart · termEnd · record[]</span><br><span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">Candidate: id · seatId · electionId · name · party · manifesto · nominationState</span><br><span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">VotePledge: electionId · citizenId · pledgedAt</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.5;margin-top:5px;">Candidates must carry identical field sets — the design forbids promoted placement. VotePledge is a pledge record only (R8).</div>
+  </div>
+
+  <div style="border:1px solid #e2e6e3;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">AIConversation · AIMessage · SourceManifest <span style="font-size:12pt;font-weight:700;color:#5c6b64;background:#f1f3f2;border-radius:5px;padding:2px 8px;margin-left:6px;">EXT + CALC</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.55;margin-top:4px;"><span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">AIConversation: id · citizenId · seatId · startedAt · archivedAt</span><br><span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">AIMessage: id · conversationId · role · body · elapsedMs · sourceManifestId</span><br><span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">SourceManifest: id · entries[{dataset, recordCount, lastSyncAt}]</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.5;margin-top:5px;">Every assistant message must reference a manifest, including no-data answers — that is what makes an answer checkable (R6). Conversations are keyed to seat: moving seat archives the old history rather than migrating it.</div>
+  </div>
+
+</div>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;break-before:page;">6 · Source of truth</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:12px;">216 defined elements. 177 carry one of the source tags below; the remaining 39 are static or routing-only and need no integration. The counts are the real distribution across the module — use them to size integration effort.</div>
+
+<table style="width:100%;table-layout:fixed;border-collapse:collapse;font-size:12pt;">
+  <thead><tr style="border-bottom:2px solid #0d1512;">
+    <th style="text-align:left;padding:8px 10px 8px 0;font-weight:800;color:#0d1512;width:14%;">Tag</th>
+    <th style="text-align:left;padding:8px 10px;font-weight:800;color:#0d1512;width:10%;">Count</th>
+    <th style="text-align:left;padding:8px 10px;font-weight:800;color:#0d1512;">Meaning and rule</th>
+  </tr></thead>
+  <tbody style="font-weight:600;color:#2a3733;">
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:8px 10px 8px 0;"><span style="font-weight:800;color:#8a6410;background:#fdf3e0;border-radius:5px;padding:2px 8px;">CALC</span></td><td style="padding:8px 10px;">59</td><td style="padding:8px 10px;">Computed by the platform. Never stored as user input, never editable. Recompute rather than cache where the cadence column says Live.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:8px 10px 8px 0;"><span style="font-weight:800;color:#5b3fd1;background:#f0ecfd;border-radius:5px;padding:2px 8px;">ADMIN</span></td><td style="padding:8px 10px;">38</td><td style="padding:8px 10px;">Curated by back office or moderator. Most of these have no authoring surface until the admin console ships — see section 12.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:8px 10px 8px 0;"><span style="font-weight:800;color:#2f6fb1;background:#e8f0f8;border-radius:5px;padding:2px 8px;">USER</span></td><td style="padding:8px 10px;">37</td><td style="padding:8px 10px;">Created by citizens. Everything here needs moderation, rate limiting and an audit trail.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:8px 10px 8px 0;"><span style="font-weight:800;color:#5c6b64;background:#f1f3f2;border-radius:5px;padding:2px 8px;">EXT</span></td><td style="padding:8px 10px;">20</td><td style="padding:8px 10px;">Third party — the AI model, government datasets, open budget feeds, approved news publishers. Each needs a freshness stamp surfaced in the UI.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:8px 10px 8px 0;"><span style="font-weight:800;color:#8f4230;background:#fbeee9;border-radius:5px;padding:2px 8px;">DEVICE</span></td><td style="padding:8px 10px;">13</td><td style="padding:8px 10px;">Stays on the phone — camera, contacts, GPS, speech-to-text, local drafts. <strong>Must not be uploaded.</strong> Mic audio never leaves the device; only the transcript is sent.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:8px 10px 8px 0;"><span style="font-weight:800;color:#1c6b47;background:#eef4f0;border-radius:5px;padding:2px 8px;">EC</span></td><td style="padding:8px 10px;">10</td><td style="padding:8px 10px;">Election Commission / NID roll. Imported, read-only, never edited in-product. Corrections go back to the EC.</td></tr><tr><td style="padding:8px 10px 8px 0;"><span style="font-weight:800;color:#5c6b64;background:#f6f8f7;border-radius:5px;padding:2px 8px;">—</span></td><td style="padding:8px 10px;">39</td><td style="padding:8px 10px;">No source — static copy, labels and routing-only controls. Listed so the total reconciles to 216; no integration work.</td></tr>
+  </tbody>
+</table>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;">7 · Roles and permissions</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:12px;">Five roles. All permission checks resolve from <span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">Citizen.seatId</span> plus <span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">Citizen.roles[]</span>. <strong>Enforce server-side</strong> — the client hides controls, it does not secure them.</div>
+
+<table style="width:100%;table-layout:fixed;border-collapse:collapse;font-size:12pt;">
+  <thead><tr style="border-bottom:2px solid #0d1512;">
+    <th style="text-align:left;padding:8px 8px 8px 0;font-weight:800;color:#0d1512;width:34%;">Action</th>
+    <th style="text-align:center;padding:8px 4px;font-weight:800;color:#0d1512;">Visitor</th>
+    <th style="text-align:center;padding:8px 4px;font-weight:800;color:#0d1512;">Member</th>
+    <th style="text-align:center;padding:8px 4px;font-weight:800;color:#0d1512;">Mod</th>
+    <th style="text-align:center;padding:8px 4px;font-weight:800;color:#0d1512;">Admin</th>
+    <th style="text-align:center;padding:8px 0 8px 4px;font-weight:800;color:#0d1512;">MP office</th>
+  </tr></thead>
+  <tbody style="font-weight:600;color:#2a3733;text-align:center;">
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 8px 7px 0;text-align:left;">View community and feed</td><td>●</td><td>●</td><td>●</td><td>●</td><td>●</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 8px 7px 0;text-align:left;">Follow a seat</td><td>●</td><td>●</td><td>●</td><td>●</td><td>●</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 8px 7px 0;text-align:left;">Post, comment, react</td><td>—</td><td>●</td><td>●</td><td>●</td><td>●</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 8px 7px 0;text-align:left;">Report an issue</td><td>—</td><td>●</td><td>●</td><td>●</td><td>●</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 8px 7px 0;text-align:left;">Vote in a poll</td><td>—</td><td>●</td><td>●</td><td>●</td><td>●</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 8px 7px 0;text-align:left;">RSVP to an event</td><td>—</td><td>●</td><td>●</td><td>●</td><td>●</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 8px 7px 0;text-align:left;">Pledge to vote</td><td>—</td><td>●</td><td>●</td><td>●</td><td>●</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 8px 7px 0;text-align:left;">Use the AI assistant</td><td>—</td><td>●</td><td>●</td><td>●</td><td>●</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 8px 7px 0;text-align:left;">See voter directory</td><td>—</td><td>●</td><td>●</td><td>●</td><td>●</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 8px 7px 0;text-align:left;">Moderate / remove content</td><td>—</td><td>—</td><td>●</td><td>●</td><td>—</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 8px 7px 0;text-align:left;">Create a poll or event</td><td>—</td><td>—</td><td>●</td><td>●</td><td>—</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 8px 7px 0;text-align:left;">Publish an announcement</td><td>—</td><td>—</td><td>●</td><td>●</td><td>● <span style="color:#8a6410;">D-2</span></td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 8px 7px 0;text-align:left;">Triage / respond to issues</td><td>—</td><td>—</td><td>●</td><td>●</td><td>●</td></tr>
+    <tr><td style="padding:7px 8px 7px 0;text-align:left;">Assign roles</td><td>—</td><td>—</td><td>—</td><td>●</td><td>—</td></tr>
+  </tbody>
+</table>
+
+<div style="background:#fdf3df;border:1px solid #f4e3bd;border-radius:10px;padding:14px 16px;margin-top:14px;font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;break-inside:avoid;"><strong style="color:#8a6410;">Visitor privacy rule.</strong> A visitor sees counts, admins and moderators. Member names, addresses and profiles are hidden outside their own seat. This applies to PC-02, PC-03.8 and every member reference in the feed.</div>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;break-before:page;">8 · State machines</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:14px;">Five machines. Transitions not listed here do not exist — reject them rather than tolerating them.</div>
+
+<div style="display:flex;flex-direction:column;gap:12px;">
+  <div style="border:1px solid #e2e6e3;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">Membership</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12pt;color:#1c6b47;line-height:1.7;margin-top:6px;">unverified → verified_no_seat → member(seatId)<br>member(A) → member(B)&nbsp;&nbsp;<span style="color:#5c6b64;">// address change, see C-3</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.5;margin-top:6px;">No pending or requested state exists (R1). <span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">verified_no_seat</span> occurs when verification passes but the address does not resolve to a seat — see C-2.</div>
+  </div>
+  <div style="border:1px solid #e2e6e3;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">Issue</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12pt;color:#1c6b47;line-height:1.7;margin-top:6px;">draft → submitted → triaged → in_progress → resolved<br>submitted → rejected&nbsp;&nbsp;<span style="color:#5c6b64;">// with reason, always visible to author</span><br>triaged → merged(clusterId)&nbsp;&nbsp;<span style="color:#5c6b64;">// duplicate handling</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.5;margin-top:6px;">Drafts are device-local until submitted. Merged issues keep their own record and redirect to the cluster — the author must never lose their submission.</div>
+  </div>
+  <div style="border:1px solid #e2e6e3;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">Poll</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12pt;color:#1c6b47;line-height:1.7;margin-top:6px;">draft → open → closed → published<br>open → cancelled&nbsp;&nbsp;<span style="color:#5c6b64;">// votes discarded, stated publicly</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.5;margin-top:6px;">Results are hidden from a citizen until they have voted, and from everyone until <span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">closed</span>. Publishing posts the outcome back to the Feed.</div>
+  </div>
+  <div style="border:1px solid #e2e6e3;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">Election</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12pt;color:#1c6b47;line-height:1.7;margin-top:6px;">scheduled → nomination_open → nomination_closed → campaigning<br>&nbsp;&nbsp;&nbsp;&nbsp;→ polling_day → ended → result_published</div>
+    <div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.5;margin-top:6px;">Drives PC-05.2 (candidate list visibility), PC-05.3 (countdown) and PC-05.4 (pledge availability). The pledge closes at <span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">polling_day</span>. Results are EC-sourced, never computed by us.</div>
+  </div>
+  <div style="border:1px solid #5b3fd1;border-radius:10px;padding:14px 16px;background:#f7f5fe;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">AI answer</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12pt;color:#4429b0;line-height:1.7;margin-top:6px;">idle → thinking → answered(manifest)<br>thinking → no_data(manifest with gap)&nbsp;&nbsp;<span style="color:#5c6b64;">// PC-07.5</span><br>thinking → error&nbsp;&nbsp;<span style="color:#5c6b64;">// model or network failure, distinct from no_data</span></div>
+    <div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.5;margin-top:6px;"><strong>no_data is not an error.</strong> It is raised by a data-presence check <em>before</em> answering, not by model uncertainty. Conflating the two breaks R6 and is the single most important distinction in the AI build.</div>
+  </div>
+</div>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;break-before:page;">9 · Corner cases</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:14px;">The cases that will otherwise be discovered in production. Each carries the required behaviour; where behaviour is not yet decided it is marked <strong>OPEN</strong> and cross-referenced to section 13.</div>
+
+<table style="width:100%;table-layout:fixed;border-collapse:collapse;font-size:12pt;">
+  <thead><tr style="border-bottom:2px solid #0d1512;">
+    <th style="text-align:left;padding:8px 10px 8px 0;font-weight:800;color:#0d1512;width:8%;">#</th>
+    <th style="text-align:left;padding:8px 10px;font-weight:800;color:#0d1512;width:36%;">Case</th>
+    <th style="text-align:left;padding:8px 0 8px 10px;font-weight:800;color:#0d1512;">Required behaviour</th>
+  </tr></thead>
+  <tbody style="font-weight:600;color:#2a3733;">
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-1</td><td style="padding:7px 10px;">Citizen is unverified</td><td style="padding:7px 0 7px 10px;">Parliamentary Zone is viewable but every write is blocked. Show the verification route, not a generic permission error.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-2</td><td style="padding:7px 10px;">Verified, but address does not resolve to a seat</td><td style="padding:7px 0 7px 10px;">State <span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">verified_no_seat</span>. Citizen sees all 300 as a visitor and is prompted to correct their address. Never silently assign a default seat.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-3</td><td style="padding:7px 10px;">Citizen moves to another seat</td><td style="padding:7px 0 7px 10px;">Membership moves. Existing posts, issues and votes stay attributed to the seat they were made in, with the status that applied then. AI history is archived, not migrated.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-4</td><td style="padding:7px 10px;">Seat boundaries are redrawn (delimitation)</td><td style="padding:7px 0 7px 10px;"><strong>OPEN — D-6.</strong> <span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">boundaryVersion</span> exists so history can be preserved, but whether communities merge, split or archive is a business decision.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-5</td><td style="padding:7px 10px;">Member votes in a poll, then loses membership</td><td style="padding:7px 0 7px 10px;">The vote stands — it was valid when cast. Do not recount retroactively. Do not allow a second vote in the new seat's copy of a different poll to be linked.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-6</td><td style="padding:7px 10px;">Two accounts claim the same NID</td><td style="padding:7px 0 7px 10px;">Verification must reject the second. NID uniqueness is the identity guarantee the whole permission model rests on.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-7</td><td style="padding:7px 10px;">Representative dies, resigns, or loses a by-election</td><td style="padding:7px 0 7px 10px;">Close the term with <span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">termEnd</span>; do not delete. PC-05.1 shows current office-holders; past holders remain in the record.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-8</td><td style="padding:7px 10px;">Announcement author loses their role afterwards</td><td style="padding:7px 0 7px 10px;">The announcement keeps the <span style="font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;">authorRole</span> stored at publish time. Never resolve roles at read time (R9).</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-9</td><td style="padding:7px 10px;">Event is cancelled after RSVPs</td><td style="padding:7px 0 7px 10px;">Notify every RSVP holder. Keep the event visible with a cancelled state rather than removing it — attendees may already have travelled.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-10</td><td style="padding:7px 10px;">Issue created while offline</td><td style="padding:7px 0 7px 10px;">Draft persists on device with its attachments. Submit on reconnect. Never lose typed content to a connection drop.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-11</td><td style="padding:7px 10px;">Attachment upload fails mid-way</td><td style="padding:7px 0 7px 10px;">Show per-file progress and a cancel control. A failed file must not block submission of the rest.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-12</td><td style="padding:7px 10px;">Session expires mid-flow</td><td style="padding:7px 0 7px 10px;">Preserve the draft, re-authenticate, return to the last safe step. Applies to issue creation and the AI follow-up wizard.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-13</td><td style="padding:7px 10px;">AI asked about a different constituency</td><td style="padding:7px 0 7px 10px;">Answer only for the citizen's own seat, and say which seat the answer covers. Do not silently answer about another area.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-14</td><td style="padding:7px 10px;">AI asked where the seat has no published data</td><td style="padding:7px 0 7px 10px;">PC-07.5. Name the missing dataset, offer to raise it as an issue. Never substitute national or neighbouring figures (R6).</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-15</td><td style="padding:7px 10px;">Model call times out or errors</td><td style="padding:7px 0 7px 10px;">Distinct from no-data. Show elapsed time honestly, offer retry. The wizard draft must survive.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-16</td><td style="padding:7px 10px;">Two citizens report the same problem</td><td style="padding:7px 0 7px 10px;">Cluster them. Both authors keep their record; the cluster carries the count shown in PC-04.1 and quoted by the AI.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-17</td><td style="padding:7px 10px;">Invitee's address maps to a different seat</td><td style="padding:7px 0 7px 10px;">They join <em>their</em> seat, not the inviter's. Stated on PC-06 so the inviter is not surprised.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-18</td><td style="padding:7px 10px;">Government dataset sync is stale or fails</td><td style="padding:7px 0 7px 10px;">Show the last successful sync date, not the publication date, and never hide staleness. AI answers must carry the same stamp.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-19</td><td style="padding:7px 10px;">Poll closes while a citizen is voting</td><td style="padding:7px 0 7px 10px;">Reject at cast time with a clear message and show results. Server time is authoritative, not the client's.</td></tr>
+    <tr><td style="padding:7px 10px 7px 0;font-weight:800;">C-20</td><td style="padding:7px 10px;">Content is reported by a member</td><td style="padding:7px 0 7px 10px;">Queue for moderation. Requires the admin console — until then reports accumulate with no reviewer (see section 12).</td></tr>
+  </tbody>
+</table>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;break-before:page;">10 · Notification triggers</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:12px;">All push notifications deep-link to PC-01.L unless a more specific target exists. Every trigger needs a per-citizen preference.</div>
+
+<table style="width:100%;table-layout:fixed;border-collapse:collapse;font-size:12pt;">
+  <thead><tr style="border-bottom:2px solid #0d1512;">
+    <th style="text-align:left;padding:8px 10px 8px 0;font-weight:800;color:#0d1512;width:34%;">Trigger</th>
+    <th style="text-align:left;padding:8px 10px;font-weight:800;color:#0d1512;width:26%;">Audience</th>
+    <th style="text-align:left;padding:8px 0 8px 10px;font-weight:800;color:#0d1512;">Target</th>
+  </tr></thead>
+  <tbody style="font-weight:600;color:#2a3733;">
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Announcement published</td><td style="padding:7px 10px;">All seat members</td><td style="padding:7px 0 7px 10px;">PC-03.3</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Poll opened</td><td style="padding:7px 10px;">All seat members</td><td style="padding:7px 0 7px 10px;">PC-03.6V</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Poll result published</td><td style="padding:7px 10px;">Members who voted</td><td style="padding:7px 0 7px 10px;">PC-03.6R</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Event published / cancelled</td><td style="padding:7px 10px;">Members · RSVP holders</td><td style="padding:7px 0 7px 10px;">PC-03.7D</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Issue state changes</td><td style="padding:7px 10px;">Author + cluster reporters</td><td style="padding:7px 0 7px 10px;">PC-04.2</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Election milestone reached</td><td style="padding:7px 10px;">All seat members</td><td style="padding:7px 0 7px 10px;">PC-05.1</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Voting reminder</td><td style="padding:7px 10px;">Members who opted in</td><td style="padding:7px 0 7px 10px;">PC-05.3</td></tr>
+    <tr><td style="padding:7px 10px 7px 0;">Missing dataset now published</td><td style="padding:7px 10px;">Citizens who subscribed at PC-07.5</td><td style="padding:7px 0 7px 10px;">PC-07.1</td></tr>
+  </tbody>
+</table>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;">11 · API surface</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:12px;"><strong>ASSUMED</strong> — derived from what the screens read and write. Shape is indicative; the set is not. Every write re-checks membership server-side.</div>
+
+<div style="background:#0d1512;border-radius:12px;padding:18px 8px;box-sizing:border-box;font-family:'JetBrains Mono',monospace;font-size:12pt;line-height:1.85;color:#cfe8dc;white-space:pre;width:0;min-width:100%;"><span style="color:#7f9c8f;">-- identity &amp; membership</span>
+GET    /me                              <span style="color:#7f9c8f;">citizen + seat + roles</span>
+GET    /seats/:seat                     <span style="color:#7f9c8f;">seat + my relation</span>
+POST   /seats/:seat/follow              <span style="color:#7f9c8f;">and DELETE</span>
+ 
+<span style="color:#7f9c8f;">-- overview &amp; community</span>
+GET    /seats/:seat/overview            <span style="color:#7f9c8f;">PC-01</span>
+GET    /seats/:seat/latest              <span style="color:#7f9c8f;">PC-01.L</span>
+GET    /seats/:seat/feed                <span style="color:#7f9c8f;">PC-03.1</span>
+GET    /seats/:seat/announcements       <span style="color:#7f9c8f;">PC-03.3</span>
+POST   /seats/:seat/announcements       <span style="color:#e0a53c;">role-gated, D-2</span>
+GET    /seats/:seat/members             <span style="color:#7f9c8f;">visitor-redacted</span>
+GET    /seats/:seat/about               <span style="color:#7f9c8f;">PC-03.9</span>
+ 
+<span style="color:#7f9c8f;">-- voters</span>
+GET    /seats/:seat/voters              <span style="color:#7f9c8f;">member only</span>
+ 
+<span style="color:#7f9c8f;">-- issues</span>
+GET    /seats/:seat/issues              <span style="color:#7f9c8f;">PC-04.1 / .2</span>
+POST   /seats/:seat/issues              <span style="color:#7f9c8f;">PC-04.3</span>
+POST   /issues/:id/attachments          <span style="color:#7f9c8f;">resumable</span>
+GET    /seats/:seat/issues/suggestions  <span style="color:#a58bff;">PC-04.4</span>
+ 
+<span style="color:#7f9c8f;">-- polls &amp; events</span>
+GET    /seats/:seat/polls               <span style="color:#7f9c8f;">and /polls/:id</span>
+POST   /polls/:id/vote                  <span style="color:#7f9c8f;">one per citizen</span>
+GET    /polls/:id/results               <span style="color:#7f9c8f;">403 until voted</span>
+GET    /seats/:seat/events              <span style="color:#7f9c8f;">and /events/:id</span>
+POST   /events/:id/rsvp                 <span style="color:#7f9c8f;">member only</span>
+ 
+<span style="color:#7f9c8f;">-- elections</span>
+GET    /seats/:seat/representatives     <span style="color:#7f9c8f;">PC-05.1</span>
+GET    /seats/:seat/election            <span style="color:#7f9c8f;">state + countdown</span>
+GET    /elections/:id/candidates        <span style="color:#7f9c8f;">identical fields</span>
+POST   /elections/:id/pledge            <span style="color:#7f9c8f;">pledge only, R8</span>
+ 
+<span style="color:#7f9c8f;">-- assistant</span>
+POST   /seats/:seat/conversations       <span style="color:#a58bff;">PC-07.1</span>
+POST   /conversations/:id/messages      <span style="color:#a58bff;">+ sourceManifest</span>
+GET    /conversations/:id               <span style="color:#7f9c8f;">seat-scoped</span>
+POST   /conversations/:id/draft         <span style="color:#a58bff;">-> PC-04.3</span>
+ 
+<span style="color:#7f9c8f;">-- invite</span>
+POST   /invites                         <span style="color:#7f9c8f;">platform-level</span>
+GET    /invites/qr</div>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;break-before:page;">12 · Build sequencing</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:12px;">What blocks what. The admin console is the largest single dependency in the module — six screens render content that nothing can currently create.</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+  <div style="border:1px solid #e2e6e3;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">Phase 1 — buildable today</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.6;margin-top:4px;">PC-01, PC-01.L, PC-02, PC-03 + tabs .1 .2 .8 .9, PC-04.1–.3, PC-05.1–.4, PC-06 and its two states, PC-03.V. Everything here depends only on the EC import, citizen input and computed values.</div>
+  </div>
+  <div style="border:1px solid #f4e3bd;background:#fdfbf6;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">Blocked on the admin console</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.6;margin-top:4px;">PC-03.3 Announcements, PC-03.6/.6C/.6V/.6R Polls, PC-03.7C Create Event, plus issue triage behind PC-04.2 and the moderation queue behind C-20. The reader screens can ship, but they will be empty and reports will accumulate unreviewed.</div>
+  </div>
+  <div style="border:1px solid #d8d0f7;background:#f9f8fe;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">Blocked on the AI platform</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.6;margin-top:4px;">PC-07.1–.5 and PC-04.4. Needs the model integration, the source manifest service, the data-presence check that produces no_data, and on-device speech-to-text. The manifest service is the part most often underestimated — without it R6 cannot hold.</div>
+  </div>
+  <div style="border:1px solid #e2e6e3;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">Designed elsewhere — connect, do not design</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.6;margin-top:4px;">Petitions (5 screens), Become a Candidate (13), Apply for Nomination (10), Support Candidates (1), Events 360 (18), Local Area Election (17). These have their own flow documents. Parliamentary routes into them; it does not reimplement them.</div>
+  </div>
+  <div style="border:1px solid #e2e6e3;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">Existing platform modules — connect only</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.6;margin-top:4px;">Famous places, local directory (Education · Health · Markets), Latest in your area, local groups, popular topics, community stats, share sheet, messaging, calling, profile. No new design work.</div>
+  </div>
+</div>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;">13 · Decision register</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:14px;">Every open decision, with options and consequences. Nothing here is guessed elsewhere in this document.</div>
+
+<div style="display:flex;flex-direction:column;gap:11px;">
+  <div style="border:1px solid #f4e3bd;background:#fdfbf6;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">D-1 · Demo constituency</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.6;margin-top:4px;">Source screens disagreed — Area Overview said Dhaka-10 (Mirpur), others said Dhaka-15. Standardised on <strong>Dhaka-10 (Mirpur)</strong> throughout. Confirm, or tell us to switch.</div>
+  </div>
+  <div style="border:1px solid #f4e3bd;background:#fdfbf6;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">D-2 · Who publishes announcements</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.6;margin-top:4px;"><strong>Option A — MP-side composer.</strong> The MP posts directly from their phone. Fastest and most personal; needs a role-gated composer and no review step.<br><strong>Option B — admin console only.</strong> Everything routes through the back office for review. Slower but moderated; needs no MP-side build.<br>These are different products, and the choice changes both scope and the trust model.</div>
+  </div>
+  <div style="border:1px solid #f4e3bd;background:#fdfbf6;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">D-3 · Constituency selection at verification</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.6;margin-top:4px;">CEO documents say membership follows "verified profile + constituency". Whether the seat is derived silently from the address or explicitly picked by the citizen is not stated. This changes the verification flow and case C-2.</div>
+  </div>
+  <div style="border:1px solid #f4e3bd;background:#fdfbf6;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">D-4 · Petitions routing and signing rights</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.6;margin-top:4px;">Five screens are designed. Open: how PC-03's petitions tab routes into them, and whether signing is gated on seat membership (consistent with polls) or opened more widely.</div>
+  </div>
+  <div style="border:1px solid #f4e3bd;background:#fdfbf6;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">D-5 · Events tab vs Events 360</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.6;margin-top:4px;">PC-03.7 is a simple seat-filtered list. Events 360 is a full 18-screen module with AI search, digital passes and audience targeting. Recommendation: PC-03.7 routes into Events 360 pre-filtered to the seat. Confirm before either team builds an event list.</div>
+  </div>
+  <div style="border:1px solid #f4e3bd;background:#fdfbf6;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">D-6 · Delimitation policy</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.6;margin-top:4px;">When seat boundaries are redrawn, do communities merge, split, or archive and restart? Affects C-4, historical attribution and the 300-community invariant. Not urgent to build, urgent to decide before the schema is frozen.</div>
+  </div>
+  <div style="border:1px solid #f4e3bd;background:#fdfbf6;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">D-7 · AI assumptions to confirm</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.6;margin-top:4px;">Stated in the definitions as our inference: five-attachment cap on issue drafts, 30-day rolling windows for reports and active citizens, verified publishers only for the news source, 30-second model timeout, on-device speech-to-text with audio never uploaded. All are safe defaults; all are ours, not yours.</div>
+  </div>
+  <div style="border:1px solid #f4e3bd;background:#fdfbf6;border-radius:10px;padding:14px 16px;break-inside:avoid;">
+    <div style="font-size:12.5pt;font-weight:800;color:#0d1512;">D-8 · Moderation SLA</div>
+    <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.6;margin-top:4px;">Reported content (C-20) and issue triage both queue for a reviewer. No response time is defined. Without one, the reporting routes in the UI promise something the platform cannot keep.</div>
+  </div>
+</div>
+
+<div style="border-top:3px solid #0d1512;margin-top:34px;padding-top:16px;font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;">
+  <strong style="color:#0d1512;">Companion artefacts.</strong> <em>Parliamentary — All Screens &amp; Definitions</em> (78-page deck: every screen with element-level definitions, sources and cadences) · <em>Parliamentary User Flow Map</em> (interactive: Flow, Screen and Prototype modes) · <em>Voice 360 Framework</em> (all modules, flows and source documents). Source documents from the CEO are in the framework's Parliamentary → Resources tab.
+</div>
+
+</doc-page>
+</x-dc>
+</body>
+</html>

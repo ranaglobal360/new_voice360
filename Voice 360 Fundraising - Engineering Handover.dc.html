@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; font-family:'Manrope',sans-serif; }
+  a { color:#1c6b47; text-decoration:none; }
+  a:hover { color:#0f4a30; }
+  doc-page:not(:defined) { visibility:hidden; }
+  table { break-inside:auto; }
+  tr { break-inside:avoid; }
+  h2, h3 { break-after:avoid; }
+</style>
+<script src="./doc-page.js"></script>
+</helmet>
+
+<doc-page margin="0.7in">
+
+<div style="border-bottom:4px solid #0d1512;padding-bottom:18px;margin-bottom:26px;">
+  <div style="font-size:12pt;font-weight:800;letter-spacing:2.6px;text-transform:uppercase;color:#1c6b47;">Voice 360 · Engineering handover</div>
+  <h1 style="font-size:30pt;font-weight:800;letter-spacing:-1.4px;color:#0d1512;line-height:1.05;margin:10px 0 0;">Fundraising</h1>
+  <div style="font-size:13pt;font-weight:600;color:#5c6b64;line-height:1.5;margin-top:10px;">Information architecture, money handling, data sources, permissions, state machines and corner cases. Written so backend and frontend can build and make decisions without further briefing.</div>
+  <div style="display:flex;flex-wrap:wrap;gap:22px;margin-top:18px;font-size:12pt;font-weight:700;color:#5c6b64;">
+    <div>Version 1.0 · 10 August 2026</div>
+    <div>61 screens · FR-01 – FR-13.5</div>
+    <div>Currency: BDT (৳)</div>
+  </div>
+</div>
+
+<div style="background:#f6f8f7;border:1px solid #e2e6e3;border-radius:12px;padding:18px 20px;margin-bottom:26px;break-inside:avoid;">
+  <div style="font-size:13pt;font-weight:800;color:#0d1512;">How to read this document</div>
+  <div style="font-size:12pt;font-weight:600;color:#2a3733;line-height:1.6;margin-top:6px;">Sections 1–4 are the architecture: rules, site map, routes and screens. Sections 5–8 are the contract: data model, ownership, permissions and state machines. Sections 9–12 are the build: corner cases, notifications, API surface and sequencing. Section 13 is the decision register — every item there blocks something, and each carries the options so you can decide in the room rather than wait.</div>
+  <div style="font-size:12pt;font-weight:600;color:#8a6410;background:#fdf3df;border-radius:8px;padding:12px 14px;line-height:1.6;margin-top:12px;">Anything marked <strong>OPEN</strong> is a decision we have not been given. It is stated with the options and the consequence of each, never guessed silently. Anything marked <strong>ASSUMED</strong> is our inference from the designs — safe to build, but push back if it contradicts a business rule you hold.</div>
+  <div style="font-size:12pt;font-weight:600;color:#7a1f14;background:#fdeeeb;border-radius:8px;padding:12px 14px;line-height:1.6;margin-top:10px;">This module moves real money and publishes public ledgers. Two rules override every other consideration in this document: <strong>no client ever computes a balance</strong>, and <strong>nothing a donor sees about where money went is written by anyone other than the server</strong>.</div>
+</div>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;">1 · The rules that govern everything</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:14px;">Ten invariants. Every screen, endpoint and permission in this document derives from them. If a requirement contradicts one of these, the rule wins until someone changes it here.</div>
+
+<table style="width:100%;table-layout:fixed;border-collapse:collapse;font-size:12pt;">
+  <colgroup><col style="width:8%"><col style="width:30%"><col style="width:62%"></colgroup>
+  <thead><tr style="border-bottom:2px solid #0d1512;text-align:left;"><th style="padding:8px 10px 8px 0;font-weight:800;color:#0d1512;">#</th><th style="padding:8px 10px;font-weight:800;color:#0d1512;">Rule</th><th style="padding:8px 0 8px 10px;font-weight:800;color:#0d1512;">What it forces</th></tr></thead>
+  <tbody style="font-weight:600;color:#2a3733;">
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:8px 10px 8px 0;font-weight:800;">R1</td><td style="padding:8px 10px;">The server owns every number</td><td style="padding:8px 0 8px 10px;">Raised totals, progress percentages, donor counts, days left, statement totals and available-to-withdraw are read-only fields on the response. The client never sums donations it holds.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:8px 10px 8px 0;font-weight:800;">R2</td><td style="padding:8px 10px;">A donation exists before a payment is attempted</td><td style="padding:8px 0 8px 10px;">FR-07.4 Review creates the donation in <span style="font-family:'JetBrains Mono',monospace;">pending</span> and returns an id. The PSP is then called against that id, so every attempt — including the ones that fail at FR-07.6 — is reconcilable.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:8px 10px 8px 0;font-weight:800;">R3</td><td style="padding:8px 10px;">Success is declared by the webhook, not the screen</td><td style="padding:8px 0 8px 10px;">FR-07.5 Processing polls; FR-07.7 renders only after the server marks the donation <span style="font-family:'JetBrains Mono',monospace;">captured</span>. A returning app that never saw FR-07.7 must still find the donation captured.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:8px 10px 8px 0;font-weight:800;">R4</td><td style="padding:8px 10px;">One payment component, both flows</td><td style="padding:8px 0 8px 10px;">FR-07.3 – FR-07.7 and FR-09.3 – FR-09.5 are the same component with a different intent object (FR-07.6O states this explicitly). Do not build two payment stacks.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:8px 10px 8px 0;font-weight:800;">R5</td><td style="padding:8px 10px;">Every capture emits a receipt</td><td style="padding:8px 0 8px 10px;">A captured donation or sponsorship charge writes an immutable receipt (FR-10.2) and a row in the annual statement (FR-10.3). Receipts are never edited — corrections are new rows.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:8px 10px 8px 0;font-weight:800;">R6</td><td style="padding:8px 10px;">The transparency report is a projection, not an entry form</td><td style="padding:8px 0 8px 10px;">FR-05 and FR-05.D render only server-side ledger entries tied to a payout or a captured donation. No screen in this module writes to it.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:8px 10px 8px 0;font-weight:800;">R7</td><td style="padding:8px 10px;">Nothing publishes without verification</td><td style="padding:8px 0 8px 10px;">A campaign request (FR-08) is invisible to donors until a verifier approves it. Beneficiaries in FR-03/FR-09.0 are onboarded by admin only; no citizen creates a beneficiary.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:8px 10px 8px 0;font-weight:800;">R8</td><td style="padding:8px 10px;">Organisers never touch money directly</td><td style="padding:8px 0 8px 10px;">FR-13.4 requests a withdrawal against a verified account; FR-13.5 is a request state. Release is a back-office action outside this module.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:8px 10px 8px 0;font-weight:800;">R9</td><td style="padding:8px 10px;">Recurring giving is a subscription with its own life</td><td style="padding:8px 0 8px 10px;">FR-07.1M and every FR-09 plan create a mandate. Each cycle is its own charge with its own receipt and its own failure path (FR-09.5F); a failed cycle never cancels the sponsorship silently.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:8px 10px 8px 0;font-weight:800;">R10</td><td style="padding:8px 10px;">Identity is optional to the public, never to the ledger</td><td style="padding:8px 0 8px 10px;">A donor may hide their name from FR-06.D Donors and from the organiser's list. The receipt, statement and internal record always carry the real identity.</td></tr>
+  </tbody>
+</table>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;break-before:page;">2 · Site map</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:14px;">FR-01 is the entry, reached from the drawer. Five destinations hang off it. Two of those — Campaign Details and Beneficiary Details — are the heads of the two money paths. Everything a citizen has already given lives under Track my giving; everything they run lives under FR-13.</div>
+
+<div style="font-family:'JetBrains Mono',monospace;font-size:10.5pt;font-weight:400;color:#0d1512;background:#f6f8f7;border:1px solid #e2e6e3;border-radius:12px;padding:18px 20px;line-height:1.75;white-space:pre;overflow-x:hidden;">FR-01  Fundraising Overview            <span style="color:#7f9c8f;">the entry</span>
+ |
+ |-- FR-02  All Campaigns
+ |     |    <span style="color:#7f9c8f;">.S search · .F filter · .L loading · .N empty</span>
+ |     `-- FR-06  Campaign Details
+ |           |    <span style="color:#7f9c8f;">.U updates · .D donors · .C closed</span>
+ |           `-- FR-07  Donate
+ |                 .1 amount -&gt; .2 details -&gt; .3 method
+ |                 -&gt; .4 review -&gt; .5 processing -&gt; .7 success
+ |
+ |-- FR-03  Sponsor a Life
+ |     `-- FR-09.0  Beneficiary Details   <span style="color:#7f9c8f;">.0A already sponsored</span>
+ |           `-- .1 plan -&gt; .2 details -&gt; .3 payment
+ |                 -&gt; .4 confirm -&gt; .5 active
+ |
+ |-- FR-04  Community Projects          <span style="color:#7f9c8f;">reuses FR-06 / FR-07</span>
+ |
+ |-- FR-05  Transparency Report         <span style="color:#7f9c8f;">.D transaction detail</span>
+ |
+ |-- Track my giving
+ |     |-- FR-10.1  My donations
+ |     |        <span style="color:#7f9c8f;">FR-10.2 receipt · FR-10.3 statement · .4 empty</span>
+ |     `-- FR-11.1  My sponsorships
+ |              <span style="color:#7f9c8f;">FR-11.2 detail · .3 updates · .4 change amount</span>
+ |
+ |-- Request a campaign
+ |     |-- FR-08.1 type -&gt; .2 goals -&gt; .3 your info
+ |     |         -&gt; .4 review -&gt; .5 submitted
+ |     `-- FR-12.1  My requests
+ |              <span style="color:#7f9c8f;">FR-12.2 approved · FR-08.5C needs changes</span>
+ |
+ `-- FR-13  Running a campaign          <span style="color:#7f9c8f;">organiser only</span>
+       `-- .1 dashboard -&gt; .2 update · .3 donors
+             · .4 withdraw -&gt; .5 requested</div>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;">3 · Proposed routes</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:12px;"><strong>ASSUMED</strong> — no route scheme was given. Campaigns, beneficiaries and receipts are addressable by id so any notification or shared link deep-links correctly. Checkout steps are children of an intent so a resumed session lands on the right step.</div>
+
+<div style="font-family:'JetBrains Mono',monospace;font-size:10.5pt;font-weight:400;color:#0d1512;background:#f6f8f7;border:1px solid #e2e6e3;border-radius:12px;padding:18px 20px;line-height:1.7;white-space:pre;overflow-x:hidden;">/fundraising                       FR-01
+/fundraising/campaigns             FR-02
+      <span style="color:#7f9c8f;">?q= &amp;cause= &amp;sort= &amp;status=</span>
+/fundraising/campaigns/:id         FR-06   <span style="color:#7f9c8f;">#updates #donors</span>
+/fundraising/campaigns/:id/donate  FR-07.1
+/fundraising/intents/:id/:step     FR-07.2 – FR-07.7
+      <span style="color:#7f9c8f;">step = details|method|review|processing|done</span>
+/fundraising/projects              FR-04
+/fundraising/sponsor               FR-03
+/fundraising/sponsor/:bid          FR-09.0
+/fundraising/sponsor/:bid/plan     FR-09.1
+/fundraising/transparency          FR-05
+/fundraising/transparency/:eid     FR-05.D
+/fundraising/me/donations          FR-10.1
+/fundraising/me/donations/:rid     FR-10.2
+/fundraising/me/statement/:year    FR-10.3
+/fundraising/me/sponsorships       FR-11.1
+/fundraising/me/sponsorships/:id   FR-11.2  <span style="color:#7f9c8f;">#updates</span>
+/fundraising/requests/new          FR-08.1
+/fundraising/requests              FR-12.1
+/fundraising/requests/:id          FR-12.2 · FR-08.5C
+/fundraising/manage/:cid           FR-13.1
+/fundraising/manage/:cid/withdraw  FR-13.4</div>
+
+<div style="background:#fdf3df;border:1px solid #f4e3bd;border-radius:10px;padding:14px 16px;margin-top:14px;font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;break-inside:avoid;"><strong style="color:#8a6410;">OPEN</strong> — whether campaigns get public slugs for sharing outside the app. If yes, <span style="font-family:'JetBrains Mono',monospace;">/c/:slug</span> resolves to FR-06 for signed-out visitors and the module needs a signed-out read-only mode. Nothing in the current designs shows one.</div>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;break-before:page;">4 · Screen inventory</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:12px;">All 61 designed screens. "State of" means the screen is a rendering state of another screen and must not become its own route. FR-07, FR-08, FR-09, FR-10, FR-11, FR-12 and FR-13 are journey labels on the flow map, not screens.</div>
+
+<table style="width:100%;table-layout:fixed;border-collapse:collapse;font-size:11.5pt;">
+  <colgroup><col style="width:13%"><col style="width:41%"><col style="width:46%"></colgroup>
+  <thead><tr style="border-bottom:2px solid #0d1512;text-align:left;"><th style="padding:8px 10px 8px 0;font-weight:800;color:#0d1512;">Code</th><th style="padding:8px 10px;font-weight:800;color:#0d1512;">Screen</th><th style="padding:8px 0 8px 10px;font-weight:800;color:#0d1512;">Build note</th></tr></thead>
+  <tbody style="font-weight:600;color:#2a3733;">
+    <tr><td colspan="3" style="padding:12px 0 4px;font-weight:800;color:#1c6b47;">Journey A · Browse the module</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-01</td><td style="padding:6px 10px;">Fundraising Overview</td><td style="padding:6px 0 6px 10px;">Entry. Action tiles, five destination rows, featured campaigns, causes, sponsor previews.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-02</td><td style="padding:6px 10px;">All Campaigns</td><td style="padding:6px 0 6px 10px;">Paged list. Filter and sort are query params, not client-side.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-02.S</td><td style="padding:6px 10px;">Search</td><td style="padding:6px 0 6px 10px;">State of FR-02.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-02.F</td><td style="padding:6px 10px;">Filter sheet</td><td style="padding:6px 0 6px 10px;">State of FR-02. Sheet, not a route.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-02.L</td><td style="padding:6px 10px;">Campaigns — loading</td><td style="padding:6px 0 6px 10px;">State of FR-02. Skeleton, fixed row count.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-02.N</td><td style="padding:6px 10px;">Campaigns — no results</td><td style="padding:6px 0 6px 10px;">State of FR-02. Must name the filter that produced it.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-03</td><td style="padding:6px 10px;">Sponsor a Life</td><td style="padding:6px 0 6px 10px;">Beneficiary list. Admin-curated only.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-04</td><td style="padding:6px 10px;">Community Projects</td><td style="padding:6px 0 6px 10px;">Campaign list filtered to project type. Reuses FR-06/FR-07.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-05</td><td style="padding:6px 10px;">Transparency Report</td><td style="padding:6px 0 6px 10px;">Read-only ledger projection. See R6.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-05.D</td><td style="padding:6px 10px;">Transaction detail</td><td style="padding:6px 0 6px 10px;">Own route — linkable from an audit conversation.</td></tr>
+    <tr><td colspan="3" style="padding:12px 0 4px;font-weight:800;color:#1c6b47;">Journey B · Discover and donate</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-06</td><td style="padding:6px 10px;">Campaign Details</td><td style="padding:6px 0 6px 10px;">Head of the money path. Tabs are hashes on one route.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-06.U</td><td style="padding:6px 10px;">Campaign — Updates tab</td><td style="padding:6px 0 6px 10px;">State of FR-06.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-06.D</td><td style="padding:6px 10px;">Campaign — Donors tab</td><td style="padding:6px 0 6px 10px;">State of FR-06. Honours the anonymity flag (R10).</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-06.C</td><td style="padding:6px 10px;">Campaign closed</td><td style="padding:6px 0 6px 10px;">State of FR-06. Donate is disabled server-side, not just hidden.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-07.1</td><td style="padding:6px 10px;">Choose Amount</td><td style="padding:6px 0 6px 10px;">Creates the intent. Presets plus free entry.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-07.1M</td><td style="padding:6px 10px;">Give monthly instead</td><td style="padding:6px 0 6px 10px;">State of FR-07.1. Switches the intent to a mandate (R9).</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-07.1E</td><td style="padding:6px 10px;">Amount — invalid</td><td style="padding:6px 0 6px 10px;">State of FR-07.1. Min/max come from config, not the client.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-07.2</td><td style="padding:6px 10px;">Your Details</td><td style="padding:6px 0 6px 10px;">Prefilled from profile. Anonymity toggle lives here.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-07.2V</td><td style="padding:6px 10px;">Details — filled &amp; valid</td><td style="padding:6px 0 6px 10px;">State of FR-07.2.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-07.3</td><td style="padding:6px 10px;">Payment Method</td><td style="padding:6px 0 6px 10px;">Shared component (R4). Method list is server-driven.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-07.3E</td><td style="padding:6px 10px;">Wallet number invalid</td><td style="padding:6px 0 6px 10px;">State of FR-07.3. Validate format locally, ownership at the PSP.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-07.4</td><td style="padding:6px 10px;">Review &amp; Confirm</td><td style="padding:6px 0 6px 10px;">Creates the donation in <span style="font-family:'JetBrains Mono',monospace;">pending</span> (R2). Idempotency key required.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-07.5</td><td style="padding:6px 10px;">Processing</td><td style="padding:6px 0 6px 10px;">Poll or socket. No client-side success (R3).</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-07.5T</td><td style="padding:6px 10px;">Payment timed out</td><td style="padding:6px 0 6px 10px;">State of FR-07.5. Outcome still unknown — never says "failed".</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-07.6</td><td style="padding:6px 10px;">Payment Failed</td><td style="padding:6px 0 6px 10px;">Retry reuses the same intent, new attempt.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-07.6O</td><td style="padding:6px 10px;">One payment component, both flows</td><td style="padding:6px 0 6px 10px;">Annotation, not a screen. Enforces R4.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-07.6X</td><td style="padding:6px 10px;">Session expired</td><td style="padding:6px 0 6px 10px;">State of FR-07.6. Intent TTL expired; restart at FR-07.1 with amount kept.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-07.7</td><td style="padding:6px 10px;">Donation Successful</td><td style="padding:6px 0 6px 10px;">Receipt id must be present here; share and view-receipt both need it.</td></tr>
+    <tr><td colspan="3" style="padding:12px 0 4px;font-weight:800;color:#1c6b47;">Journey C · Sponsor a life</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-09.0</td><td style="padding:6px 10px;">Beneficiary Details</td><td style="padding:6px 0 6px 10px;">Sensitive record. Field-level visibility rules apply (§7).</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-09.0A</td><td style="padding:6px 10px;">Already sponsored</td><td style="padding:6px 0 6px 10px;">State of FR-09.0. Capacity is a server field, not a UI guess.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-09.1</td><td style="padding:6px 10px;">Choose a Support Plan</td><td style="padding:6px 0 6px 10px;">Plans are records with amount, cycle and inclusions.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-09.2</td><td style="padding:6px 10px;">Your Details &amp; Message</td><td style="padding:6px 0 6px 10px;">Message is moderated before it reaches the beneficiary.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-09.3</td><td style="padding:6px 10px;">Payment</td><td style="padding:6px 0 6px 10px;">Same component as FR-07.3, mandate intent.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-09.4</td><td style="padding:6px 10px;">Confirm Sponsorship</td><td style="padding:6px 0 6px 10px;">Must state the recurring commitment in words before consent.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-09.5</td><td style="padding:6px 10px;">Sponsorship Active</td><td style="padding:6px 0 6px 10px;">Shows next charge date from the mandate.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-09.5F</td><td style="padding:6px 10px;">Monthly charge failed</td><td style="padding:6px 0 6px 10px;">State of FR-09.5. Dunning window, then <span style="font-family:'JetBrains Mono',monospace;">past_due</span> — never silent cancel (R9).</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-09.5C</td><td style="padding:6px 10px;">Cancel — confirm</td><td style="padding:6px 0 6px 10px;">State of FR-09.5. Cancels future cycles only.</td></tr>
+    <tr><td colspan="3" style="padding:12px 0 4px;font-weight:800;color:#1c6b47;">Journey D · Request a campaign</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-08.1</td><td style="padding:6px 10px;">Request Type &amp; Details</td><td style="padding:6px 0 6px 10px;">Autosaves a draft from first keystroke.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-08.1E</td><td style="padding:6px 10px;">Request form — errors</td><td style="padding:6px 0 6px 10px;">State of FR-08.1. Server validation mirrors client rules exactly.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-08.1D</td><td style="padding:6px 10px;">Resume draft</td><td style="padding:6px 0 6px 10px;">State of FR-08.1. One draft per citizen per type.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-08.2</td><td style="padding:6px 10px;">Goals &amp; Documents</td><td style="padding:6px 0 6px 10px;">Uploads are scanned; type and size limits are server-enforced.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-08.3</td><td style="padding:6px 10px;">Your Information</td><td style="padding:6px 0 6px 10px;">Prefilled from the verified profile; edits do not write back to it.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-08.4</td><td style="padding:6px 10px;">Review Your Request</td><td style="padding:6px 0 6px 10px;">Last editable point.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-08.4D</td><td style="padding:6px 10px;">Duplicate request</td><td style="padding:6px 0 6px 10px;">State of FR-08.4. Server-side dedupe on citizen + type + window.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-08.5</td><td style="padding:6px 10px;">Request Submitted</td><td style="padding:6px 0 6px 10px;">Carries the reference and the expected review window.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-08.5C</td><td style="padding:6px 10px;">Needs changes</td><td style="padding:6px 0 6px 10px;">Reviewer note is required data, not free-text chat.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-12.1</td><td style="padding:6px 10px;">My requests</td><td style="padding:6px 0 6px 10px;">One row per request with the state machine value.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-12.2</td><td style="padding:6px 10px;">Request approved</td><td style="padding:6px 0 6px 10px;">Approval is what creates the campaign and grants the organiser role.</td></tr>
+    <tr><td colspan="3" style="padding:12px 0 4px;font-weight:800;color:#1c6b47;">Journey E · Track my giving</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-10.1</td><td style="padding:6px 10px;">My donations</td><td style="padding:6px 0 6px 10px;">Includes pending and failed attempts, clearly labelled.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-10.2</td><td style="padding:6px 10px;">Receipt detail</td><td style="padding:6px 0 6px 10px;">Immutable (R5). Shareable and printable.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-10.3</td><td style="padding:6px 10px;">Annual statement</td><td style="padding:6px 0 6px 10px;">Server-generated per year; totals never computed on device.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-10.4</td><td style="padding:6px 10px;">No donations yet</td><td style="padding:6px 0 6px 10px;">State of FR-10.1.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-11.1</td><td style="padding:6px 10px;">My sponsorships</td><td style="padding:6px 0 6px 10px;">Groups active, past_due and ended.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-11.2</td><td style="padding:6px 10px;">Sponsorship detail</td><td style="padding:6px 0 6px 10px;">Charge history plus next charge; each cycle links to its receipt.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-11.3</td><td style="padding:6px 10px;">Updates from the beneficiary</td><td style="padding:6px 0 6px 10px;">Moderated content, published by admin on the beneficiary's behalf.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-11.4</td><td style="padding:6px 10px;">Change amount</td><td style="padding:6px 0 6px 10px;">Amends the mandate from the next cycle, never the current one.</td></tr>
+    <tr><td colspan="3" style="padding:12px 0 4px;font-weight:800;color:#1c6b47;">Journey F · Running a campaign</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-13.1</td><td style="padding:6px 10px;">Campaign dashboard</td><td style="padding:6px 0 6px 10px;">Organiser-scoped. Raised, withdrawn and available are three distinct server fields.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-13.2</td><td style="padding:6px 10px;">Post an update</td><td style="padding:6px 0 6px 10px;">Publishes to FR-06.U and notifies donors.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-13.3</td><td style="padding:6px 10px;">Donors &amp; messages</td><td style="padding:6px 0 6px 10px;">Anonymous donors appear without identity, with the amount (R10).</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">FR-13.4</td><td style="padding:6px 10px;">Withdraw funds</td><td style="padding:6px 0 6px 10px;">Request only (R8). Destination must be a pre-verified account.</td></tr>
+    <tr><td style="padding:6px 10px 6px 0;font-weight:800;">FR-13.5</td><td style="padding:6px 10px;">Withdrawal requested</td><td style="padding:6px 0 6px 10px;">Pending back-office release. Reduces available, not raised.</td></tr>
+  </tbody>
+</table>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;break-before:page;">5 · Data model</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:14px;">Entities implied by the 61 screens. Field lists are the minimum the designs require, not an exhaustive schema. Money is stored in minor units as an integer with an explicit currency — never a float.</div>
+
+<div style="font-family:'JetBrains Mono',monospace;font-size:10.5pt;font-weight:400;color:#0d1512;background:#f6f8f7;border:1px solid #e2e6e3;border-radius:12px;padding:18px 20px;line-height:1.7;white-space:pre;overflow-x:hidden;">Campaign
+  id, type(campaign|project), title, cause, summary, story, cover,
+  organiserId, area, goalMinor, raisedMinor*, donorCount*, progress*,
+  startsAt, endsAt, daysLeft*, status, verifiedAt, verifierId
+
+CampaignUpdate
+  id, campaignId, authorId, body, media[], publishedAt
+
+Beneficiary
+  id, displayName, age, area, story, photo, needs[], plans[],
+  sponsorCapacity, sponsorCount*, status, onboardedBy, consentRef
+
+SponsorPlan
+  id, beneficiaryId, label, amountMinor, cycle(monthly|quarterly),
+  inclusions[], active
+
+DonationIntent
+  id, citizenId, target(campaignId|beneficiaryId), kind(one_off|mandate),
+  amountMinor, currency, anonymous, message, step, expiresAt
+
+Donation
+  id, intentId, citizenId, campaignId, amountMinor, feeMinor,
+  netMinor*, anonymous, status, method, pspRef, capturedAt, receiptId
+
+Sponsorship
+  id, citizenId, beneficiaryId, planId, amountMinor, cycle,
+  status, startedAt, nextChargeAt, endedAt, cancelReason
+
+Charge          <span style="color:#7f9c8f;">one per cycle (R9)</span>
+  id, sponsorshipId, cycleNo, amountMinor, status, attemptCount,
+  pspRef, capturedAt, receiptId
+
+PaymentAttempt
+  id, intentId|chargeId, method, walletMasked, status,
+  pspRef, failureCode, startedAt, endedAt
+
+Receipt         <span style="color:#7f9c8f;">immutable (R5)</span>
+  id, donationId|chargeId, number, issuedAt, payerName, payerMasked,
+  amountMinor, target, pdfRef
+
+AnnualStatement
+  citizenId, year, totalMinor*, donationCount*, sponsorshipCount*,
+  generatedAt, pdfRef
+
+CampaignRequest
+  id, citizenId, type, title, story, goalMinor, area, documents[],
+  status, reviewerId, reviewerNote, submittedAt, decidedAt, campaignId
+
+Payout
+  id, campaignId, requestedBy, amountMinor, destinationId,
+  status, requestedAt, releasedAt, reference
+
+PayoutAccount
+  id, ownerId, kind(bank|wallet), maskedNumber, verifiedAt
+
+LedgerEntry     <span style="color:#7f9c8f;">projection source for FR-05</span>
+  id, kind(donation|payout|fee|adjustment), campaignId, amountMinor,
+  occurredAt, sourceRef, publicNote
+
+<span style="color:#7f9c8f;">* server-computed, read-only on the client (R1)</span></div>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;break-before:page;">6 · Source of truth</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:12px;">Every element in the Fundraising definitions document carries one of these tags. The tag decides who may write the value — and in this module, who is liable for it.</div>
+
+<table style="width:100%;table-layout:fixed;border-collapse:collapse;font-size:12pt;">
+  <colgroup><col style="width:16%"><col style="width:84%"></colgroup>
+  <tbody style="font-weight:600;color:#2a3733;">
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:8px 10px 8px 0;"><span style="font-weight:800;color:#8a6410;background:#fdf3e0;border-radius:5px;padding:2px 8px;">CALC</span></td><td style="padding:8px 0 8px 10px;">Server-derived. Raised, progress, donor count, days left, available to withdraw, statement totals, next charge date. Read-only everywhere.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:8px 10px 8px 0;"><span style="font-weight:800;color:#5b3fd1;background:#f0ecfd;border-radius:5px;padding:2px 8px;">ADMIN</span></td><td style="padding:8px 0 8px 10px;">Written in the back office: beneficiary records and plans, verification decisions, moderated updates, ledger notes, payout release.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:8px 10px 8px 0;"><span style="font-weight:800;color:#1c6b47;background:#e7f2ec;border-radius:5px;padding:2px 8px;">ORG</span></td><td style="padding:8px 0 8px 10px;">Written by the campaign organiser: story, cover, updates, thank-you messages, withdrawal requests.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:8px 10px 8px 0;"><span style="font-weight:800;color:#2f6fb1;background:#e8f0f8;border-radius:5px;padding:2px 8px;">USER</span></td><td style="padding:8px 0 8px 10px;">Written by the citizen: amount, anonymity, message, contact details, request drafts, plan choice.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:8px 10px 8px 0;"><span style="font-weight:800;color:#7a1f14;background:#fdeeeb;border-radius:5px;padding:2px 8px;">PSP</span></td><td style="padding:8px 0 8px 10px;">Owned by the payment provider: attempt status, failure codes, provider reference, capture time. The app records, never edits.</td></tr>
+    <tr><td style="padding:8px 10px 8px 0;"><span style="font-weight:800;color:#5c6b64;background:#f1f3f2;border-radius:5px;padding:2px 8px;">EXT</span></td><td style="padding:8px 0 8px 10px;">External or static: cause taxonomy, fee schedule, legal copy, trade/NGO registry checks used during verification.</td></tr>
+  </tbody>
+</table>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;">7 · Roles and permissions</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:12px;">Five roles. Organiser is scoped per campaign — a citizen may be an organiser of one campaign and an ordinary donor everywhere else. Every check resolves from <span style="font-family:'JetBrains Mono',monospace;">role + campaignId</span>, never from a client flag.</div>
+
+<table style="width:100%;table-layout:fixed;border-collapse:collapse;font-size:11.5pt;">
+  <colgroup><col style="width:34%"><col style="width:13%"><col style="width:13%"><col style="width:13%"><col style="width:13%"><col style="width:14%"></colgroup>
+  <thead><tr style="border-bottom:2px solid #0d1512;text-align:left;"><th style="padding:8px 10px 8px 0;font-weight:800;color:#0d1512;">Capability</th><th style="padding:8px 6px;font-weight:800;color:#0d1512;">Citizen</th><th style="padding:8px 6px;font-weight:800;color:#0d1512;">Donor</th><th style="padding:8px 6px;font-weight:800;color:#0d1512;">Organiser</th><th style="padding:8px 6px;font-weight:800;color:#0d1512;">Verifier</th><th style="padding:8px 0 8px 6px;font-weight:800;color:#0d1512;">Finance</th></tr></thead>
+  <tbody style="font-weight:600;color:#2a3733;">
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Browse campaigns, projects, beneficiaries</td><td style="padding:7px 6px;">✓</td><td style="padding:7px 6px;">✓</td><td style="padding:7px 6px;">✓</td><td style="padding:7px 6px;">✓</td><td style="padding:7px 0 7px 6px;">✓</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Donate / start a sponsorship</td><td style="padding:7px 6px;">✓</td><td style="padding:7px 6px;">✓</td><td style="padding:7px 6px;">✓</td><td style="padding:7px 6px;">✓</td><td style="padding:7px 0 7px 6px;">✓</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">See own receipts and annual statement</td><td style="padding:7px 6px;">—</td><td style="padding:7px 6px;">✓</td><td style="padding:7px 6px;">✓</td><td style="padding:7px 6px;">—</td><td style="padding:7px 0 7px 6px;">—</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">See a donor's real identity behind an anonymous gift</td><td style="padding:7px 6px;">—</td><td style="padding:7px 6px;">—</td><td style="padding:7px 6px;">—</td><td style="padding:7px 6px;">—</td><td style="padding:7px 0 7px 6px;">✓</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Submit a campaign request</td><td style="padding:7px 6px;">✓</td><td style="padding:7px 6px;">✓</td><td style="padding:7px 6px;">✓</td><td style="padding:7px 6px;">—</td><td style="padding:7px 0 7px 6px;">—</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Approve, reject or return a request</td><td style="padding:7px 6px;">—</td><td style="padding:7px 6px;">—</td><td style="padding:7px 6px;">—</td><td style="padding:7px 6px;">✓</td><td style="padding:7px 0 7px 6px;">—</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Edit campaign story, post updates (own campaign)</td><td style="padding:7px 6px;">—</td><td style="padding:7px 6px;">—</td><td style="padding:7px 6px;">✓</td><td style="padding:7px 6px;">—</td><td style="padding:7px 0 7px 6px;">—</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">See donor list with amounts (own campaign)</td><td style="padding:7px 6px;">—</td><td style="padding:7px 6px;">—</td><td style="padding:7px 6px;">✓</td><td style="padding:7px 6px;">—</td><td style="padding:7px 0 7px 6px;">✓</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Request a withdrawal</td><td style="padding:7px 6px;">—</td><td style="padding:7px 6px;">—</td><td style="padding:7px 6px;">✓</td><td style="padding:7px 6px;">—</td><td style="padding:7px 0 7px 6px;">—</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Release a withdrawal, post a ledger adjustment</td><td style="padding:7px 6px;">—</td><td style="padding:7px 6px;">—</td><td style="padding:7px 6px;">—</td><td style="padding:7px 6px;">—</td><td style="padding:7px 0 7px 6px;">✓</td></tr>
+    <tr><td style="padding:7px 10px 7px 0;">Create or edit a beneficiary record</td><td style="padding:7px 6px;">—</td><td style="padding:7px 6px;">—</td><td style="padding:7px 6px;">—</td><td style="padding:7px 6px;">✓</td><td style="padding:7px 0 7px 6px;">—</td></tr>
+  </tbody>
+</table>
+
+<div style="background:#fdeeeb;border:1px solid #f6d4cd;border-radius:10px;padding:14px 16px;margin-top:14px;font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;break-inside:avoid;"><strong style="color:#7a1f14;">Beneficiary privacy.</strong> FR-09.0 and FR-11.3 show a minor's story and photograph. Full name, exact address and school must not be exposed to sponsors; the record carries a consent reference and a display-safe subset. Treat the field-level split as a build requirement, not a copy decision.</div>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;break-before:page;">8 · State machines</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:14px;">Five machines. Transitions not listed here do not exist — reject them rather than tolerating them.</div>
+
+<div style="font-family:'JetBrains Mono',monospace;font-size:10.5pt;font-weight:400;color:#0d1512;background:#f6f8f7;border:1px solid #e2e6e3;border-radius:12px;padding:18px 20px;line-height:1.75;white-space:pre;overflow-x:hidden;"><span style="font-weight:700;">Campaign</span>
+  draft -&gt; pending_review -&gt; approved -&gt; live
+  live -&gt; (goal_met | ended) -&gt; closed
+  live -&gt; suspended -&gt; live | closed
+        <span style="color:#7f9c8f;">suspended blocks donation server-side (FR-06.C)</span>
+  pending_review -&gt; changes_requested -&gt; pending_review | withdrawn
+
+<span style="font-weight:700;">Donation</span>
+  created(intent) -&gt; pending -&gt; processing -&gt; captured
+  processing -&gt; failed -&gt; pending
+        <span style="color:#7f9c8f;">retry on the same intent (FR-07.6)</span>
+  processing -&gt; unknown -&gt; captured | failed
+        <span style="color:#7f9c8f;">timeout (FR-07.5T), resolved by webhook or recon</span>
+  pending -&gt; expired            <span style="color:#7f9c8f;">intent TTL (FR-07.6X)</span>
+  captured -&gt; refunded          <span style="color:#7f9c8f;">finance only, writes a ledger row</span>
+
+<span style="font-weight:700;">Sponsorship</span>
+  pending_first_charge -&gt; active
+  active -&gt; past_due -&gt; active  <span style="color:#7f9c8f;">dunning recovers (FR-09.5F)</span>
+  past_due -&gt; lapsed            <span style="color:#7f9c8f;">after the dunning window; see §13</span>
+  active -&gt; cancelled           <span style="color:#7f9c8f;">future cycles only (FR-09.5C)</span>
+  active -&gt; completed           <span style="color:#7f9c8f;">plan term reached or exit</span>
+
+<span style="font-weight:700;">CampaignRequest</span>
+  draft -&gt; submitted -&gt; under_review
+  under_review -&gt; (approved | rejected | changes_requested)
+  changes_requested -&gt; submitted
+  approved -&gt; campaign_created   <span style="color:#7f9c8f;">grants organiser role (FR-12.2)</span>
+
+<span style="font-weight:700;">Payout</span>
+  requested -&gt; approved -&gt; released -&gt; settled
+  requested -&gt; rejected          <span style="color:#7f9c8f;">reason required, amount returns</span>
+  released -&gt; failed -&gt; requested  <span style="color:#7f9c8f;">bank or wallet rejection</span></div>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;break-before:page;">9 · Corner cases</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:14px;">The cases that will otherwise be discovered in production — and in a money module, discovered by a donor. Each carries the required behaviour; where behaviour is a business call it is marked and repeated in §13.</div>
+
+<table style="width:100%;table-layout:fixed;border-collapse:collapse;font-size:11.5pt;">
+  <colgroup><col style="width:8%"><col style="width:38%"><col style="width:54%"></colgroup>
+  <thead><tr style="border-bottom:2px solid #0d1512;text-align:left;"><th style="padding:8px 10px 8px 0;font-weight:800;color:#0d1512;">#</th><th style="padding:8px 10px;font-weight:800;color:#0d1512;">Case</th><th style="padding:8px 0 8px 10px;font-weight:800;color:#0d1512;">Required behaviour</th></tr></thead>
+  <tbody style="font-weight:600;color:#2a3733;">
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-01</td><td style="padding:7px 10px;">App is killed on FR-07.5 Processing</td><td style="padding:7px 0 7px 10px;">On next launch, resolve the intent server-side. If captured, show the receipt; if still unknown, show a "we are confirming" state — never a second charge.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-02</td><td style="padding:7px 10px;">Donor taps Confirm twice</td><td style="padding:7px 0 7px 10px;">Idempotency key on FR-07.4 returns the same donation id. One attempt, one charge.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-03</td><td style="padding:7px 10px;">Webhook arrives before the client leaves FR-07.5</td><td style="padding:7px 0 7px 10px;">Poll picks it up and advances to FR-07.7. Server state is authoritative in both directions.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-04</td><td style="padding:7px 10px;">Webhook never arrives</td><td style="padding:7px 0 7px 10px;">Reconciliation job queries the PSP for open attempts. FR-07.5T is a waiting state, not a verdict.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-05</td><td style="padding:7px 10px;">Campaign hits its goal mid-checkout</td><td style="padding:7px 0 7px 10px;">Allow the donation to complete; overfunding is permitted and shown as over 100%. <strong>OPEN</strong> — whether a hard cap exists.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-06</td><td style="padding:7px 10px;">Campaign is suspended mid-checkout</td><td style="padding:7px 0 7px 10px;">Reject at FR-07.4 with a clear reason. If already captured, refund automatically and notify.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-07</td><td style="padding:7px 10px;">Beneficiary reaches sponsor capacity mid-flow</td><td style="padding:7px 0 7px 10px;">FR-09.0A. Offer the waiting list or a similar beneficiary; never take a mandate that cannot be honoured.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-08</td><td style="padding:7px 10px;">Beneficiary leaves the programme with active sponsors</td><td style="padding:7px 0 7px 10px;">Stop future charges, mark <span style="font-family:'JetBrains Mono',monospace;">completed</span>, notify each sponsor with a reassignment offer. <strong>OPEN</strong> — reassign or refund the current cycle.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-09</td><td style="padding:7px 10px;">Monthly charge fails on a saved wallet</td><td style="padding:7px 0 7px 10px;">FR-09.5F. Retry on a defined schedule, notify each time, then <span style="font-family:'JetBrains Mono',monospace;">past_due</span>. The sponsorship stays visible in FR-11.1.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-10</td><td style="padding:7px 10px;">Sponsor changes the amount mid-cycle</td><td style="padding:7px 0 7px 10px;">FR-11.4 amends the mandate from the next charge. The current cycle is untouched and the screen says so.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-11</td><td style="padding:7px 10px;">Donor asks to be removed from the public donor list after giving</td><td style="padding:7px 0 7px 10px;">Anonymity is editable after the fact on FR-10.2; the ledger keeps identity (R10).</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-12</td><td style="padding:7px 10px;">Organiser requests more than the available balance</td><td style="padding:7px 0 7px 10px;">Server rejects with the available figure. Never rely on the FR-13.4 field being right.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-13</td><td style="padding:7px 10px;">Two withdrawal requests in flight</td><td style="padding:7px 0 7px 10px;">One open payout per campaign. The second is refused with the first's reference.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-14</td><td style="padding:7px 10px;">Payout fails at the bank after release</td><td style="padding:7px 0 7px 10px;">Return the amount to available, write a ledger adjustment visible in FR-05, notify the organiser.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-15</td><td style="padding:7px 10px;">Refund issued after the annual statement was generated</td><td style="padding:7px 0 7px 10px;">Regenerate the statement and mark it revised; do not silently change a downloaded total.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-16</td><td style="padding:7px 10px;">Duplicate campaign request from the same citizen</td><td style="padding:7px 0 7px 10px;">FR-08.4D. Dedupe server-side on citizen + type + window and link to the existing reference.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-17</td><td style="padding:7px 10px;">Uploaded document is unreadable or fails a scan</td><td style="padding:7px 0 7px 10px;">Reject at upload with the reason. A request never reaches review with an unscanned file.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-18</td><td style="padding:7px 10px;">Request approved while the citizen's draft is open</td><td style="padding:7px 0 7px 10px;">Draft becomes read-only and routes to FR-12.2. No lost-update conflict.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-19</td><td style="padding:7px 10px;">Organiser loses the role while managing the campaign</td><td style="padding:7px 0 7px 10px;">FR-13.x returns 403 on the next call and the app falls back to FR-06. Never cache the permission.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-20</td><td style="padding:7px 10px;">Donor message contains abuse or personal data</td><td style="padding:7px 0 7px 10px;">Queue for moderation before it appears on FR-13.3 or reaches a beneficiary. Hold, do not publish then remove.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-21</td><td style="padding:7px 10px;">Fees change between intent creation and capture</td><td style="padding:7px 0 7px 10px;">Freeze the fee on the intent. The donor pays what FR-07.4 showed.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">C-22</td><td style="padding:7px 10px;">Ledger and campaign total disagree</td><td style="padding:7px 0 7px 10px;">The ledger wins. Surface a reconciliation alert internally; FR-05 must never contradict FR-06.</td></tr>
+    <tr><td style="padding:7px 10px 7px 0;font-weight:800;">C-23</td><td style="padding:7px 10px;">Citizen deletes their account with an active sponsorship</td><td style="padding:7px 0 7px 10px;">Cancel future cycles, retain receipts and ledger rows for the statutory period. <strong>OPEN</strong> — retention window.</td></tr>
+  </tbody>
+</table>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;break-before:page;">10 · Notification triggers</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:12px;">Money notifications are transactional, not marketing: they must be delivered regardless of preference, and each needs an in-app destination.</div>
+
+<table style="width:100%;table-layout:fixed;border-collapse:collapse;font-size:11.5pt;">
+  <colgroup><col style="width:44%"><col style="width:26%"><col style="width:30%"></colgroup>
+  <thead><tr style="border-bottom:2px solid #0d1512;text-align:left;"><th style="padding:8px 10px 8px 0;font-weight:800;color:#0d1512;">Trigger</th><th style="padding:8px 10px;font-weight:800;color:#0d1512;">Recipient</th><th style="padding:8px 0 8px 10px;font-weight:800;color:#0d1512;">Deep link</th></tr></thead>
+  <tbody style="font-weight:600;color:#2a3733;">
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Donation captured</td><td style="padding:7px 10px;">Donor</td><td style="padding:7px 0 7px 10px;">FR-10.2 receipt</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Donation failed or expired</td><td style="padding:7px 10px;">Donor</td><td style="padding:7px 0 7px 10px;">FR-07.6 retry</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">New donation received</td><td style="padding:7px 10px;">Organiser</td><td style="padding:7px 0 7px 10px;">FR-13.3</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Campaign update posted</td><td style="padding:7px 10px;">All donors of that campaign</td><td style="padding:7px 0 7px 10px;">FR-06.U</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Goal reached · campaign closed</td><td style="padding:7px 10px;">Donors and organiser</td><td style="padding:7px 0 7px 10px;">FR-06 / FR-06.C</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Sponsorship charge due in 3 days</td><td style="padding:7px 10px;">Sponsor</td><td style="padding:7px 0 7px 10px;">FR-11.2</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Sponsorship charge failed · retry scheduled</td><td style="padding:7px 10px;">Sponsor</td><td style="padding:7px 0 7px 10px;">FR-09.5F</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Update from the beneficiary</td><td style="padding:7px 10px;">Sponsor</td><td style="padding:7px 0 7px 10px;">FR-11.3</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Request approved · rejected · needs changes</td><td style="padding:7px 10px;">Requester</td><td style="padding:7px 0 7px 10px;">FR-12.2 / FR-08.5C</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;">Withdrawal released or failed</td><td style="padding:7px 10px;">Organiser</td><td style="padding:7px 0 7px 10px;">FR-13.1</td></tr>
+    <tr><td style="padding:7px 10px 7px 0;">Annual statement ready</td><td style="padding:7px 10px;">Donor</td><td style="padding:7px 0 7px 10px;">FR-10.3</td></tr>
+  </tbody>
+</table>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;">11 · API surface</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:12px;"><strong>ASSUMED</strong> — derived from what the screens read and write. Shape is indicative; the set is not. Every write in the money path takes an idempotency key.</div>
+
+<div style="font-family:'JetBrains Mono',monospace;font-size:10.5pt;font-weight:400;color:#0d1512;background:#f6f8f7;border:1px solid #e2e6e3;border-radius:12px;padding:18px 20px;line-height:1.7;white-space:pre;overflow-x:hidden;">GET    /fundraising/overview            <span style="color:#7f9c8f;">FR-01</span>
+GET    /campaigns?q&amp;cause&amp;status&amp;sort   <span style="color:#7f9c8f;">FR-02 · FR-04</span>
+GET    /campaigns/:id                   <span style="color:#7f9c8f;">FR-06</span>
+GET    /campaigns/:id/updates           <span style="color:#7f9c8f;">FR-06.U</span>
+GET    /campaigns/:id/donors            <span style="color:#7f9c8f;">FR-06.D</span>
+      <span style="color:#7f9c8f;">anonymity applied server-side</span>
+
+POST   /donation-intents                <span style="color:#7f9c8f;">FR-07.1</span>
+PATCH  /donation-intents/:id            <span style="color:#7f9c8f;">FR-07.2 · FR-07.3</span>
+POST   /donation-intents/:id/confirm    <span style="color:#7f9c8f;">FR-07.4 · idempotent</span>
+      <span style="color:#7f9c8f;">creates the donation in pending (R2)</span>
+GET    /donations/:id                   <span style="color:#7f9c8f;">FR-07.5 poll</span>
+POST   /donations/:id/retry             <span style="color:#7f9c8f;">FR-07.6</span>
+POST   /psp/webhook                     <span style="color:#7f9c8f;">only writer of captured</span>
+
+GET    /beneficiaries                   <span style="color:#7f9c8f;">FR-03</span>
+GET    /beneficiaries/:id               <span style="color:#7f9c8f;">FR-09.0 · safe subset</span>
+GET    /beneficiaries/:id/plans         <span style="color:#7f9c8f;">FR-09.1</span>
+POST   /sponsorships                    <span style="color:#7f9c8f;">FR-09.4 · mandate</span>
+GET    /me/sponsorships                 <span style="color:#7f9c8f;">FR-11.1</span>
+GET    /sponsorships/:id                <span style="color:#7f9c8f;">FR-11.2</span>
+PATCH  /sponsorships/:id                <span style="color:#7f9c8f;">FR-11.4 · next cycle</span>
+DELETE /sponsorships/:id                <span style="color:#7f9c8f;">FR-09.5C cancel</span>
+
+GET    /me/donations                    <span style="color:#7f9c8f;">FR-10.1</span>
+GET    /receipts/:id                    <span style="color:#7f9c8f;">FR-10.2</span>
+GET    /me/statements/:year             <span style="color:#7f9c8f;">FR-10.3</span>
+
+POST   /campaign-requests               <span style="color:#7f9c8f;">FR-08.1 draft</span>
+PUT    /campaign-requests/:id           <span style="color:#7f9c8f;">FR-08.2 · .3 autosave</span>
+POST   /campaign-requests/:id/submit    <span style="color:#7f9c8f;">FR-08.4</span>
+GET    /me/campaign-requests            <span style="color:#7f9c8f;">FR-12.1</span>
+POST   /uploads                         <span style="color:#7f9c8f;">FR-08.2 · scanned</span>
+
+GET    /manage/campaigns/:id            <span style="color:#7f9c8f;">FR-13.1</span>
+POST   /manage/campaigns/:id/updates    <span style="color:#7f9c8f;">FR-13.2</span>
+GET    /manage/campaigns/:id/donors     <span style="color:#7f9c8f;">FR-13.3</span>
+POST   /manage/campaigns/:id/payouts    <span style="color:#7f9c8f;">FR-13.4 · one open</span>
+GET    /payout-accounts                 <span style="color:#7f9c8f;">FR-13.4 destinations</span>
+
+GET    /transparency?campaign&amp;from&amp;to   <span style="color:#7f9c8f;">FR-05</span>
+GET    /transparency/:entryId           <span style="color:#7f9c8f;">FR-05.D</span></div>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;break-before:page;">12 · Build sequencing</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:12px;">The payment component and the ledger are the two dependencies that block everything else. Build them once, correctly, before any surface that reads a number.</div>
+
+<div style="font-family:'JetBrains Mono',monospace;font-size:10.5pt;font-weight:400;color:#0d1512;background:#f6f8f7;border:1px solid #e2e6e3;border-radius:12px;padding:18px 20px;line-height:1.75;white-space:pre;overflow-x:hidden;"><span style="font-weight:700;">Wave 1 · foundation</span>
+  ledger + money types + fee schedule + idempotency
+  PSP integration, webhook, reconciliation job
+  shared payment component (R4)
+      <span style="color:#7f9c8f;">blocks everything below</span>
+
+<span style="font-weight:700;">Wave 2 · read paths</span>
+  FR-01 · FR-02 (+ .S .F .L .N) · FR-04
+  FR-06 (+ .U .D .C)
+  FR-05 · FR-05.D      <span style="color:#7f9c8f;">needs the ledger from Wave 1</span>
+
+<span style="font-weight:700;">Wave 3 · one-off giving</span>
+  FR-07.1 – FR-07.7 with every failure state
+  receipts (FR-10.2), FR-10.1 · FR-10.4
+
+<span style="font-weight:700;">Wave 4 · recurring</span>
+  beneficiaries FR-03 · FR-09.0 (+ .0A)
+  mandates FR-09.1 – FR-09.5 (+ .5F .5C)
+  FR-11.1 – FR-11.4 · dunning schedule
+
+<span style="font-weight:700;">Wave 5 · supply side</span>
+  FR-08.1 – FR-08.5 (+ .1E .1D .4D .5C)
+  FR-12.1 · FR-12.2
+  verifier console (outside this module)
+      <span style="color:#7f9c8f;">blocks approval end to end</span>
+
+<span style="font-weight:700;">Wave 6 · organiser</span>
+  FR-13.1 – FR-13.5 · payout accounts · finance release
+  FR-10.3 annual statement generation</div>
+
+<h2 style="font-size:19pt;font-weight:800;color:#0d1512;letter-spacing:-.6px;margin:34px 0 4px;">13 · Decision register</h2>
+<div style="font-size:12pt;font-weight:600;color:#5c6b64;line-height:1.6;margin-bottom:14px;">Every open decision, with options and consequences. Nothing here is guessed elsewhere in this document.</div>
+
+<table style="width:100%;table-layout:fixed;border-collapse:collapse;font-size:11.5pt;">
+  <colgroup><col style="width:8%"><col style="width:30%"><col style="width:62%"></colgroup>
+  <thead><tr style="border-bottom:2px solid #0d1512;text-align:left;"><th style="padding:8px 10px 8px 0;font-weight:800;color:#0d1512;">#</th><th style="padding:8px 10px;font-weight:800;color:#0d1512;">Decision</th><th style="padding:8px 0 8px 10px;font-weight:800;color:#0d1512;">Options and consequence</th></tr></thead>
+  <tbody style="font-weight:600;color:#2a3733;">
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">D-01</td><td style="padding:7px 10px;">Who bears the payment fee</td><td style="padding:7px 0 7px 10px;">Donor pays on top (raised = pledge) or the campaign absorbs it (raised = net). Changes FR-07.4, every receipt and FR-05. Blocks Wave 1.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">D-02</td><td style="padding:7px 10px;">Platform fee, if any</td><td style="padding:7px 0 7px 10px;">None, fixed percentage, or opt-in tip. A tip needs a control on FR-07.1 that does not exist yet.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">D-03</td><td style="padding:7px 10px;">Payment providers at launch</td><td style="padding:7px 0 7px 10px;">bKash / Nagad / card / bank. Each adds a method row on FR-07.3 and its own failure codes for FR-07.6.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">D-04</td><td style="padding:7px 10px;">Are recurring mandates supported by the chosen provider</td><td style="padding:7px 0 7px 10px;">If not, FR-07.1M and all of Journey C become reminder-driven manual charges — a different product. Blocks Wave 4.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">D-05</td><td style="padding:7px 10px;">Minimum and maximum donation</td><td style="padding:7px 0 7px 10px;">Drives FR-07.1E copy and KYC thresholds. A high ceiling may require source-of-funds checks.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">D-06</td><td style="padding:7px 10px;">Dunning schedule and lapse window</td><td style="padding:7px 0 7px 10px;">How many retries over how many days before <span style="font-family:'JetBrains Mono',monospace;">lapsed</span>, and whether the beneficiary's slot is released. C-09, FR-09.5F.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">D-07</td><td style="padding:7px 10px;">Overfunding cap</td><td style="padding:7px 0 7px 10px;">Uncapped, hard stop at 100%, or organiser-set ceiling. C-05.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">D-08</td><td style="padding:7px 10px;">Refund policy and window</td><td style="padding:7px 0 7px 10px;">Whether donors can request a refund at all, and who approves. Determines whether FR-10.2 needs an action.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">D-09</td><td style="padding:7px 10px;">Withdrawal rules</td><td style="padding:7px 0 7px 10px;">Minimum amount, frequency, milestone-based release, proof-of-spend requirement. Shapes FR-13.4 and the payout machine.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">D-10</td><td style="padding:7px 10px;">Verification standard for a campaign request</td><td style="padding:7px 0 7px 10px;">Which documents, which registry checks, what SLA. FR-08.5's stated review window depends on it.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">D-11</td><td style="padding:7px 10px;">Beneficiary consent and data retention</td><td style="padding:7px 0 7px 10px;">Guardian consent for minors, how long stories and photographs stay published, and what a sponsor may see. §7 privacy box, C-23.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">D-12</td><td style="padding:7px 10px;">Tax-deductible receipts</td><td style="padding:7px 0 7px 10px;">If claimed, receipts and FR-10.3 need a registration number and a legally fixed format. Retro-fitting this is expensive.</td></tr>
+    <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:7px 10px 7px 0;font-weight:800;">D-13</td><td style="padding:7px 10px;">Transparency granularity</td><td style="padding:7px 0 7px 10px;">Per-transaction (as designed) or aggregated. Per-transaction is the stronger promise and the harder operational commitment.</td></tr>
+    <tr><td style="padding:7px 10px 7px 0;font-weight:800;">D-14</td><td style="padding:7px 10px;">Public campaign links</td><td style="padding:7px 0 7px 10px;">Shareable slugs require a signed-out read-only FR-06. §3.</td></tr>
+  </tbody>
+</table>
+
+<div style="border-top:2px solid #0d1512;margin-top:36px;padding-top:14px;font-size:11pt;font-weight:700;color:#5c6b64;">Voice 360 · Fundraising engineering handover · v1.0 · 10 August 2026 · 61 screens · companion to the Fundraising flow map and definitions document</div>
+
+</doc-page>
+
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="#0d1512"></rect><path d="M100 148s-44-26-44-56a24 24 0 0 1 44-13 24 24 0 0 1 44 13c0 30-44 56-44 56z" fill="#2f9169"></path><rect x="60" y="34" width="80" height="12" rx="6" fill="#7fb69c"></rect></svg></template>
+
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0" rel="stylesheet">
+<style>
+  body { margin:0; font-family:'Manrope',sans-serif; background:#f4f5f4; }
+  a { color:#2f9169; text-decoration:none; }
+  a:hover { color:#1c6b47; }
+  .msi { font-family:'Material Symbols Rounded'; font-weight:400; font-style:normal; line-height:1; }
+</style>
+</helmet>
+
+<div class="v360-map-scroll" style="width:100%;max-width:100vw;min-width:0;height:100%;overflow:auto;background:#f4f5f4;">
+<div style="padding:56px 56px 80px;width:max-content;min-width:100%;box-sizing:border-box;font-family:'Manrope',sans-serif;">
+
+  <div style="font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#2f9169;">Voice 360 · Community</div>
+  <div style="font-size:34px;font-weight:800;letter-spacing:-1.2px;color:#182420;margin-top:6px;">User flow map — Administrative Community Network</div>
+  <div style="font-size:15px;font-weight:400;color:#5c6b64;line-height:23px;margin-top:8px;max-width:900px;">Ten screens, three sections. C01 is the entry, C04 is the one template that serves every administrative level, and the Activity Zone decides whether a citizen arrives as a participant or a visitor. Every node carries the code used in the screen gallery and the definition deck.</div>
+
+  <div style="display:flex;background:#e9ecea;border-radius:12px;padding:3px;width:330px;margin-top:22px;">
+    <div onClick="{{ setMode.flow }}" style="flex:1;padding:9px;text-align:center;cursor:pointer;border-radius:9px;">
+      <sc-if value="{{ isFlow }}" hint-placeholder-val="{{ true }}"><span style="display:block;margin:-9px;padding:9px;background:#182420;border-radius:9px;font-size:12px;font-weight:800;color:#fff;">Flow</span></sc-if>
+      <sc-if value="{{ notFlow }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:800;color:#8b978f;">Flow</span></sc-if>
+    </div>
+    <div onClick="{{ setMode.screen }}" style="flex:1;padding:9px;text-align:center;cursor:pointer;border-radius:9px;">
+      <sc-if value="{{ isScreen }}" hint-placeholder-val="{{ false }}"><span style="display:block;margin:-9px;padding:9px;background:#182420;border-radius:9px;font-size:12px;font-weight:800;color:#fff;">Screen</span></sc-if>
+      <sc-if value="{{ notScreen }}" hint-placeholder-val="{{ true }}"><span style="font-size:12px;font-weight:800;color:#8b978f;">Screen</span></sc-if>
+    </div>
+    <div style="flex:1;padding:9px;text-align:center;"><span style="font-size:12px;font-weight:800;color:#c3ccc7;">Prototype</span></div>
+  </div>
+  <div style="font-size:11px;font-weight:600;color:#8b978f;line-height:16px;margin-top:6px;">Prototype is greyed out — the Community screens are static designs, with no clickable build yet.</div>
+
+  <sc-if value="{{ isScreen }}" hint-placeholder-val="{{ false }}">
+    <div style="font-size:12px;font-weight:600;color:#8b978f;line-height:17px;margin-top:18px;">Same structure as the Flow tab, with the real screens. Click any screen to open it full size.</div>
+<div style="display:flex;align-items:center;gap:12px;margin-top:44px;"><div style="font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#fff;background:#1c6b47;border-radius:999px;padding:6px 12px;">Section A</div><div style="font-size:20px;font-weight:800;color:#182420;letter-spacing:-.4px;">Activity Zone &amp; my dashboard</div><div style="font-size:13px;font-weight:600;color:#5c6b64;">C01 – C03 · C10</div></div>    <div style="display:flex;align-items:flex-start;margin-top:16px;"><div onClick="{{ zoom.C01 }}" style="flex:none;width:190px;cursor:zoom-in;"><div style="width:190px;height:340px;overflow:hidden;border-radius:14px;border:1px solid #dfe4e1;background:#fff;box-shadow:0 10px 26px rgba(13,21,18,.12);"><img src="screens/c-01.png" alt="C01" style="display:block;width:190px;height:auto;"></div><div style="font-size:10px;font-weight:800;letter-spacing:1.2px;color:#2f9169;margin-top:8px;">C01</div><div style="font-size:12px;font-weight:800;color:#182420;line-height:16px;">Community Network Home</div></div><div style="flex:none;width:44px;height:2px;background:#b9c1bc;margin-top:170px;position:relative;"><div style="position:absolute;right:-1px;top:-4px;width:0;height:0;border-left:8px solid #b9c1bc;border-top:5px solid transparent;border-bottom:5px solid transparent;"></div></div><div onClick="{{ zoom.C02 }}" style="flex:none;width:190px;cursor:zoom-in;"><div style="width:190px;height:340px;overflow:hidden;border-radius:14px;border:1px solid #dfe4e1;background:#fff;box-shadow:0 10px 26px rgba(13,21,18,.12);"><img src="screens/c-02.png" alt="C02" style="display:block;width:190px;height:auto;"></div><div style="font-size:10px;font-weight:800;letter-spacing:1.2px;color:#2f9169;margin-top:8px;">C02</div><div style="font-size:12px;font-weight:800;color:#182420;line-height:16px;">My Activity Zone</div></div><div style="flex:none;width:44px;height:2px;background:#b9c1bc;margin-top:170px;position:relative;"><div style="position:absolute;right:-1px;top:-4px;width:0;height:0;border-left:8px solid #b9c1bc;border-top:5px solid transparent;border-bottom:5px solid transparent;"></div></div><div onClick="{{ zoom.C03 }}" style="flex:none;width:190px;cursor:zoom-in;"><div style="width:190px;height:340px;overflow:hidden;border-radius:14px;border:1px solid #dfe4e1;background:#fff;box-shadow:0 10px 26px rgba(13,21,18,.12);"><img src="screens/c-03.png" alt="C03" style="display:block;width:190px;height:auto;"></div><div style="font-size:10px;font-weight:800;letter-spacing:1.2px;color:#2f9169;margin-top:8px;">C03</div><div style="font-size:12px;font-weight:800;color:#182420;line-height:16px;">Access Hierarchy</div></div><div style="flex:none;width:44px;height:2px;background:#b9c1bc;margin-top:170px;position:relative;"><div style="position:absolute;right:-1px;top:-4px;width:0;height:0;border-left:8px solid #b9c1bc;border-top:5px solid transparent;border-bottom:5px solid transparent;"></div></div><div onClick="{{ zoom.C10 }}" style="flex:none;width:190px;cursor:zoom-in;"><div style="width:190px;height:340px;overflow:hidden;border-radius:14px;border:1px solid #f0d9a8;background:#fff;box-shadow:0 10px 26px rgba(13,21,18,.12);"><img src="screens/c-10.png" alt="C10" style="display:block;width:190px;height:auto;"></div><div style="font-size:10px;font-weight:800;letter-spacing:1.2px;color:#a3760e;margin-top:8px;">C10</div><div style="font-size:12px;font-weight:800;color:#182420;line-height:16px;">Change Activity Zone</div></div></div>
+<div style="display:flex;align-items:center;gap:12px;margin-top:44px;"><div style="font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#fff;background:#1c6b47;border-radius:999px;padding:6px 12px;">Section B</div><div style="font-size:20px;font-weight:800;color:#182420;letter-spacing:-.4px;">Inside a community</div><div style="font-size:13px;font-weight:600;color:#5c6b64;">C04 and the three screens its tabs open</div></div>    <div style="display:flex;align-items:flex-start;margin-top:16px;"><div onClick="{{ zoom.C04 }}" style="flex:none;width:190px;cursor:zoom-in;"><div style="width:190px;height:340px;overflow:hidden;border-radius:14px;border:1px solid #dfe4e1;background:#fff;box-shadow:0 10px 26px rgba(13,21,18,.12);"><img src="screens/c-04.png" alt="C04" style="display:block;width:190px;height:auto;"></div><div style="font-size:10px;font-weight:800;letter-spacing:1.2px;color:#2f9169;margin-top:8px;">C04</div><div style="font-size:12px;font-weight:800;color:#182420;line-height:16px;">Administrative Community Home</div></div><div style="flex:none;width:44px;height:2px;background:#b9c1bc;margin-top:170px;position:relative;"><div style="position:absolute;right:-1px;top:-4px;width:0;height:0;border-left:8px solid #b9c1bc;border-top:5px solid transparent;border-bottom:5px solid transparent;"></div></div><div onClick="{{ zoom.C07 }}" style="flex:none;width:190px;cursor:zoom-in;"><div style="width:190px;height:340px;overflow:hidden;border-radius:14px;border:1px solid #dfe4e1;background:#fff;box-shadow:0 10px 26px rgba(13,21,18,.12);"><img src="screens/c-07.png" alt="C07" style="display:block;width:190px;height:auto;"></div><div style="font-size:10px;font-weight:800;letter-spacing:1.2px;color:#2f9169;margin-top:8px;">C07</div><div style="font-size:12px;font-weight:800;color:#182420;line-height:16px;">Members &amp; Roles</div></div><div style="flex:none;width:44px;height:2px;background:#b9c1bc;margin-top:170px;position:relative;"><div style="position:absolute;right:-1px;top:-4px;width:0;height:0;border-left:8px solid #b9c1bc;border-top:5px solid transparent;border-bottom:5px solid transparent;"></div></div><div onClick="{{ zoom.C08 }}" style="flex:none;width:190px;cursor:zoom-in;"><div style="width:190px;height:340px;overflow:hidden;border-radius:14px;border:1px solid #dfe4e1;background:#fff;box-shadow:0 10px 26px rgba(13,21,18,.12);"><img src="screens/c-08.png" alt="C08" style="display:block;width:190px;height:auto;"></div><div style="font-size:10px;font-weight:800;letter-spacing:1.2px;color:#2f9169;margin-top:8px;">C08</div><div style="font-size:12px;font-weight:800;color:#182420;line-height:16px;">About &amp; Rules</div></div><div style="flex:none;width:44px;height:2px;background:#b9c1bc;margin-top:170px;position:relative;"><div style="position:absolute;right:-1px;top:-4px;width:0;height:0;border-left:8px solid #b9c1bc;border-top:5px solid transparent;border-bottom:5px solid transparent;"></div></div><div onClick="{{ zoom.C09 }}" style="flex:none;width:190px;cursor:zoom-in;"><div style="width:190px;height:340px;overflow:hidden;border-radius:14px;border:1px solid #dfe4e1;background:#fff;box-shadow:0 10px 26px rgba(13,21,18,.12);"><img src="screens/c-09.png" alt="C09" style="display:block;width:190px;height:auto;"></div><div style="font-size:10px;font-weight:800;letter-spacing:1.2px;color:#2f9169;margin-top:8px;">C09</div><div style="font-size:12px;font-weight:800;color:#182420;line-height:16px;">Follow &amp; Notifications</div></div></div>
+<div style="display:flex;align-items:center;gap:12px;margin-top:44px;"><div style="font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#fff;background:#1c6b47;border-radius:999px;padding:6px 12px;">Section C</div><div style="font-size:20px;font-weight:800;color:#182420;letter-spacing:-.4px;">Discovery &amp; visitor access</div><div style="font-size:13px;font-weight:600;color:#5c6b64;">How a citizen reaches a community outside their zone</div></div>    <div style="display:flex;align-items:flex-start;margin-top:16px;"><div onClick="{{ zoom.C05 }}" style="flex:none;width:190px;cursor:zoom-in;"><div style="width:190px;height:340px;overflow:hidden;border-radius:14px;border:1px solid #dfe4e1;background:#fff;box-shadow:0 10px 26px rgba(13,21,18,.12);"><img src="screens/c-05.png" alt="C05" style="display:block;width:190px;height:auto;"></div><div style="font-size:10px;font-weight:800;letter-spacing:1.2px;color:#2f9169;margin-top:8px;">C05</div><div style="font-size:12px;font-weight:800;color:#182420;line-height:16px;">Community Search &amp; Explore</div></div><div style="flex:none;width:44px;height:2px;background:#b9c1bc;margin-top:170px;position:relative;"><div style="position:absolute;right:-1px;top:-4px;width:0;height:0;border-left:8px solid #b9c1bc;border-top:5px solid transparent;border-bottom:5px solid transparent;"></div></div><div onClick="{{ zoom.C06 }}" style="flex:none;width:190px;cursor:zoom-in;"><div style="width:190px;height:340px;overflow:hidden;border-radius:14px;border:1px solid #f0c6c0;background:#fff;box-shadow:0 10px 26px rgba(13,21,18,.12);"><img src="screens/c-06.png" alt="C06" style="display:block;width:190px;height:auto;"></div><div style="font-size:10px;font-weight:800;letter-spacing:1.2px;color:#c0392b;margin-top:8px;">C06</div><div style="font-size:12px;font-weight:800;color:#182420;line-height:16px;">Visitor Community View</div></div></div>
+  </sc-if>
+
+
+  <sc-if value="{{ isFlow }}" hint-placeholder-val="{{ true }}">
+  <div style="display:flex;flex-wrap:wrap;gap:22px;margin-top:26px;padding:16px 20px;background:#fff;border:1px solid #e2e6e3;border-radius:16px;width:max-content;align-items:center;">
+    <div style="font-size:11px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#8b978f;">Legend</div>
+    <div style="display:flex;align-items:center;gap:8px;"><div style="width:26px;height:18px;background:#fff;border:1px solid #dfe4e0;border-radius:6px;"></div><span style="font-size:12px;font-weight:600;color:#3a4642;">Designed screen</span></div>
+    <div style="display:flex;align-items:center;gap:8px;"><div style="width:26px;height:18px;background:#182420;border-radius:6px;"></div><span style="font-size:12px;font-weight:600;color:#3a4642;">The template · all levels</span></div>
+    <div style="display:flex;align-items:center;gap:8px;"><div style="width:26px;height:18px;background:#fdf3df;border:1px solid #f0d9a8;border-radius:6px;"></div><span style="font-size:12px;font-weight:600;color:#3a4642;">Open decision</span></div>
+    <div style="display:flex;align-items:center;gap:8px;"><div style="width:26px;height:18px;background:#fbe9e7;border:1px solid #f0c6c0;border-radius:6px;"></div><span style="font-size:12px;font-weight:600;color:#3a4642;">Same screen, other state</span></div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:12px;margin-top:44px;">
+    <div style="font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#fff;background:#1c6b47;border-radius:999px;padding:6px 12px;">Section A</div>
+    <div style="font-size:20px;font-weight:800;color:#182420;letter-spacing:-.4px;">Activity Zone &amp; my dashboard</div>
+    <div style="font-size:13px;font-weight:600;color:#5c6b64;">C01 – C03 · C10 — where the citizen learns what they may do, and why</div>
+  </div>
+
+  <div style="display:flex;align-items:flex-start;gap:0;margin-top:18px;">
+    <div style="flex:none;width:250px;background:#182420;border-radius:12px;padding:16px 14px;box-shadow:0 10px 26px rgba(24,36,32,.16);">
+      <div style="font-size:10px;font-weight:800;letter-spacing:1.4px;color:#8fd6b4;">ENTRY · C01</div>
+      <div style="font-size:15px;font-weight:800;color:#fff;line-height:20px;margin-top:5px;">Community Network Home</div>
+      <div style="font-size:11px;font-weight:600;color:#b8c6bf;line-height:16px;margin-top:5px;">My zone · communities I participate in · following · discover</div>
+    </div>
+    <div style="flex:none;width:56px;height:2px;background:#b9c1bc;margin-top:44px;position:relative;"><div style="position:absolute;right:-1px;top:-4px;width:0;height:0;border-left:8px solid #b9c1bc;border-top:5px solid transparent;border-bottom:5px solid transparent;"></div></div>
+    <div style="flex:none;display:flex;flex-direction:column;gap:12px;">
+      <div style="width:250px;background:#fff;border:1px solid #dfe4e0;border-radius:12px;padding:14px;">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.4px;color:#2f9169;">C02</div>
+        <div style="font-size:14px;font-weight:800;color:#182420;line-height:19px;margin-top:4px;">My Activity Zone &amp; Access</div>
+        <div style="font-size:11px;font-weight:600;color:#8b978f;line-height:16px;margin-top:4px;">What it unlocks · what it does not · viewing is never limited</div>
+      </div>
+      <div style="width:250px;background:#fff;border:1px solid #dfe4e0;border-radius:12px;padding:14px;">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.4px;color:#2f9169;">C03</div>
+        <div style="font-size:14px;font-weight:800;color:#182420;line-height:19px;margin-top:4px;">Community Access Hierarchy</div>
+        <div style="font-size:11px;font-weight:600;color:#8b978f;line-height:16px;margin-top:4px;">Ward → union → upazila → district, drawn. Ancestry grants access, not a shared district</div>
+      </div>
+      <div style="width:250px;background:#fdf3df;border:1px solid #f0d9a8;border-left:4px solid #a3760e;border-radius:12px;padding:14px;">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.4px;color:#8a6410;">C10 · PENDING DEV DISCUSSION</div>
+        <div style="font-size:14px;font-weight:800;color:#182420;line-height:19px;margin-top:4px;">Change Activity Zone</div>
+        <div style="font-size:11px;font-weight:600;color:#8a6a13;line-height:16px;margin-top:4px;">Dependent address path · reason · document upload · added / removed / still-followed preview before confirming</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:12px;margin-top:52px;">
+    <div style="font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#fff;background:#1c6b47;border-radius:999px;padding:6px 12px;">Section B</div>
+    <div style="font-size:20px;font-weight:800;color:#182420;letter-spacing:-.4px;">Inside a community</div>
+    <div style="font-size:13px;font-weight:600;color:#5c6b64;">C04 and the three screens its tabs and header open</div>
+  </div>
+
+  <div style="display:flex;align-items:flex-start;gap:0;margin-top:18px;">
+    <div style="flex:none;width:270px;background:#182420;border-radius:14px;padding:16px;box-shadow:0 10px 26px rgba(24,36,32,.2);">
+      <div style="font-size:10px;font-weight:800;letter-spacing:1.4px;color:#8fd6b4;">C04 · TEMPLATE · ALL LEVELS</div>
+      <div style="font-size:16px;font-weight:800;color:#fff;line-height:21px;margin-top:5px;">Administrative Community Home</div>
+      <div style="font-size:11px;font-weight:600;color:#b8c6bf;line-height:16px;margin-top:5px;">One screen for district, city corporation, upazila, thana, pourashava, union and all three ward types. Participant or visitor is decided by the zone, not by a different build.</div>
+    </div>
+    <div style="flex:none;width:56px;height:2px;background:#b9c1bc;margin-top:56px;position:relative;"><div style="position:absolute;right:-1px;top:-4px;width:0;height:0;border-left:8px solid #b9c1bc;border-top:5px solid transparent;border-bottom:5px solid transparent;"></div></div>
+    <div style="flex:none;display:flex;flex-direction:column;gap:12px;">
+      <div style="width:250px;background:#fff;border:1px solid #dfe4e0;border-radius:12px;padding:14px;">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.4px;color:#2f9169;">C07 · TAB</div>
+        <div style="font-size:14px;font-weight:800;color:#182420;line-height:19px;margin-top:4px;">Members &amp; Roles</div>
+        <div style="font-size:11px;font-weight:600;color:#8b978f;line-height:16px;margin-top:4px;">Admins pinned above participants · visitors see counts and moderators only</div>
+      </div>
+      <div style="width:250px;background:#fff;border:1px solid #dfe4e0;border-radius:12px;padding:14px;">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.4px;color:#2f9169;">C08 · TAB</div>
+        <div style="font-size:14px;font-weight:800;color:#182420;line-height:19px;margin-top:4px;">About &amp; Rules</div>
+        <div style="font-size:11px;font-weight:600;color:#8b978f;line-height:16px;margin-top:4px;">Verified area · full hierarchy · rules · your own permissions</div>
+      </div>
+      <div style="width:250px;background:#fff;border:1px solid #dfe4e0;border-radius:12px;padding:14px;">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.4px;color:#2f9169;">C09 · SHEET</div>
+        <div style="font-size:14px;font-weight:800;color:#182420;line-height:19px;margin-top:4px;">Follow &amp; Notification Settings</div>
+        <div style="font-size:11px;font-weight:600;color:#8b978f;line-height:16px;margin-top:4px;">Per community, not global. Mute is the quiet exit that is not unfollowing</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:12px;margin-top:52px;">
+    <div style="font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#fff;background:#1c6b47;border-radius:999px;padding:6px 12px;">Section C</div>
+    <div style="font-size:20px;font-weight:800;color:#182420;letter-spacing:-.4px;">Discovery &amp; visitor access</div>
+    <div style="font-size:13px;font-weight:600;color:#5c6b64;">How a citizen reaches a community outside their own zone</div>
+  </div>
+
+  <div style="display:flex;align-items:flex-start;gap:0;margin-top:18px;">
+    <div style="flex:none;width:250px;background:#fff;border:1px solid #dfe4e0;border-radius:12px;padding:14px;">
+      <div style="font-size:10px;font-weight:800;letter-spacing:1.4px;color:#2f9169;">C05</div>
+      <div style="font-size:14px;font-weight:800;color:#182420;line-height:19px;margin-top:4px;">Community Search &amp; Explore</div>
+      <div style="font-size:11px;font-weight:600;color:#8b978f;line-height:16px;margin-top:4px;">Search by area name · filter by level · my-zone badge on rows the citizen can act in</div>
+    </div>
+    <div style="flex:none;width:56px;height:2px;background:#b9c1bc;margin-top:44px;position:relative;"><div style="position:absolute;right:-1px;top:-4px;width:0;height:0;border-left:8px solid #b9c1bc;border-top:5px solid transparent;border-bottom:5px solid transparent;"></div></div>
+    <div style="flex:none;display:flex;flex-direction:column;gap:12px;">
+      <div style="width:250px;background:#fbe9e7;border:1px solid #f0c6c0;border-left:4px solid #c0392b;border-radius:12px;padding:14px;">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.4px;color:#c0392b;">C06 · C04 IN VISITOR STATE</div>
+        <div style="font-size:14px;font-weight:800;color:#182420;line-height:19px;margin-top:4px;">Visitor Community View</div>
+        <div style="font-size:11px;font-weight:600;color:#8f4034;line-height:16px;margin-top:4px;">No composer at all · read-only feed · member names hidden · Follow is the only action</div>
+      </div>
+      <div style="width:250px;background:#fff;border:1px solid #dfe4e0;border-radius:12px;padding:14px;">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.4px;color:#2f9169;">→ C10</div>
+        <div style="font-size:14px;font-weight:800;color:#182420;line-height:19px;margin-top:4px;">How to participate here</div>
+        <div style="font-size:11px;font-weight:600;color:#8b978f;line-height:16px;margin-top:4px;">The only route from visitor to participant is changing the Activity Zone</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:56px;max-width:1400px;">
+    <div style="flex:1 1 320px;background:#fff;border:1px solid #e4e7e5;border-radius:14px;padding:14px 16px;">
+      <div style="font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#1c6b47;">The rule</div>
+      <div style="font-size:13px;font-weight:600;color:#3a4642;line-height:20px;margin-top:5px;">Viewing and following are open to everyone. Posting, commenting, reporting, polling and petitioning come only from the Activity Zone and its direct parent chain.</div>
+    </div>
+    <div style="flex:1 1 320px;background:#fff;border:1px solid #e4e7e5;border-radius:14px;padding:14px 16px;">
+      <div style="font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#a3760e;">Not Parliamentary</div>
+      <div style="font-size:13px;font-weight:600;color:#3a4642;line-height:20px;margin-top:5px;">Parliamentary membership is automatic from the verified profile. Community participation must be earned by selecting a zone. Two systems, two join rules.</div>
+    </div>
+    <div style="flex:1 1 320px;background:#fff;border:1px solid #e4e7e5;border-radius:14px;padding:14px 16px;">
+      <div style="font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#c0392b;">Blocked on</div>
+      <div style="font-size:13px;font-weight:600;color:#3a4642;line-height:20px;margin-top:5px;">The Activity Zone is set in Profile U01 / U02, still future phase. Until that ships no citizen can select a zone, so nothing in this map can be used.</div>
+    </div>
+  </div>
+  </sc-if>
+
+
+  <sc-if value="{{ zoomOn }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ zoomClose }}" style="position:fixed;inset:0;z-index:90;background:rgba(12,20,16,.86);display:flex;align-items:flex-start;justify-content:center;padding:36px 24px;overflow-y:auto;cursor:zoom-out;">{{ zoomImg }}<div style="position:fixed;top:18px;left:22px;font-size:12px;font-weight:700;color:rgba(255,255,255,.72);background:rgba(255,255,255,.12);border-radius:999px;padding:8px 14px;">Full screen · scroll to see all of it</div><div style="position:fixed;top:18px;right:22px;width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:20px;color:#fff;">close</span></div></div>
+  </sc-if>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { mode: 'flow', zoom: null };
+  renderVals() {
+    const m = this.state.mode;
+    const SHOTS = {
+      C01: 'c-01', C02: 'c-02', C03: 'c-03', C10: 'c-10',
+      C04: 'c-04', C07: 'c-07', C08: 'c-08', C09: 'c-09',
+      C05: 'c-05', C06: 'c-06'
+    };
+    const zoom = {};
+    Object.keys(SHOTS).forEach((code) => {
+      zoom[code] = () => this.setState({ zoom: SHOTS[code] });
+    });
+    return {
+      isFlow: m === 'flow', notFlow: m !== 'flow',
+      isScreen: m === 'screen', notScreen: m !== 'screen',
+      setMode: {
+        flow: () => this.setState({ mode: 'flow' }),
+        screen: () => this.setState({ mode: 'screen' })
+      },
+      zoom,
+      zoomOn: !!this.state.zoom,
+      zoomClose: () => this.setState({ zoom: null }),
+      zoomImg: this.state.zoom
+        ? React.createElement('img', {
+            src: 'screens/' + this.state.zoom + '.png',
+            alt: '',
+            style: { width: 'min(430px,92vw)', height: 'auto', borderRadius: '18px', boxShadow: '0 30px 70px rgba(0,0,0,.5)', display: 'block' }
+          })
+        : null
+    };
+  }
+}
+</script>
+</body>
+</html>
