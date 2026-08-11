@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; font-family:'Manrope',system-ui,sans-serif; }
+  doc-page:not(:defined) { visibility:hidden; }
+  a { color:#1c6b47; }
+  a:hover { color:#0f3f29; }
+</style>
+<script src="./doc-page.js"></script>
+</helmet>
+
+<doc-page margin="0.8in">
+
+  <div slot="header" style="display:flex;align-items:baseline;justify-content:space-between;gap:20px;border-bottom:1px solid #dfe4e1;padding-bottom:7px;font-size:7.5pt;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#8b978f;">
+    <span style="color:#1c6b47;">Voice 360 · Developer specification</span>
+    <span>Pages · Communities · Activity Zone · Location</span>
+  </div>
+
+  <div slot="footer" style="display:flex;align-items:baseline;justify-content:space-between;gap:20px;border-top:1px solid #dfe4e1;padding-top:7px;font-size:7.5pt;font-weight:700;letter-spacing:.6px;color:#9aa5a0;">
+    <span>Voice 360 — internal build instruction</span>
+    <span>Version 1.1 · August 2026</span>
+  </div>
+
+  <div style="border-bottom:3px solid #182420;padding-bottom:18px;margin-top:34px;">
+    <h1 style="font-size:30pt;font-weight:800;color:#000;letter-spacing:-1.1px;line-height:1.08;margin:0;">Pages, Community Groups, Activity Zone and Unified Location System</h1>
+    <p style="font-size:12pt;line-height:1.5;color:#4b5a54;margin:12px 0 0;max-width:5.6in;">Instruction for the development team. Four connected systems that let Voice 360 generate its own official pages and geographical communities, and grant participation rights from a single verified location hierarchy.</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px;break-inside:avoid;">
+    <div style="background:#eef5f1;border-top:3px solid #1c6b47;padding:12px 13px;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#1c6b47;">One</div>
+      <div style="font-size:10pt;font-weight:800;color:#182420;line-height:1.3;margin-top:4px;">Automatic pages for verified businesses and professionals</div>
+    </div>
+    <div style="background:#f2f6f4;border-top:3px solid #64ac8e;padding:12px 13px;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#2f9169;">Two</div>
+      <div style="font-size:10pt;font-weight:800;color:#182420;line-height:1.3;margin-top:4px;">Official administrative community groups created by Voice 360</div>
+    </div>
+    <div style="background:#f7f8f7;border-top:3px solid #c3d4cb;padding:12px 13px;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#6c9d85;">Three</div>
+      <div style="font-size:10pt;font-weight:800;color:#182420;line-height:1.3;margin-top:4px;">Activity Zone–based participation permissions</div>
+    </div>
+    <div style="background:#f7f8f7;border-top:3px solid #c3d4cb;padding:12px 13px;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#6c9d85;">Four</div>
+      <div style="font-size:10pt;font-weight:800;color:#182420;line-height:1.3;margin-top:4px;">One unified address and location hierarchy across the entire app</div>
+    </div>
+  </div>
+
+  <div style="border:1px solid #e4e8e6;border-left:3px solid #1c6b47;background:#f7faf8;padding:16px 18px;margin-top:16px;break-inside:avoid;">
+    <div style="font-size:8pt;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#1c6b47;">The core rule</div>
+    <p style="font-size:11pt;line-height:1.55;color:#182420;margin:6px 0 0;font-weight:600;">Users can view and follow any community, but their posting and participation rights come only from the Activity Zone they select.</p>
+    <p style="font-size:10pt;line-height:1.55;color:#4b5a54;margin:8px 0 0;">Users are not automatically treated as participating members of every community connected to their full address. Participation access is calculated from the specific Activity Zone — My Local Community — that they select.</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:26px;break-inside:avoid;">
+    <div>
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#1c6b47;border-bottom:1.5px solid #182420;padding-bottom:7px;">Document control</div>
+      <table style="width:100%;border-collapse:collapse;font-size:10pt;margin-top:9px;">
+        <tbody>
+          <tr><td style="padding:5px 0;color:#8b978f;font-weight:700;width:38%;">Document</td><td style="padding:5px 0;color:#2a3733;font-weight:600;">Developer specification</td></tr>
+          <tr><td style="padding:5px 0;color:#8b978f;font-weight:700;">Version</td><td style="padding:5px 0;color:#2a3733;font-weight:600;">1.1</td></tr>
+          <tr><td style="padding:5px 0;color:#8b978f;font-weight:700;">Status</td><td style="padding:5px 0;color:#1c6b47;font-weight:800;">Approved for build</td></tr>
+          <tr><td style="padding:5px 0;color:#8b978f;font-weight:700;">Owner</td><td style="padding:5px 0;color:#2a3733;font-weight:600;">Voice 360 product</td></tr>
+          <tr><td style="padding:5px 0;color:#8b978f;font-weight:700;">Audience</td><td style="padding:5px 0;color:#2a3733;font-weight:600;">Backend, mobile and web engineering · UI/UX designers</td></tr>
+          <tr><td style="padding:5px 0;color:#8b978f;font-weight:700;">Open item</td><td style="padding:5px 0;color:#c0392b;font-weight:700;">District-level access policy — see Part M</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#1c6b47;border-bottom:1.5px solid #182420;padding-bottom:7px;">Revision history</div>
+      <table style="width:100%;border-collapse:collapse;font-size:10pt;margin-top:9px;">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding:0 0 6px;font-size:8pt;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#8b978f;width:20%;">Ver.</th>
+            <th style="text-align:left;padding:0 0 6px;font-size:8pt;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#8b978f;width:28%;">Date</th>
+            <th style="text-align:left;padding:0 0 6px;font-size:8pt;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#8b978f;">Change</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-top:1px solid #e4e8e6;"><td style="padding:6px 0;color:#2a3733;font-weight:700;">1.0</td><td style="padding:6px 0;color:#4b5a54;">Aug 2026</td><td style="padding:6px 0;color:#4b5a54;">First issue — Parts A–M</td></tr>
+          <tr style="border-top:1px solid #e4e8e6;"><td style="padding:6px 0;color:#2a3733;font-weight:700;">1.1</td><td style="padding:6px 0;color:#4b5a54;">Aug 2026</td><td style="padding:6px 0;color:#4b5a54;">Added contents, Overview part and document control</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="break-before:page;">
+    <div style="background:#182420;color:#fff;padding:16px 20px;break-inside:avoid;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:2.6px;text-transform:uppercase;color:#8fd0b1;">Contents</div>
+      <div style="font-size:16pt;font-weight:800;letter-spacing:-.4px;margin-top:2px;">39 sections across thirteen parts</div>
+    </div>
+
+    <div style="column-count:2;column-gap:36px;margin-top:20px;">
+
+      <div style="break-inside:avoid;margin-bottom:18px;">
+        <div style="font-size:8pt;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#1c6b47;border-bottom:1.5px solid #182420;padding-bottom:5px;">Overview</div>
+        <div style="font-size:10pt;line-height:1.65;color:#2a3733;margin-top:8px;">1. Purpose<br>How to read this document</div>
+      </div>
+
+      <div style="break-inside:avoid;margin-bottom:18px;">
+        <div style="font-size:8pt;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#1c6b47;border-bottom:1.5px solid #182420;padding-bottom:5px;">Part A · Automatic Voice 360 Pages</div>
+        <div style="font-size:10pt;line-height:1.65;color:#2a3733;margin-top:8px;">2. What is a Voice 360 Page?<br>3. Pages created automatically<br>4. Page eligibility<br>5. Avoiding duplicate pages<br>6. Page ownership<br>7. Page permissions</div>
+      </div>
+
+      <div style="break-inside:avoid;margin-bottom:18px;">
+        <div style="font-size:8pt;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#1c6b47;border-bottom:1.5px solid #182420;padding-bottom:5px;">Part B · Community Groups</div>
+        <div style="font-size:10pt;line-height:1.65;color:#2a3733;margin-top:8px;">8. What is a Community Group?<br>9. Administrative units receiving groups<br>10. Community creation</div>
+      </div>
+
+      <div style="break-inside:avoid;margin-bottom:18px;">
+        <div style="font-size:8pt;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#1c6b47;border-bottom:1.5px solid #182420;padding-bottom:5px;">Part C &amp; D · Activity Zone and access rules</div>
+        <div style="font-size:10pt;line-height:1.65;color:#2a3733;margin-top:8px;">11. What is Activity Zone?<br>12. Requirements before participation<br>13. Two access directions<br>14. Example — District selected<br>15. Example — Union Ward selected<br>16. Strict parent-only hierarchy rule<br>17. Important access interpretation</div>
+      </div>
+
+      <div style="break-inside:avoid;margin-bottom:18px;">
+        <div style="font-size:8pt;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#1c6b47;border-bottom:1.5px solid #182420;padding-bottom:5px;">Part E &amp; F · Viewing, following, roles</div>
+        <div style="font-size:10pt;line-height:1.65;color:#2a3733;margin-top:8px;">18. Viewing other communities<br>19. Participation outside Activity Zone<br>20. Follow and participation are different<br>21–25. Community roles</div>
+      </div>
+
+      <div style="break-inside:avoid;margin-bottom:18px;">
+        <div style="font-size:8pt;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#1c6b47;border-bottom:1.5px solid #182420;padding-bottom:5px;">Part G · Unified address system</div>
+        <div style="font-size:10pt;line-height:1.65;color:#2a3733;margin-top:8px;">26. One standard address system<br>27. Standard address fields<br>28. Dynamic address form<br>29. Central location database</div>
+      </div>
+
+      <div style="break-inside:avoid;margin-bottom:18px;">
+        <div style="font-size:8pt;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#1c6b47;border-bottom:1.5px solid #182420;padding-bottom:5px;">Part H &amp; I · Backend and zone changes</div>
+        <div style="font-size:10pt;line-height:1.65;color:#2a3733;margin-top:8px;">30. Required backend process<br>31. Access is calculated, not assigned<br>32. Suggested access result<br>33. Changing Activity Zone</div>
+      </div>
+
+      <div style="break-inside:avoid;margin-bottom:18px;">
+        <div style="font-size:8pt;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#1c6b47;border-bottom:1.5px solid #182420;padding-bottom:5px;">Part J, K &amp; L · Parliamentary, navigation, labels</div>
+        <div style="font-size:10pt;line-height:1.65;color:#2a3733;margin-top:8px;">34. Parliamentary Community remains separate<br>35. Parliamentary membership<br>36. Left Menu → Community<br>37. Left Menu → Parliamentary Zone<br>38. Participation labels<br>39. Page and community labels</div>
+      </div>
+
+      <div style="break-inside:avoid;margin-bottom:18px;">
+        <div style="font-size:8pt;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#1c6b47;border-bottom:1.5px solid #182420;padding-bottom:5px;">Part M · Final development rules</div>
+        <div style="font-size:10pt;line-height:1.65;color:#2a3733;margin-top:8px;">Twenty binding rules<br>Why this structure matters<br>One policy to confirm before backend development</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div style="background:#182420;color:#fff;padding:16px 20px;margin:52px 0 0;break-inside:avoid;break-before:page;">
+    <div style="font-size:8pt;font-weight:800;letter-spacing:2.6px;text-transform:uppercase;color:#8fd0b1;">Overview</div>
+    <div style="font-size:16pt;font-weight:800;letter-spacing:-.4px;margin-top:2px;">One connected location system</div>
+  </div>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;letter-spacing:-.3px;margin:28px 0 0;">1. Purpose</h2>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">Voice 360 will use one connected location system to automatically organise:</p>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px 18px;margin-top:9px;font-size:10pt;line-height:1.5;color:#2a3733;">
+    <div>Business and professional pages</div><div>Marketplace shops</div><div>Travel providers</div>
+    <div>Deals and offers</div><div>Administrative community groups</div><div>Local posts and discussions</div>
+    <div>Local services</div><div>Jobs</div><div>Property</div>
+    <div>Events</div><div>Nearby recommendations</div><div>Parliamentary communities</div>
+  </div>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:12px 0 0;">Users should not need to create official pages or geographical community groups manually. The platform generates them from verified profiles, business records and the central location database.</p>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;letter-spacing:-.3px;margin:34px 0 0;">How to read this document</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+    <div style="border:1px solid #e4e8e6;border-left:3px solid #1c6b47;padding:13px 15px;break-inside:avoid;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#1c6b47;">Parts A &amp; B</div>
+      <div style="font-size:10.5pt;font-weight:800;color:#182420;margin-top:3px;">What gets created automatically</div>
+      <p style="font-size:10pt;line-height:1.55;color:#4b5a54;margin:5px 0 0;">Official pages for verified records, and one official community per administrative unit.</p>
+    </div>
+    <div style="border:1px solid #e4e8e6;border-left:3px solid #1c6b47;padding:13px 15px;break-inside:avoid;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#1c6b47;">Parts C – F</div>
+      <div style="font-size:10.5pt;font-weight:800;color:#182420;margin-top:3px;">Who may participate where</div>
+      <p style="font-size:10pt;line-height:1.55;color:#4b5a54;margin:5px 0 0;">Activity Zone rules, the difference between following and participating, and the community roles.</p>
+    </div>
+    <div style="border:1px solid #e4e8e6;border-left:3px solid #64ac8e;padding:13px 15px;break-inside:avoid;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#2f9169;">Parts G – I</div>
+      <div style="font-size:10.5pt;font-weight:800;color:#182420;margin-top:3px;">How the data works</div>
+      <p style="font-size:10pt;line-height:1.55;color:#4b5a54;margin:5px 0 0;">The unified address system, the central location database, and the backend permission calculation.</p>
+    </div>
+    <div style="border:1px solid #e4e8e6;border-left:3px solid #64ac8e;padding:13px 15px;break-inside:avoid;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#2f9169;">Parts J – M</div>
+      <div style="font-size:10.5pt;font-weight:800;color:#182420;margin-top:3px;">What the user sees, and the rules</div>
+      <p style="font-size:10pt;line-height:1.55;color:#4b5a54;margin:5px 0 0;">Parliamentary communities, left-menu structure, UI labels, and the twenty binding development rules.</p>
+    </div>
+  </div>
+
+  <div style="background:#182420;color:#fff;padding:16px 20px;margin:52px 0 0;break-inside:avoid;break-before:page;">
+    <div style="font-size:8pt;font-weight:800;letter-spacing:2.6px;text-transform:uppercase;color:#8fd0b1;">Part A</div>
+    <div style="font-size:16pt;font-weight:800;letter-spacing:-.4px;margin-top:2px;">Automatic Voice 360 Pages</div>
+  </div>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:28px 0 0;">2. What is a Voice 360 Page?</h2>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">A Voice 360 Page is the official public profile of a verified business, professional, shop or eligible service provider. It is different from a user profile and different from a Community Group.</p>
+  <div style="font-size:8pt;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#1c6b47;margin-top:12px;">A page may contain</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px 18px;margin-top:6px;font-size:10pt;line-height:1.5;color:#2a3733;">
+    <div>Name</div><div>Logo or profile image</div><div>Cover image</div>
+    <div>Description</div><div>Business or professional category</div><div>Address</div>
+    <div>Contact details</div><div>Opening hours</div><div>Products or services</div>
+    <div>Posts</div><div>Photos and videos</div><div>Offers</div>
+    <div>Reviews and ratings</div><div>Followers</div><div>Verification badge</div>
+  </div>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">3. Pages created automatically</h2>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">Voice 360 will automatically create a dedicated page for:</p>
+  <ul style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:6px 0 0;padding-left:20px;">
+    <li>Every verified business in the Business Directory</li>
+    <li>Every verified professional in the Professionals Directory</li>
+    <li>Every approved shop in the Marketplace</li>
+    <li>Every verified travel business offering travel packages</li>
+    <li>Every business publishing Deals and Offers, provided the business already exists in the Business Directory</li>
+  </ul>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">Users must not create these pages manually. The page is created automatically when the related business, professional or shop is approved.</p>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">4. Page eligibility</h2>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">Automatic pages are available only for verified businesses, verified professionals, approved Marketplace shops, verified travel providers and eligible Deals and Offers businesses. Unverified or rejected records should not receive a public page.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;">
+    <div style="border:1px solid #e4e8e6;background:#f7f8f7;padding:6px 11px;font-size:9.5pt;font-weight:700;color:#4b5a54;">Draft</div>
+    <div style="border:1px solid #e4e8e6;background:#f7f8f7;padding:6px 11px;font-size:9.5pt;font-weight:700;color:#4b5a54;">Pending Verification</div>
+    <div style="border:1px solid #cfe3d8;background:#eef5f1;padding:6px 11px;font-size:9.5pt;font-weight:800;color:#1c6b47;">Active</div>
+    <div style="border:1px solid #e4e8e6;background:#f7f8f7;padding:6px 11px;font-size:9.5pt;font-weight:700;color:#4b5a54;">Suspended</div>
+    <div style="border:1px solid #e4e8e6;background:#f7f8f7;padding:6px 11px;font-size:9.5pt;font-weight:700;color:#4b5a54;">Rejected</div>
+    <div style="border:1px solid #e4e8e6;background:#f7f8f7;padding:6px 11px;font-size:9.5pt;font-weight:700;color:#4b5a54;">Closed</div>
+    <div style="border:1px solid #e4e8e6;background:#f7f8f7;padding:6px 11px;font-size:9.5pt;font-weight:700;color:#4b5a54;">Archived</div>
+  </div>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">5. Avoiding duplicate pages</h2>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">The same business must not receive multiple separate pages simply because it appears in multiple Voice 360 modules. A business may exist in the Business Directory, the Marketplace, Deals and Offers and Travel 360 at the same time. If those records belong to the same verified business, they must connect to one main Voice 360 Page.</p>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">That page can show different sections or tabs — About, Posts, Products, Services, Offers, Travel Packages, Reviews. The backend should use a single verified business identity or organisation ID to prevent duplicate pages.</p>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">6. Page ownership</h2>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">Each page has one primary owner, optional additional managers, optional editors or staff, and followers. The page owner is linked to the verified business or professional record and may assign approved staff permissions later.</p>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-top:12px;break-inside:avoid;">
+    <div style="border:1px solid #e4e8e6;border-left:3px solid #1c6b47;padding:13px 15px;">
+      <div style="font-size:11pt;font-weight:800;color:#000;">Owner</div>
+      <div style="font-size:9.5pt;line-height:1.6;color:#4b5a54;margin-top:5px;">Full page control · edit page information · publish content · manage staff · respond to reviews · view analytics</div>
+    </div>
+    <div style="border:1px solid #e4e8e6;border-left:3px solid #64ac8e;padding:13px 15px;">
+      <div style="font-size:11pt;font-weight:800;color:#000;">Manager</div>
+      <div style="font-size:9.5pt;line-height:1.6;color:#4b5a54;margin-top:5px;">Publish and manage content · respond to comments and messages · manage offers and services</div>
+    </div>
+    <div style="border:1px solid #e4e8e6;border-left:3px solid #c3d4cb;padding:13px 15px;">
+      <div style="font-size:11pt;font-weight:800;color:#000;">Editor</div>
+      <div style="font-size:9.5pt;line-height:1.6;color:#4b5a54;margin-top:5px;">Create and edit posts · upload photos and videos</div>
+    </div>
+    <div style="border:1px solid #e4e8e6;border-left:3px solid #c3d4cb;padding:13px 15px;">
+      <div style="font-size:11pt;font-weight:800;color:#000;">Follower</div>
+      <div style="font-size:9.5pt;line-height:1.6;color:#4b5a54;margin-top:5px;">View follower-only content · comment according to platform rules · review and rate where eligible · interact with page content</div>
+    </div>
+  </div>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">7. Page permissions</h2>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:10px;break-inside:avoid;">
+    <div style="background:#f7faf8;padding:13px 14px;">
+      <div style="font-size:10pt;font-weight:800;color:#182420;">Owner and authorised managers</div>
+      <div style="font-size:9.5pt;line-height:1.6;color:#4b5a54;margin-top:5px;">Create posts · edit page information · upload photos and videos · publish products, services, packages or offers · comment on posts · reply to users · manage page content · respond to reviews</div>
+    </div>
+    <div style="background:#f7f8f7;padding:13px 14px;">
+      <div style="font-size:10pt;font-weight:800;color:#182420;">Followers</div>
+      <div style="font-size:9.5pt;line-height:1.6;color:#4b5a54;margin-top:5px;">View the page and its content · comment according to page rules · react to content · leave reviews and ratings where eligible · share page content · receive page updates</div>
+    </div>
+    <div style="background:#f7f8f7;padding:13px 14px;">
+      <div style="font-size:10pt;font-weight:800;color:#182420;">Non-followers</div>
+      <div style="font-size:9.5pt;line-height:1.6;color:#4b5a54;margin-top:5px;">View public page information and content · follow the page · share public content. They cannot post on the page or comment unless platform rules allow it after following.</div>
+    </div>
+  </div>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:10px 0 0;">Maintain separate permission sets for page owner, page staff, follower and non-follower visitor.</p>
+
+  <div style="background:#182420;color:#fff;padding:16px 20px;margin:40px 0 0;break-inside:avoid;break-before:page;">
+    <div style="font-size:8pt;font-weight:800;letter-spacing:2.6px;text-transform:uppercase;color:#8fd0b1;">Part B</div>
+    <div style="font-size:16pt;font-weight:800;letter-spacing:-.4px;margin-top:2px;">Official administrative Community Groups</div>
+  </div>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:28px 0 0;">8. What is a Community Group?</h2>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">A Community Group is an official geographical community created by Voice 360 for a specific administrative area. It works similarly to a Facebook Group, but users cannot create these groups. Each administrative unit must have only one official Voice 360 Community Group.</p>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">9. Administrative units receiving groups</h2>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;">
+    <div style="border:1px solid #cfe3d8;background:#eef5f1;padding:6px 11px;font-size:9.5pt;font-weight:800;color:#1c6b47;">District</div>
+    <div style="border:1px solid #cfe3d8;background:#eef5f1;padding:6px 11px;font-size:9.5pt;font-weight:800;color:#1c6b47;">City Corporation</div>
+    <div style="border:1px solid #cfe3d8;background:#eef5f1;padding:6px 11px;font-size:9.5pt;font-weight:800;color:#1c6b47;">Upazila</div>
+    <div style="border:1px solid #cfe3d8;background:#eef5f1;padding:6px 11px;font-size:9.5pt;font-weight:800;color:#1c6b47;">Thana</div>
+    <div style="border:1px solid #cfe3d8;background:#eef5f1;padding:6px 11px;font-size:9.5pt;font-weight:800;color:#1c6b47;">Pourashava</div>
+    <div style="border:1px solid #cfe3d8;background:#eef5f1;padding:6px 11px;font-size:9.5pt;font-weight:800;color:#1c6b47;">Union</div>
+    <div style="border:1px solid #cfe3d8;background:#eef5f1;padding:6px 11px;font-size:9.5pt;font-weight:800;color:#1c6b47;">City Ward</div>
+    <div style="border:1px solid #cfe3d8;background:#eef5f1;padding:6px 11px;font-size:9.5pt;font-weight:800;color:#1c6b47;">Pourashava Ward</div>
+    <div style="border:1px solid #cfe3d8;background:#eef5f1;padding:6px 11px;font-size:9.5pt;font-weight:800;color:#1c6b47;">Union Ward</div>
+  </div>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:10px 0 0;">Division may remain available as a higher-level regional community if it is part of the approved Voice 360 structure — but it must then be handled consistently in the hierarchy and in permissions.</p>
+  <div style="border:1px solid #e4e8e6;background:#f7f8f7;padding:13px 16px;margin-top:12px;break-inside:avoid;">
+    <div style="font-size:8pt;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#1c6b47;">Suggested naming format</div>
+    <div style="font-size:10pt;line-height:1.75;color:#2a3733;margin-top:5px;">Dhaka District Community · Dhaka North City Corporation Community · Dhanmondi Thana Community · Singra Upazila Community · Singra Pourashava Community · Ramanandakhajura Union Community · Dhaka North City Ward 17 Community · Singra Pourashava Ward 5 Community · Ramanandakhajura Union Ward 3 Community</div>
+  </div>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:10px 0 0;font-weight:600;">No unofficial duplicate group should be allowed.</p>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">10. Community creation</h2>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">Communities are generated centrally from the Voice 360 location database. Each community record should contain:</p>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px 18px;margin-top:7px;font-size:10pt;line-height:1.5;color:#2a3733;">
+    <div>Community ID</div><div>Official community name</div><div>Administrative area ID</div>
+    <div>Area type</div><div>Parent area ID</div><div>District ID</div>
+    <div>Division ID</div><div>Community description</div><div>Cover image</div>
+    <div>Member or participant count</div><div>Followers count</div><div>Admins</div>
+    <div>Moderators</div><div>Community rules</div><div>Visibility</div>
+    <div>Active status</div><div>Date created</div><div></div>
+  </div>
+  <div style="border:1px solid #e6d3d0;background:#faf6f5;border-left:3px solid #c0392b;padding:13px 16px;margin-top:12px;break-inside:avoid;">
+    <div style="font-size:8pt;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#c0392b;">Users must not be able to</div>
+    <div style="font-size:10pt;line-height:1.6;color:#2a3733;margin-top:5px;">Create official geographical groups · rename a community · change the linked area · merge communities · create duplicate communities</div>
+  </div>
+
+  <div style="background:#182420;color:#fff;padding:16px 20px;margin:40px 0 0;break-inside:avoid;break-before:page;">
+    <div style="font-size:8pt;font-weight:800;letter-spacing:2.6px;text-transform:uppercase;color:#8fd0b1;">Part C &amp; D</div>
+    <div style="font-size:16pt;font-weight:800;letter-spacing:-.4px;margin-top:2px;">Activity Zone and its access rules</div>
+  </div>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:28px 0 0;">11. What is Activity Zone?</h2>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">The Activity Zone is the administrative area a user selects in their Voice 360 profile. It determines where the user is allowed to participate as a local community member: creating posts, commenting, reacting as an eligible local member, reporting local issues, creating or voting in polls, joining local discussions, participating in local events and supporting member-only petitions.</p>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">The Activity Zone does not prevent the user from viewing or following other communities.</p>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">12. Requirements before community participation</h2>
+  <ul style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;padding-left:20px;">
+    <li>Complete the required profile information</li>
+    <li>Verify the Voice 360 account</li>
+    <li>Complete the required location fields</li>
+    <li>Select an Activity Zone</li>
+    <li>Pass any required location validation</li>
+  </ul>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">Until these steps are complete the user may view public community content but should not receive full participation permission.</p>
+  <div style="border-left:3px solid #1c6b47;background:#f7faf8;padding:12px 16px;margin-top:11px;break-inside:avoid;">
+    <div style="font-size:8pt;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#1c6b47;">Suggested status message</div>
+    <div style="font-size:11pt;line-height:1.5;color:#182420;font-weight:600;margin-top:4px;">“Complete your profile, verify your account and select your Activity Zone to participate in local communities.”</div>
+  </div>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">13. Two access directions</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:10px;break-inside:avoid;">
+    <div style="border:1px solid #e4e8e6;border-top:3px solid #1c6b47;padding:14px 16px;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#1c6b47;">Rule A</div>
+      <div style="font-size:11.5pt;font-weight:800;color:#000;margin-top:3px;">Higher-level Activity Zone</div>
+      <p style="font-size:10pt;line-height:1.55;color:#4b5a54;margin:6px 0 0;">When a user selects a higher administrative level, they can participate in that area <strong>and</strong> in the administrative units located under it.</p>
+    </div>
+    <div style="border:1px solid #e4e8e6;border-top:3px solid #64ac8e;padding:14px 16px;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#2f9169;">Rule B</div>
+      <div style="font-size:11.5pt;font-weight:800;color:#000;margin-top:3px;">Lower-level Activity Zone</div>
+      <p style="font-size:10pt;line-height:1.55;color:#4b5a54;margin:6px 0 0;">When a user selects a lower administrative level, they can participate only in that exact unit and its direct parent units. They cannot participate in sibling or parallel areas.</p>
+    </div>
+  </div>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">14. Example — District selected</h2>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">If a user selects a District as their Activity Zone, they can participate in the selected District Community and in every Upazila, applicable Thana, City Corporation, Pourashava, Union, City Ward, Pourashava Ward and Union Ward within that District.</p>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">If the selected Activity Zone is Natore District, the user may participate in official communities geographically contained within Natore District. The backend must use the location hierarchy, not text name matching.</p>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">15. Example — Union Ward selected</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:10px;break-inside:avoid;">
+    <div style="border:1px solid #cfe3d8;background:#f7faf8;padding:14px 16px;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#1c6b47;">May participate in</div>
+      <div style="font-size:10pt;line-height:1.65;color:#2a3733;margin-top:5px;">The selected Union Ward<br>Its parent Union<br>Its parent Upazila<br>Its applicable parent Thana, where the hierarchy uses one<br>Its parent District<br>Its parent Division, if Division Communities are enabled</div>
+    </div>
+    <div style="border:1px solid #e6d3d0;background:#faf6f5;padding:14px 16px;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#c0392b;">Cannot participate in</div>
+      <div style="font-size:10pt;line-height:1.65;color:#2a3733;margin-top:5px;">Other Union Wards in the same Union<br>Other Unions in the same Upazila or Thana<br>Other Thanas in the same Upazila<br>Other Upazilas in the same District<br>Parallel Pourashavas · parallel Wards<br>Any sibling administrative unit</div>
+    </div>
+  </div>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">16. Strict parent-only hierarchy rule</h2>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">For a lower-level Activity Zone, the access path must always follow the selected area’s direct ancestry.</p>
+  <div style="border:1px solid #e4e8e6;background:#f7f8f7;padding:13px 16px;margin-top:11px;font-size:10.5pt;font-weight:700;color:#182420;line-height:1.7;break-inside:avoid;">
+    Union Ward 3 → parent Union → parent Upazila or Thana → parent District → parent Division, if enabled
+  </div>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:10px 0 0;">The system must not calculate access from the fact that two areas share a District. It must follow the actual parent chain: selected unit, direct parent, parent of that parent, continuing upward to the highest enabled level. Sibling wards, neighbouring unions, other upazilas, parallel city areas and any unit outside the selected unit’s direct hierarchy are incorrect access.</p>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">17. Important access interpretation</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:10px;break-inside:avoid;">
+    <div style="background:#f7f8f7;padding:13px 15px;">
+      <div style="font-size:10.5pt;font-weight:800;color:#182420;">Geographical containment</div>
+      <p style="font-size:10pt;line-height:1.55;color:#4b5a54;margin:5px 0 0;">A District contains many lower-level units. District selection gives broad participation access to its descendants.</p>
+    </div>
+    <div style="background:#f7f8f7;padding:13px 15px;">
+      <div style="font-size:10.5pt;font-weight:800;color:#182420;">Direct ancestry</div>
+      <p style="font-size:10pt;line-height:1.55;color:#4b5a54;margin:5px 0 0;">A Ward belongs to one specific parent chain. Ward selection gives narrow access to that Ward and its direct parents.</p>
+    </div>
+  </div>
+  <p style="font-size:10.5pt;line-height:1.6;color:#182420;margin:10px 0 0;font-weight:700;">A user can never move sideways across sibling locations. This is the core Activity Zone rule.</p>
+
+  <div style="background:#182420;color:#fff;padding:16px 20px;margin:40px 0 0;break-inside:avoid;break-before:page;">
+    <div style="font-size:8pt;font-weight:800;letter-spacing:2.6px;text-transform:uppercase;color:#8fd0b1;">Part E &amp; F</div>
+    <div style="font-size:16pt;font-weight:800;letter-spacing:-.4px;margin-top:2px;">Viewing, following and community roles</div>
+  </div>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:28px 0 0;">18. Viewing other communities</h2>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">Users may search and view any public Community Group: search any administrative community, open public community pages, view public posts and announcements, follow the community, share public content and receive selected public updates. Viewing access does not make the user a participating local member.</p>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">19. Participation outside Activity Zone</h2>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">When a community is outside the user’s authorised Activity Zone hierarchy, the user cannot create posts, comment as a local community member, react where reactions require local membership, vote in member-only polls, create local issues, participate in member-only discussions, sign member-only petitions, RSVP to restricted local events or access private member information.</p>
+  <div style="border-left:3px solid #1c6b47;background:#f7faf8;padding:13px 16px;margin-top:11px;break-inside:avoid;">
+    <div style="font-size:8pt;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#1c6b47;">The UI must clearly show</div>
+    <div style="font-size:11pt;line-height:1.5;color:#182420;font-weight:600;margin-top:5px;">“You are viewing this community as a visitor.”</div>
+    <div style="font-size:11pt;line-height:1.5;color:#182420;font-weight:600;margin-top:6px;">“Follow this community to receive public updates. Participation is limited to verified members of this Activity Zone.”</div>
+    <div style="font-size:10pt;line-height:1.5;color:#c0392b;font-weight:700;margin-top:8px;">Do not show a normal Join button.</div>
+  </div>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">20. Follow and participation are different</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:10px;break-inside:avoid;">
+    <div style="border:1px solid #e4e8e6;border-left:3px solid #c3d4cb;padding:14px 16px;">
+      <div style="font-size:11pt;font-weight:800;color:#000;">Follow relationship</div>
+      <div style="font-size:10pt;line-height:1.6;color:#4b5a54;margin-top:5px;">Receive public updates · save the community · view its public content</div>
+    </div>
+    <div style="border:1px solid #e4e8e6;border-left:3px solid #1c6b47;padding:14px 16px;">
+      <div style="font-size:11pt;font-weight:800;color:#000;">Activity Zone participation permission</div>
+      <div style="font-size:10pt;line-height:1.6;color:#4b5a54;margin-top:5px;">Post · comment · react as an eligible member · vote · report issues · participate in member-only activities</div>
+    </div>
+  </div>
+  <p style="font-size:10.5pt;line-height:1.6;color:#182420;margin:10px 0 0;font-weight:700;">Following a community must never automatically give participation permission.</p>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">21–25. Community roles</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:10px;">
+    <div style="border:1px solid #e4e8e6;padding:14px 16px;break-inside:avoid;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#8b978f;">21</div>
+      <div style="font-size:11.5pt;font-weight:800;color:#000;margin-top:2px;">Visitor</div>
+      <div style="font-size:10pt;line-height:1.6;color:#4b5a54;margin-top:5px;">View public content · follow the community · share public content. A visitor cannot participate as a local member.</div>
+    </div>
+    <div style="border:1px solid #e4e8e6;padding:14px 16px;break-inside:avoid;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#1c6b47;">22</div>
+      <div style="font-size:11.5pt;font-weight:800;color:#000;margin-top:2px;">Eligible local participant</div>
+      <div style="font-size:10pt;line-height:1.6;color:#4b5a54;margin-top:5px;">A verified user whose Activity Zone grants access to that community. Create posts · comment · react · report local issues · vote in polls · join discussions · RSVP to events · support petitions. Final permission may still depend on moderation or community settings.</div>
+    </div>
+    <div style="border:1px solid #e4e8e6;padding:14px 16px;break-inside:avoid;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#1c6b47;">23</div>
+      <div style="font-size:11.5pt;font-weight:800;color:#000;margin-top:2px;">Moderator</div>
+      <div style="font-size:10pt;line-height:1.6;color:#4b5a54;margin-top:5px;">Review reported content · remove inappropriate posts · manage comments · warn users · escalate serious violations · review local reports. Moderator status is assigned separately — never automatically from location.</div>
+    </div>
+    <div style="border:1px solid #e4e8e6;padding:14px 16px;break-inside:avoid;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#1c6b47;">24</div>
+      <div style="font-size:11.5pt;font-weight:800;color:#000;margin-top:2px;">Community admin</div>
+      <div style="font-size:10pt;line-height:1.6;color:#4b5a54;margin-top:5px;">Publish official announcements · create official polls · create events · pin posts · manage moderators · review community reports · update community information · apply community rules.</div>
+    </div>
+    <div style="border:1px solid #e4e8e6;border-left:3px solid #1c6b47;padding:14px 16px;grid-column:span 2;break-inside:avoid;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#1c6b47;">25</div>
+      <div style="font-size:11.5pt;font-weight:800;color:#000;margin-top:2px;">Central super admin</div>
+      <div style="font-size:10pt;line-height:1.6;color:#4b5a54;margin-top:5px;">Manage all official communities · correct location mapping · create missing location units · disable duplicate or invalid units · assign admins and moderators · review community activity · suspend users · manage community rules · view audit history · correct Activity Zone access errors.</div>
+    </div>
+  </div>
+
+  <div style="background:#182420;color:#fff;padding:16px 20px;margin:40px 0 0;break-inside:avoid;break-before:page;">
+    <div style="font-size:8pt;font-weight:800;letter-spacing:2.6px;text-transform:uppercase;color:#8fd0b1;">Part G</div>
+    <div style="font-size:16pt;font-weight:800;letter-spacing:-.4px;margin-top:2px;">Unified address system</div>
+  </div>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:28px 0 0;">26. One standard address system</h2>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">Every Voice 360 module that contains a physical location must use the same central address system — user profiles, Business Directory, Professionals Directory, Marketplace shops, travel providers, Deals and Offers, Local Services, Property, Jobs, Events, community issues, petitions and any future location-based module. Developers must not create separate address formats for different modules.</p>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">27. Standard address fields</h2>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px 18px;margin-top:8px;font-size:10pt;line-height:1.5;color:#2a3733;">
+    <div>Country</div><div>Division</div><div>District</div>
+    <div>City Corporation, if applicable</div><div>Upazila, if applicable</div><div>Thana, if applicable</div>
+    <div>Pourashava, if applicable</div><div>Union, if applicable</div><div>City Ward, if applicable</div>
+    <div>Pourashava Ward, if applicable</div><div>Union Ward, if applicable</div><div>Street or road</div>
+    <div>House, building or holding number</div><div>Postal code</div><div>Landmark</div>
+    <div>Latitude</div><div>Longitude</div><div></div>
+  </div>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:10px 0 0;">Only relevant fields should be shown based on the selected location path. A city user should not be required to select Union Ward; a rural user should not be required to select City Corporation unless applicable.</p>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">28. Dynamic address form</h2>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:10px;break-inside:avoid;">
+    <div style="background:#eef5f1;border-top:3px solid #1c6b47;padding:13px 15px;">
+      <div style="font-size:10.5pt;font-weight:800;color:#182420;">Urban path</div>
+      <div style="font-size:10pt;line-height:1.7;color:#4b5a54;margin-top:5px;">Division → District → City Corporation → Thana → City Ward</div>
+    </div>
+    <div style="background:#f2f6f4;border-top:3px solid #64ac8e;padding:13px 15px;">
+      <div style="font-size:10.5pt;font-weight:800;color:#182420;">Rural path</div>
+      <div style="font-size:10pt;line-height:1.7;color:#4b5a54;margin-top:5px;">Division → District → Upazila → Union → Union Ward</div>
+    </div>
+    <div style="background:#f7f8f7;border-top:3px solid #c3d4cb;padding:13px 15px;">
+      <div style="font-size:10.5pt;font-weight:800;color:#182420;">Municipal path</div>
+      <div style="font-size:10pt;line-height:1.7;color:#4b5a54;margin-top:5px;">Division → District → Upazila or applicable authority → Pourashava → Pourashava Ward</div>
+    </div>
+  </div>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:10px 0 0;">Each field depends on the previous selection. Users must not be able to select invalid combinations.</p>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">29. Central location database</h2>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">Every administrative unit must have:</p>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px 18px;margin-top:7px;font-size:10pt;line-height:1.5;color:#2a3733;">
+    <div>Unique area ID</div><div>Official name</div><div>Bangla name</div>
+    <div>English name</div><div>Area type</div><div>Parent area ID</div>
+    <div>Full hierarchy path</div><div>Division ID</div><div>District ID</div>
+    <div>Latitude and longitude, where available</div><div>Parliamentary constituency ID</div><div>Active status</div>
+    <div>Effective date</div><div>Previous or replacement area ID, where boundaries change</div><div></div>
+  </div>
+  <div style="border:1px solid #e4e8e6;border-left:3px solid #1c6b47;background:#f7faf8;padding:13px 16px;margin-top:12px;break-inside:avoid;">
+    <p style="font-size:10.5pt;line-height:1.55;color:#182420;margin:0;font-weight:600;">Use area IDs, never area names, for database relationships. Names may be duplicated or spelled differently, so names alone are not reliable identifiers.</p>
+  </div>
+
+  <div style="background:#182420;color:#fff;padding:16px 20px;margin:40px 0 0;break-inside:avoid;break-before:page;">
+    <div style="font-size:8pt;font-weight:800;letter-spacing:2.6px;text-transform:uppercase;color:#8fd0b1;">Part H &amp; I</div>
+    <div style="font-size:16pt;font-weight:800;letter-spacing:-.4px;margin-top:2px;">Backend permission calculation and zone changes</div>
+  </div>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:28px 0 0;">30. Required backend process</h2>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">When a user selects or changes their Activity Zone, the backend should:</p>
+  <ol style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:7px 0 0;padding-left:22px;">
+    <li>Verify the selected area ID.</li>
+    <li>Confirm the user’s profile and account verification status.</li>
+    <li>Identify the area’s type.</li>
+    <li>Load its full parent chain.</li>
+    <li>Load descendants only when the selected Activity Zone level allows descendant access.</li>
+    <li>Generate the authorised community ID list.</li>
+    <li>Save the access calculation.</li>
+    <li>Remove permissions that no longer apply.</li>
+    <li>Add new permissions.</li>
+    <li>Record the change in an audit log.</li>
+    <li>Update relevant community counts.</li>
+    <li>Notify the user.</li>
+  </ol>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">31. Access is calculated, not manually assigned</h2>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">The system should not create thousands of separate access rules per user. Access is calculated from the user’s Activity Zone ID, the selected area type, the parent-child hierarchy, verification status, community status and access policy. The backend may cache the result for performance, but the hierarchy database remains the source of truth.</p>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">32. Suggested access result</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:10px;break-inside:avoid;">
+    <div style="background:#f7f8f7;padding:13px 15px;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#1c6b47;">Returned fields</div>
+      <div style="font-size:10pt;line-height:1.65;color:#2a3733;margin-top:5px;">Community ID · community name · community type · access relationship · participation allowed · follow status · visitor status · reason for permission</div>
+    </div>
+    <div style="background:#f7faf8;padding:13px 15px;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#1c6b47;">Possible access relationships</div>
+      <div style="font-size:10pt;line-height:1.65;color:#2a3733;margin-top:5px;">Selected Activity Zone · parent of Activity Zone · descendant of selected higher-level zone · outside Activity Zone · followed only</div>
+    </div>
+  </div>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">33. Changing Activity Zone</h2>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">Users should not be able to change their Activity Zone repeatedly without control. The process may include confirmation, address verification, a supporting document where necessary, a waiting period and admin review for suspicious changes.</p>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">When the Activity Zone changes:</p>
+  <ol style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:7px 0 0;padding-left:22px;">
+    <li>Recalculate community participation rights.</li>
+    <li>Remove permissions from communities that no longer qualify.</li>
+    <li>Keep followed communities as followed, where appropriate.</li>
+    <li>Add permissions for the new hierarchy.</li>
+    <li>Keep the user’s previous posts visible.</li>
+    <li>Mark old posts with the location status applicable when they were posted.</li>
+    <li>Store the complete change history.</li>
+  </ol>
+
+  <div style="background:#182420;color:#fff;padding:16px 20px;margin:40px 0 0;break-inside:avoid;break-before:page;">
+    <div style="font-size:8pt;font-weight:800;letter-spacing:2.6px;text-transform:uppercase;color:#8fd0b1;">Part J, K &amp; L</div>
+    <div style="font-size:16pt;font-weight:800;letter-spacing:-.4px;margin-top:2px;">Parliamentary communities, navigation and labels</div>
+  </div>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:28px 0 0;">34. Parliamentary Community remains separate</h2>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">The Administrative Community system stays separate from the Parliamentary Zone. Voice 360 will have administrative Community Groups based on local administrative units, and a fixed set of 300 Parliamentary Communities.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:11px;break-inside:avoid;">
+    <div style="border:1px solid #e4e8e6;border-left:3px solid #1c6b47;padding:13px 15px;">
+      <div style="font-size:10.5pt;font-weight:800;color:#182420;">Left Menu → Community</div>
+      <div style="font-size:10pt;line-height:1.55;color:#4b5a54;margin-top:4px;">Administrative communities</div>
+    </div>
+    <div style="border:1px solid #e4e8e6;border-left:3px solid #64ac8e;padding:13px 15px;">
+      <div style="font-size:10.5pt;font-weight:800;color:#182420;">Left Menu → Parliamentary Zone</div>
+      <div style="font-size:10pt;line-height:1.55;color:#4b5a54;margin-top:4px;">The user’s parliamentary community</div>
+    </div>
+  </div>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">35. Parliamentary membership</h2>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">The user’s Parliamentary Community is calculated from the parliamentary constituency linked to their verified profile location. A user normally belongs to one Parliamentary Community, and it must not be selected through the normal Activity Zone hierarchy alone.</p>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">The central location database maps the user’s address or selected location to the correct constituency. No manual Join, Pending Approval or Leave Community flow is required.</p>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">36. Left Menu → Community</h2>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-top:10px;">
+    <div style="background:#f7faf8;padding:13px 15px;break-inside:avoid;">
+      <div style="font-size:10.5pt;font-weight:800;color:#182420;">My Activity Zone</div>
+      <div style="font-size:10pt;line-height:1.6;color:#4b5a54;margin-top:4px;">Selected area · area type · verification status · edit or update request</div>
+    </div>
+    <div style="background:#f7faf8;padding:13px 15px;break-inside:avoid;">
+      <div style="font-size:10.5pt;font-weight:800;color:#182420;">Communities I can participate in</div>
+      <div style="font-size:10pt;line-height:1.6;color:#4b5a54;margin-top:4px;">The selected Activity Zone community · authorised parent communities · authorised descendant communities, when the selected higher-level zone permits them</div>
+    </div>
+    <div style="background:#f7f8f7;padding:13px 15px;break-inside:avoid;">
+      <div style="font-size:10.5pt;font-weight:800;color:#182420;">Followed communities</div>
+      <div style="font-size:10pt;line-height:1.6;color:#4b5a54;margin-top:4px;">Communities outside the Activity Zone that the user follows, clearly labelled as visitor access</div>
+    </div>
+    <div style="background:#f7f8f7;padding:13px 15px;break-inside:avoid;">
+      <div style="font-size:10.5pt;font-weight:800;color:#182420;">Search communities</div>
+      <div style="font-size:10pt;line-height:1.6;color:#4b5a54;margin-top:4px;">Search by area name · filter by community level · view and follow public communities</div>
+    </div>
+  </div>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">37. Left Menu → Parliamentary Zone</h2>
+  <div style="font-size:10.5pt;line-height:1.75;color:#2a3733;margin-top:7px;">My Parliamentary Community · constituency overview · MP and representatives · elections and candidates · community issues · polls · events · petitions · AI Parliamentary Assistant · constituency statistics · public updates</div>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">38. Participation labels</h2>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;">
+    <div style="border:1px solid #cfe3d8;background:#eef5f1;padding:6px 11px;font-size:9.5pt;font-weight:800;color:#1c6b47;">Your Activity Zone</div>
+    <div style="border:1px solid #cfe3d8;background:#eef5f1;padding:6px 11px;font-size:9.5pt;font-weight:800;color:#1c6b47;">Eligible to Participate</div>
+    <div style="border:1px solid #cfe3d8;background:#eef5f1;padding:6px 11px;font-size:9.5pt;font-weight:800;color:#1c6b47;">Parent Community</div>
+    <div style="border:1px solid #cfe3d8;background:#eef5f1;padding:6px 11px;font-size:9.5pt;font-weight:800;color:#1c6b47;">Within Your Activity Zone</div>
+    <div style="border:1px solid #e4e8e6;background:#f7f8f7;padding:6px 11px;font-size:9.5pt;font-weight:700;color:#4b5a54;">Following</div>
+    <div style="border:1px solid #e4e8e6;background:#f7f8f7;padding:6px 11px;font-size:9.5pt;font-weight:700;color:#4b5a54;">Viewing as Visitor</div>
+    <div style="border:1px solid #e6d3d0;background:#faf6f5;padding:6px 11px;font-size:9.5pt;font-weight:700;color:#c0392b;">Participation Restricted</div>
+    <div style="border:1px solid #cfe3d8;background:#eef5f1;padding:6px 11px;font-size:9.5pt;font-weight:800;color:#1c6b47;">Verified Local Participant</div>
+  </div>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:10px 0 0;">Avoid using “Joined” everywhere — it confuses automatic geographical access with voluntary group membership.</p>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:34px 0 0;">39. Page and community labels</h2>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:10px;break-inside:avoid;">
+    <div style="background:#f7f8f7;padding:13px 15px;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#1c6b47;">Automatic public pages</div>
+      <div style="font-size:10pt;line-height:1.6;color:#2a3733;margin-top:5px;">Verified Business · Verified Professional · Official Marketplace Shop · Verified Travel Provider</div>
+    </div>
+    <div style="background:#f7f8f7;padding:13px 15px;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#1c6b47;">Community groups</div>
+      <div style="font-size:10pt;line-height:1.6;color:#2a3733;margin-top:5px;">Official Community · Administrative Community · Voice 360 Verified Area</div>
+    </div>
+    <div style="background:#f7f8f7;padding:13px 15px;">
+      <div style="font-size:8pt;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#1c6b47;">Parliamentary communities</div>
+      <div style="font-size:10pt;line-height:1.6;color:#2a3733;margin-top:5px;">Parliamentary Community · Official Constituency Community</div>
+    </div>
+  </div>
+
+  <div style="background:#182420;color:#fff;padding:16px 20px;margin:40px 0 0;break-inside:avoid;break-before:page;">
+    <div style="font-size:8pt;font-weight:800;letter-spacing:2.6px;text-transform:uppercase;color:#8fd0b1;">Part M</div>
+    <div style="font-size:16pt;font-weight:800;letter-spacing:-.4px;margin-top:2px;">Final development rules</div>
+  </div>
+
+  <ol style="font-size:10.5pt;line-height:1.62;color:#2a3733;margin:18px 0 0;padding-left:22px;column-count:2;column-gap:30px;">
+    <li>Users cannot create official geographical community groups.</li>
+    <li>Each administrative unit has only one official group.</li>
+    <li>Pages are generated automatically for eligible verified records.</li>
+    <li>The same business should have one page across multiple modules.</li>
+    <li>Users must complete and verify their profile before community participation.</li>
+    <li>Activity Zone determines participation rights.</li>
+    <li>Following a community does not grant participation rights.</li>
+    <li>A higher-level zone may grant access to its authorised descendants.</li>
+    <li>A lower-level zone grants access only to itself and its direct parent path.</li>
+    <li>Users cannot participate in sibling or parallel areas.</li>
+    <li>Users may view and follow other public communities.</li>
+    <li>Use one central address and location system across all modules.</li>
+    <li>Use unique area IDs, not area names, for relationships.</li>
+    <li>Keep Parliamentary Communities separate from Administrative Communities.</li>
+    <li>Reuse existing Voice 360 posts, comments, reactions, messages, notifications and reporting systems.</li>
+    <li>All permission checks must be enforced by the backend, not only hidden in the UI.</li>
+    <li>Store Activity Zone and location change history.</li>
+    <li>Prevent duplicate pages and duplicate official communities.</li>
+    <li>Support dynamic urban, rural and municipal address paths.</li>
+    <li>Every location-based record should link to the central location database.</li>
+  </ol>
+
+  <h2 style="font-size:13pt;font-weight:800;color:#000;margin:28px 0 0;">Why this structure matters</h2>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">Facebook Groups are created and controlled manually. Voice 360 communities are officially structured, geographically accurate, automatically generated, connected to verified users, based on real administrative boundaries and protected from duplicate or fake local groups.</p>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">The Activity Zone concept balances openness and local control: anyone can discover and follow communities, only eligible local users can participate, lower-level users cannot interfere in neighbouring communities, and district-level users can participate more broadly when that is intentionally allowed.</p>
+  <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">The unified address system is equally essential. Without it, Business Directory, Professionals, Marketplace, Community, Jobs, Property and other modules could all use different location data and produce inconsistent results.</p>
+
+  <div style="border:1px solid #e4e8e6;border-left:3px solid #c0392b;background:#faf6f5;padding:16px 18px;margin-top:18px;break-inside:avoid;">
+    <div style="font-size:8pt;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#c0392b;">One policy to confirm before backend development</div>
+    <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:7px 0 0;">The current rule lets a user who selects District as their Activity Zone participate in every lower community within that District — very broad posting rights. That can work as designed, but the system must clearly distinguish three things: the user’s verified residential or primary location, the user’s selected Activity Zone, and the communities where they hold participation rights. Otherwise many users will select District only to unlock everything beneath it.</p>
+    <p style="font-size:10.5pt;line-height:1.6;color:#182420;margin:8px 0 0;font-weight:600;">Target structure: the verified address determines primary local identity, while the Activity Zone determines the approved operating area under platform eligibility rules.</p>
+    <p style="font-size:10.5pt;line-height:1.6;color:#2a3733;margin:8px 0 0;">District-level access could later require stronger verification, an organisation role, a professional role or admin approval, with ordinary residents using their actual local unit and its parent hierarchy. This may not ship at launch, but the regulations should be introduced gradually — the safeguard preserves the strict local identity the concept is built around.</p>
+  </div>
+
+</doc-page>
+</x-dc>
+</body>
+</html>
