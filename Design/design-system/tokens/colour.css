@@ -1,0 +1,142 @@
+/* Voice 360 — colour tokens. Generated 2026-08-11 from seed #049567 (M3 Tonal spot, Standard contrast). */
+
+:root {
+  /* M3 light scheme */
+  --v360-primary: #006c49;
+  --v360-on-primary: #ffffff;
+  --v360-primary-container: #8af8c6;
+  --v360-on-primary-container: #002114;
+  --v360-secondary: #83541a;
+  --v360-on-secondary: #ffffff;
+  --v360-secondary-container: #ffdcbb;
+  --v360-on-secondary-container: #291800;
+  --v360-tertiary: #006879;
+  --v360-on-tertiary: #ffffff;
+  --v360-tertiary-container: #a6eeff;
+  --v360-on-tertiary-container: #001f26;
+  --v360-error: #ba1a1a;
+  --v360-on-error: #ffffff;
+  --v360-error-container: #ffdad3;
+  --v360-on-error-container: #390c00;
+  --v360-warning: #656100;
+  --v360-on-warning: #ffffff;
+  --v360-warning-container: #f2e572;
+  --v360-on-warning-container: #201c00;
+  --v360-surface: #effdf5;
+  --v360-on-surface: #141e19;
+  --v360-surface-variant: #d5e7dd;
+  --v360-on-surface-variant: #3b4a42;
+  --v360-outline: #6b7b72;
+  --v360-outline-variant: #b9cac1;
+  --v360-surface-container-lowest: #ffffff;
+  --v360-surface-container-low: #e9f7f0;
+  --v360-surface-container: #e4f1ea;
+  --v360-surface-container-high: #deebe4;
+  --v360-surface-container-highest: #d8e6df;
+  --v360-inverse-surface: #28332d;
+  --v360-inverse-on-surface: #e6f4ed;
+  --v360-inverse-primary: #6ddbaa;
+  --v360-scrim: #000000;
+
+  /* Fixed roles — identical in light and dark */
+  --v360-primary-fixed: #8af8c6;
+  --v360-primary-fixed-dim: #6ddbaa;
+  --v360-on-primary-fixed: #002114;
+  --v360-on-primary-fixed-variant: #005236;
+  --v360-secondary-fixed: #ffdcbb;
+  --v360-secondary-fixed-dim: #f7bb7c;
+  --v360-on-secondary-fixed: #291800;
+  --v360-on-secondary-fixed-variant: #673d00;
+  --v360-error-fixed: #ffdad3;
+  --v360-error-fixed-dim: #ffb4a5;
+  --v360-on-error-fixed: #390c00;
+  --v360-on-error-fixed-variant: #93000c;
+  --v360-warning-fixed: #f2e572;
+  --v360-warning-fixed-dim: #d5c957;
+  --v360-on-warning-fixed: #201c00;
+  --v360-on-warning-fixed-variant: #4c4800;
+
+  /* Numeric primary ramp — 500 pinned to seed */
+  --v360-primary-50: #defaec;
+  --v360-primary-100: #c5f2db;
+  --v360-primary-200: #9fdfc0;
+  --v360-primary-300: #71c79f;
+  --v360-primary-400: #47b285;
+  --v360-primary-500: #049567;
+  --v360-primary-600: #007c54;
+  --v360-primary-700: #006343;
+  --v360-primary-800: #004e34;
+  --v360-primary-900: #003a25;
+
+  /* Hand-picked working palette (legacy, still valid) */
+  --v360-primary: #049567;
+  --v360-primary-tint: #defaec;
+  --v360-primary-border: #9fdfc0;
+  --v360-primary-text: #006343;
+  --v360-information: #33569b;
+  --v360-information-tint: #e8eefa;
+  --v360-information-border: #d3ddf3;
+  --v360-information-text: #1e2f4d;
+  --v360-caution: #e0a53c;
+  --v360-caution-tint: #fdf3df;
+  --v360-caution-border: #f4e3bd;
+  --v360-caution-text: #8a6410;
+  --v360-critical: #c0392b;
+  --v360-critical-tint: #fbe9e7;
+  --v360-critical-border: #f5d5d1;
+  --v360-critical-text: #4a140e;
+  --v360-ownership: #7a4fb5;
+  --v360-ownership-tint: #f1eaf9;
+  --v360-ownership-border: #e3d7f2;
+  --v360-ownership-text: #4a2d70;
+  --v360-dialogue: #17838a;
+  --v360-dialogue-tint: #e5f2f3;
+  --v360-dialogue-border: #cfe6e8;
+  --v360-dialogue-text: #0e4a4e;
+
+  /* Neutrals */
+  --v360-text-strong: #182420;
+  --v360-text-body: #26302c;
+  --v360-text-secondary: #5c6b64;
+  --v360-text-muted: #8b978f;
+  --v360-border: #e2e6e3;
+  --v360-bg-app: #f4f6f4;
+}
+
+[data-theme="dark"] {
+  --v360-primary: #6ddbaa;
+  --v360-on-primary: #003824;
+  --v360-primary-container: #005236;
+  --v360-on-primary-container: #8af8c6;
+  --v360-secondary: #f7bb7c;
+  --v360-on-secondary: #472a00;
+  --v360-secondary-container: #673d00;
+  --v360-on-secondary-container: #ffdcbb;
+  --v360-tertiary: #73d4ea;
+  --v360-on-tertiary: #003640;
+  --v360-tertiary-container: #004e5b;
+  --v360-on-tertiary-container: #a6eeff;
+  --v360-error: #ffb4a5;
+  --v360-on-error: #690000;
+  --v360-error-container: #93000c;
+  --v360-on-error-container: #ffdad3;
+  --v360-warning: #d5c957;
+  --v360-on-warning: #353100;
+  --v360-warning-container: #4c4800;
+  --v360-on-warning-container: #f2e572;
+  --v360-surface: #091610;
+  --v360-on-surface: #d8e6df;
+  --v360-surface-variant: #3b4a42;
+  --v360-on-surface-variant: #b9cac1;
+  --v360-outline: #84948c;
+  --v360-outline-variant: #3b4a42;
+  --v360-surface-container-lowest: #02110a;
+  --v360-surface-container-low: #141e19;
+  --v360-surface-container: #18221d;
+  --v360-surface-container-high: #222c27;
+  --v360-surface-container-highest: #2d3732;
+  --v360-inverse-surface: #d8e6df;
+  --v360-inverse-on-surface: #28332d;
+  --v360-inverse-primary: #006c49;
+  --v360-scrim: #000000;
+}

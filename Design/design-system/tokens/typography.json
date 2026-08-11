@@ -1,0 +1,196 @@
+{
+  "meta": {
+    "system": "Voice 360 typography",
+    "generated": "2026-08-11",
+    "family": "Manrope",
+    "fallback": "Manrope, SF Pro, Roboto, system-ui, sans-serif",
+    "weights": {
+      "body": 400,
+      "interface": 600,
+      "structural": 800,
+      "banned": [
+        300,
+        500,
+        700
+      ]
+    },
+    "audit": "Rebuilt from a count of 5,185 text font-size declarations across all built mobile screens (Parliamentary, Community, Pages, Business Hub, Fundraising). 27 sizes consolidated to 11 steps; 2,378 declarations migrated. Icons (17–26px glyphs) excluded — see Iconography.",
+    "rules": [
+      "Floor is 10px, only for caps labels and pills; body copy never below 11px.",
+      "Every size in a screen must name a step; never invent a size.",
+      "Weights 400/600/800 only — never 300, 500 or 700.",
+      "Max three type sizes inside one card.",
+      "No italics; no letter-spacing on body copy; no centred paragraphs.",
+      "Permitted tracking: -1.4 (display), -0.4 (titles 15–22), 0 (body/meta), +0.8 (caps), +1.1 (pills).",
+      "Bangla: add 2px line-height at every step, never shrink size; containers grow, never truncate."
+    ]
+  },
+  "mobileScale": [
+    {
+      "step": 1,
+      "token": "display",
+      "px": 34,
+      "lh": 40,
+      "weight": 800,
+      "tracking": "-1.4px",
+      "use": "Screen hero numbers and names",
+      "absorbs": [
+        30,
+        32,
+        38
+      ]
+    },
+    {
+      "step": 2,
+      "token": "headline",
+      "px": 22,
+      "lh": 28,
+      "weight": 800,
+      "tracking": "-0.8px",
+      "use": "Screen titles",
+      "absorbs": [
+        20,
+        21,
+        24,
+        26
+      ]
+    },
+    {
+      "step": 3,
+      "token": "title-l",
+      "px": 18,
+      "lh": 23,
+      "weight": 800,
+      "tracking": "-0.4px",
+      "use": "Prominent card titles",
+      "absorbs": [
+        17,
+        19
+      ]
+    },
+    {
+      "step": 4,
+      "token": "title-m",
+      "px": 15,
+      "lh": 20,
+      "weight": 800,
+      "tracking": "-0.2px",
+      "use": "Card and section headings",
+      "absorbs": [
+        14,
+        16
+      ]
+    },
+    {
+      "step": 5,
+      "token": "title-s",
+      "px": 13,
+      "lh": 17,
+      "weight": 800,
+      "tracking": "0",
+      "use": "List row titles, button labels",
+      "absorbs": []
+    },
+    {
+      "step": 6,
+      "token": "label",
+      "px": 12,
+      "lh": 16,
+      "weight": 800,
+      "tracking": "0",
+      "use": "Chips, stat labels, tabs — busiest pair (617 uses)",
+      "absorbs": []
+    },
+    {
+      "step": 7,
+      "token": "body",
+      "px": 13,
+      "lh": 20,
+      "weight": 600,
+      "tracking": "0",
+      "use": "Descriptions and explanatory copy; 400 for multi-paragraph only",
+      "absorbs": []
+    },
+    {
+      "step": 8,
+      "token": "body-s",
+      "px": 12,
+      "lh": 17,
+      "weight": 600,
+      "tracking": "0",
+      "use": "Secondary description in denser cards and sheets",
+      "absorbs": []
+    },
+    {
+      "step": 9,
+      "token": "meta",
+      "px": 11,
+      "lh": 16,
+      "weight": 600,
+      "tracking": "0",
+      "use": "Counts, timestamps, helper text; 800 when emphasised",
+      "absorbs": []
+    },
+    {
+      "step": 10,
+      "token": "caps",
+      "px": 10,
+      "lh": 14,
+      "weight": 800,
+      "tracking": "+0.8px",
+      "use": "Uppercase labels; absorbs all 9px caps",
+      "absorbs": [
+        9
+      ]
+    },
+    {
+      "step": 11,
+      "token": "pill",
+      "px": 10,
+      "lh": 14,
+      "weight": 800,
+      "tracking": "+1.1px",
+      "use": "Pills only, uppercase",
+      "absorbs": []
+    }
+  ],
+  "desktopScale": [
+    {
+      "token": "hero",
+      "px": 46,
+      "lh": 52,
+      "tracking": "-2px"
+    },
+    {
+      "token": "page-title",
+      "px": 34,
+      "lh": 40,
+      "tracking": "-1.3px"
+    },
+    {
+      "token": "section",
+      "px": 20,
+      "lh": 26,
+      "tracking": "-0.4px"
+    },
+    {
+      "token": "card-title",
+      "px": 16,
+      "lh": 21,
+      "tracking": "0"
+    },
+    {
+      "token": "body",
+      "px": 14,
+      "lh": 21,
+      "tracking": "0",
+      "weight": "400–600"
+    },
+    {
+      "token": "meta",
+      "px": 12,
+      "lh": 17,
+      "tracking": "0"
+    }
+  ]
+}

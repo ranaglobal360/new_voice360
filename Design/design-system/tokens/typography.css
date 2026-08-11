@@ -1,0 +1,62 @@
+/* Voice 360 — typography tokens. 11-step mobile scale, Manrope 400/600/800. Generated 2026-08-11. */
+
+:root {
+  --v360-font: 'Manrope', 'SF Pro', 'Roboto', system-ui, sans-serif;
+
+  /* 1 · display — Screen hero numbers and names */
+  --v360-type-display: 800 34px/40px var(--v360-font);
+  --v360-type-display-tracking: -1.4px;
+
+  /* 2 · headline — Screen titles */
+  --v360-type-headline: 800 22px/28px var(--v360-font);
+  --v360-type-headline-tracking: -0.8px;
+
+  /* 3 · title-l — Prominent card titles */
+  --v360-type-title-l: 800 18px/23px var(--v360-font);
+  --v360-type-title-l-tracking: -0.4px;
+
+  /* 4 · title-m — Card and section headings */
+  --v360-type-title-m: 800 15px/20px var(--v360-font);
+  --v360-type-title-m-tracking: -0.2px;
+
+  /* 5 · title-s — List row titles, button labels */
+  --v360-type-title-s: 800 13px/17px var(--v360-font);
+  --v360-type-title-s-tracking: 0;
+
+  /* 6 · label — Chips, stat labels, tabs — busiest pair (617 uses) */
+  --v360-type-label: 800 12px/16px var(--v360-font);
+  --v360-type-label-tracking: 0;
+
+  /* 7 · body — Descriptions and explanatory copy; 400 for multi-paragraph only */
+  --v360-type-body: 600 13px/20px var(--v360-font);
+  --v360-type-body-tracking: 0;
+
+  /* 8 · body-s — Secondary description in denser cards and sheets */
+  --v360-type-body-s: 600 12px/17px var(--v360-font);
+  --v360-type-body-s-tracking: 0;
+
+  /* 9 · meta — Counts, timestamps, helper text; 800 when emphasised */
+  --v360-type-meta: 600 11px/16px var(--v360-font);
+  --v360-type-meta-tracking: 0;
+
+  /* 10 · caps — Uppercase labels; absorbs all 9px caps */
+  --v360-type-caps: 800 10px/14px var(--v360-font);
+  --v360-type-caps-tracking: 0.8px;
+
+  /* 11 · pill — Pills only, uppercase */
+  --v360-type-pill: 800 10px/14px var(--v360-font);
+  --v360-type-pill-tracking: 1.1px;
+}
+
+/* Utility classes */
+.v360-display { font: var(--v360-type-display); letter-spacing: -1.4px; }
+.v360-headline { font: var(--v360-type-headline); letter-spacing: -0.8px; }
+.v360-title-l { font: var(--v360-type-title-l); letter-spacing: -0.4px; }
+.v360-title-m { font: var(--v360-type-title-m); letter-spacing: -0.2px; }
+.v360-title-s { font: var(--v360-type-title-s); letter-spacing: 0; }
+.v360-label { font: var(--v360-type-label); letter-spacing: 0; }
+.v360-body { font: var(--v360-type-body); letter-spacing: 0; }
+.v360-body-s { font: var(--v360-type-body-s); letter-spacing: 0; }
+.v360-meta { font: var(--v360-type-meta); letter-spacing: 0; }
+.v360-caps { font: var(--v360-type-caps); letter-spacing: 0.8px; text-transform: uppercase; }
+.v360-pill { font: var(--v360-type-pill); letter-spacing: 1.1px; text-transform: uppercase; }

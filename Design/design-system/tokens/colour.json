@@ -1,0 +1,316 @@
+{
+  "meta": {
+    "system": "Voice 360 colour",
+    "generated": "2026-08-11",
+    "m3": {
+      "seed": "#049567",
+      "variant": "Tonal spot",
+      "contrast": "Standard",
+      "note": "All 32+ checked pairs pass their floors. Warning is a custom 7th palette at hue 100° (not standard M3). Numeric ramp pins 500 to the exact seed."
+    },
+    "migration": "Hand-picked hues stay valid for existing screens; new work references M3 roles. The five domain secondaries (blue, amber, red, violet, teal) are fixed brand accents, not seed-derived."
+  },
+  "m3": {
+    "light": {
+      "primary": "#006c49",
+      "onPrimary": "#ffffff",
+      "primaryContainer": "#8af8c6",
+      "onPrimaryContainer": "#002114",
+      "secondary": "#83541a",
+      "onSecondary": "#ffffff",
+      "secondaryContainer": "#ffdcbb",
+      "onSecondaryContainer": "#291800",
+      "tertiary": "#006879",
+      "onTertiary": "#ffffff",
+      "tertiaryContainer": "#a6eeff",
+      "onTertiaryContainer": "#001f26",
+      "error": "#ba1a1a",
+      "onError": "#ffffff",
+      "errorContainer": "#ffdad3",
+      "onErrorContainer": "#390c00",
+      "warning": "#656100",
+      "onWarning": "#ffffff",
+      "warningContainer": "#f2e572",
+      "onWarningContainer": "#201c00",
+      "surface": "#effdf5",
+      "onSurface": "#141e19",
+      "surfaceVariant": "#d5e7dd",
+      "onSurfaceVariant": "#3b4a42",
+      "outline": "#6b7b72",
+      "outlineVariant": "#b9cac1",
+      "surfaceContainerLowest": "#ffffff",
+      "surfaceContainerLow": "#e9f7f0",
+      "surfaceContainer": "#e4f1ea",
+      "surfaceContainerHigh": "#deebe4",
+      "surfaceContainerHighest": "#d8e6df",
+      "inverseSurface": "#28332d",
+      "inverseOnSurface": "#e6f4ed",
+      "inversePrimary": "#6ddbaa",
+      "scrim": "#000000"
+    },
+    "dark": {
+      "primary": "#6ddbaa",
+      "onPrimary": "#003824",
+      "primaryContainer": "#005236",
+      "onPrimaryContainer": "#8af8c6",
+      "secondary": "#f7bb7c",
+      "onSecondary": "#472a00",
+      "secondaryContainer": "#673d00",
+      "onSecondaryContainer": "#ffdcbb",
+      "tertiary": "#73d4ea",
+      "onTertiary": "#003640",
+      "tertiaryContainer": "#004e5b",
+      "onTertiaryContainer": "#a6eeff",
+      "error": "#ffb4a5",
+      "onError": "#690000",
+      "errorContainer": "#93000c",
+      "onErrorContainer": "#ffdad3",
+      "warning": "#d5c957",
+      "onWarning": "#353100",
+      "warningContainer": "#4c4800",
+      "onWarningContainer": "#f2e572",
+      "surface": "#091610",
+      "onSurface": "#d8e6df",
+      "surfaceVariant": "#3b4a42",
+      "onSurfaceVariant": "#b9cac1",
+      "outline": "#84948c",
+      "outlineVariant": "#3b4a42",
+      "surfaceContainerLowest": "#02110a",
+      "surfaceContainerLow": "#141e19",
+      "surfaceContainer": "#18221d",
+      "surfaceContainerHigh": "#222c27",
+      "surfaceContainerHighest": "#2d3732",
+      "inverseSurface": "#d8e6df",
+      "inverseOnSurface": "#28332d",
+      "inversePrimary": "#006c49",
+      "scrim": "#000000"
+    },
+    "fixedRoles": {
+      "primaryFixed": "#8af8c6",
+      "primaryFixedDim": "#6ddbaa",
+      "onPrimaryFixed": "#002114",
+      "onPrimaryFixedVariant": "#005236",
+      "secondaryFixed": "#ffdcbb",
+      "secondaryFixedDim": "#f7bb7c",
+      "onSecondaryFixed": "#291800",
+      "onSecondaryFixedVariant": "#673d00",
+      "errorFixed": "#ffdad3",
+      "errorFixedDim": "#ffb4a5",
+      "onErrorFixed": "#390c00",
+      "onErrorFixedVariant": "#93000c",
+      "warningFixed": "#f2e572",
+      "warningFixedDim": "#d5c957",
+      "onWarningFixed": "#201c00",
+      "onWarningFixedVariant": "#4c4800"
+    },
+    "numericRamp": {
+      "50": "#defaec",
+      "100": "#c5f2db",
+      "200": "#9fdfc0",
+      "300": "#71c79f",
+      "400": "#47b285",
+      "500": "#049567",
+      "600": "#007c54",
+      "700": "#006343",
+      "800": "#004e34",
+      "900": "#003a25"
+    },
+    "tonalPalettes": {
+      "primary": {
+        "spec": "hue 161° · chroma 45",
+        "tones": {
+          "0": "#000000",
+          "10": "#002114",
+          "20": "#003824",
+          "30": "#005236",
+          "40": "#006c49",
+          "50": "#00885d",
+          "60": "#30a376",
+          "70": "#50be90",
+          "80": "#6ddbaa",
+          "90": "#8af8c6",
+          "95": "#baffdd",
+          "99": "#f1fff8",
+          "100": "#ffffff"
+        }
+      },
+      "secondary": {
+        "spec": "hue 70° · chroma 43",
+        "tones": {
+          "0": "#000000",
+          "10": "#291800",
+          "20": "#472a00",
+          "30": "#673d00",
+          "40": "#83541a",
+          "50": "#9f6c32",
+          "60": "#bc864a",
+          "70": "#d9a062",
+          "80": "#f7bb7c",
+          "90": "#ffdcbb",
+          "95": "#ffeede",
+          "99": "#fffbf8",
+          "100": "#ffffff"
+        }
+      },
+      "tertiary": {
+        "spec": "hue 221° · chroma 30",
+        "tones": {
+          "0": "#000000",
+          "10": "#001f26",
+          "20": "#003640",
+          "30": "#004e5b",
+          "40": "#006879",
+          "50": "#008398",
+          "60": "#349db3",
+          "70": "#55b8ce",
+          "80": "#73d4ea",
+          "90": "#a6eeff",
+          "95": "#d5f7ff",
+          "99": "#f6feff",
+          "100": "#ffffff"
+        }
+      },
+      "neutral": {
+        "spec": "hue 161° · chroma 6",
+        "tones": {
+          "0": "#000000",
+          "10": "#141e19",
+          "20": "#28332d",
+          "30": "#3e4944",
+          "40": "#56615b",
+          "50": "#6e7a74",
+          "60": "#87938d",
+          "70": "#a2aea7",
+          "80": "#bdc9c3",
+          "90": "#d8e6df",
+          "95": "#e6f4ed",
+          "99": "#f2fff8",
+          "100": "#ffffff"
+        }
+      },
+      "neutral-variant": {
+        "spec": "hue 161° · chroma 8",
+        "tones": {
+          "0": "#000000",
+          "10": "#111e18",
+          "20": "#26332c",
+          "30": "#3b4a42",
+          "40": "#53625a",
+          "50": "#6b7b72",
+          "60": "#84948c",
+          "70": "#9eafa6",
+          "80": "#b9cac1",
+          "90": "#d5e7dd",
+          "95": "#e3f5eb",
+          "99": "#f1fff8",
+          "100": "#ffffff"
+        }
+      },
+      "error": {
+        "spec": "hue 36° · chroma 74",
+        "tones": {
+          "0": "#000000",
+          "10": "#390c00",
+          "20": "#690000",
+          "30": "#93000c",
+          "40": "#ba1a1a",
+          "50": "#da3d30",
+          "60": "#fa5a47",
+          "70": "#ff8a75",
+          "80": "#ffb4a5",
+          "90": "#ffdad3",
+          "95": "#ffede9",
+          "99": "#fffbfa",
+          "100": "#ffffff"
+        }
+      },
+      "warning": {
+        "spec": "hue 100° · chroma 58",
+        "tones": {
+          "0": "#000000",
+          "10": "#201c00",
+          "20": "#353100",
+          "30": "#4c4800",
+          "40": "#656100",
+          "50": "#807a00",
+          "60": "#9b9420",
+          "70": "#b8ae3c",
+          "80": "#d5c957",
+          "90": "#f2e572",
+          "95": "#fff39b",
+          "99": "#fffcef",
+          "100": "#ffffff"
+        }
+      }
+    }
+  },
+  "handPicked": {
+    "hues": {
+      "primary": {
+        "name": "Voice Green",
+        "hex": "#049567",
+        "note": "Brand, membership, confirm, primary action. White on 500 is 3.8:1 — large text/icons only; body-size white labels use 600 #007c54.",
+        "tint": "#defaec",
+        "border": "#9fdfc0",
+        "text": "#006343",
+        "filled600": "#007c54"
+      },
+      "information": {
+        "name": "Civic Blue",
+        "hex": "#33569b",
+        "on": "#ffffff",
+        "tint": "#e8eefa",
+        "border": "#d3ddf3",
+        "text": "#1e2f4d"
+      },
+      "caution": {
+        "name": "Signal Amber",
+        "hex": "#e0a53c",
+        "on": "#4a370a",
+        "tint": "#fdf3df",
+        "border": "#f4e3bd",
+        "text": "#8a6410"
+      },
+      "critical": {
+        "name": "Alert Red",
+        "hex": "#c0392b",
+        "on": "#ffffff",
+        "tint": "#fbe9e7",
+        "border": "#f5d5d1",
+        "text": "#4a140e"
+      },
+      "ownership": {
+        "name": "Manage Violet",
+        "hex": "#7a4fb5",
+        "on": "#ffffff",
+        "tint": "#f1eaf9",
+        "border": "#e3d7f2",
+        "text": "#4a2d70"
+      },
+      "dialogue": {
+        "name": "Talk Teal",
+        "hex": "#17838a",
+        "on": "#ffffff",
+        "tint": "#e5f2f3",
+        "border": "#cfe6e8",
+        "text": "#0e4a4e"
+      }
+    },
+    "neutrals": {
+      "text-strong": "#182420",
+      "text-body": "#26302c",
+      "text-secondary": "#5c6b64",
+      "text-muted": "#8b978f",
+      "border": "#e2e6e3",
+      "bg-app": "#f4f6f4"
+    },
+    "darkSurface": {
+      "bg": "#182420",
+      "container": "#22322c",
+      "divider": "#2c3a33",
+      "eyebrow": "#7fb69c",
+      "title": "#ffffff",
+      "body": "#b8c6bf"
+    }
+  }
+}
