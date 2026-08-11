@@ -31,7 +31,7 @@
     <div onClick="{{ goHome }}" style="width:36px;height:36px;border-radius:12px;background:#eef4f0;display:flex;align-items:center;justify-content:center;cursor:pointer;"><span class="msi" style="font-size:20px;color:#1c6b47;">menu</span></div>
     <div style="flex:1;min-width:0;">
       <div style="font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#2f9169;line-height:14px;">Fundraising</div>
-      <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ title }}</div>
+      <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ title }}</div>
     </div>
     <div style="width:36px;height:36px;border-radius:999px;background:#eef4f0;display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:20px;color:#1c6b47;">search</span></div>
     <div style="width:36px;height:36px;border-radius:999px;background:#eef4f0;display:flex;align-items:center;justify-content:center;position:relative;"><span class="msi" style="font-size:20px;color:#1c6b47;">notifications</span><span style="position:absolute;top:4px;right:5px;width:8px;height:8px;border-radius:999px;background:#c0392b;border:2px solid #fff;"></span></div>
@@ -46,12 +46,12 @@
       <div style="height:150px;background:#e8f3ee;display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:44px;color:#7fa793;">volunteer_activism</span></div>
       <div style="padding:16px;">
         <div style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:800;color:#1c6b47;background:#e2f1e9;border-radius:999px;padding:6px 10px;"><span class="msi" style="font-size:14px;">favorite</span> Make a difference today</div>
-        <div style="font-size:24px;font-weight:800;color:#182420;line-height:29px;letter-spacing:-.5px;margin-top:12px;">Small acts, big impact</div>
-        <div style="font-size:24px;font-weight:800;color:#2f9169;line-height:29px;letter-spacing:-.5px;">Together we change lives</div>
-        <div style="font-size:14px;font-weight:400;color:#5c6b64;line-height:20px;margin-top:8px;">Your kindness can bring hope, provide essentials, and build a better future for those in need.</div>
+        <div style="font-size:22px;font-weight:800;color:#182420;line-height:29px;letter-spacing:-.5px;margin-top:12px;">Small acts, big impact</div>
+        <div style="font-size:22px;font-weight:800;color:#2f9169;line-height:29px;letter-spacing:-.5px;">Together we change lives</div>
+        <div style="font-size:15px;font-weight:400;color:#5c6b64;line-height:20px;margin-top:8px;">Your kindness can bring hope, provide essentials, and build a better future for those in need.</div>
         <div style="display:flex;gap:8px;margin-top:14px;">
-          <div style="flex:1;height:44px;background:#2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:800;color:#fff;"><span class="msi" style="font-size:18px;">favorite</span> Donate now</div>
-          <div onClick="{{ openSponsor }}" style="flex:1;height:44px;border:1px solid #2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:800;color:#1c6b47;cursor:pointer;"><span class="msi" style="font-size:18px;">diversity_1</span> Sponsor a life</div>
+          <div style="flex:1;height:44px;background:#2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:15px;font-weight:800;color:#fff;"><span class="msi" style="font-size:18px;">favorite</span> Donate now</div>
+          <div onClick="{{ openSponsor }}" style="flex:1;height:44px;border:1px solid #2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:15px;font-weight:800;color:#1c6b47;cursor:pointer;"><span class="msi" style="font-size:18px;">diversity_1</span> Sponsor a life</div>
         </div>
         <div style="display:flex;gap:12px;margin-top:14px;flex-wrap:wrap;">
           <sc-for list="{{ trust }}" as="t" hint-placeholder-count="3">
@@ -62,12 +62,12 @@
     </div>
 
     <div>
-      <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;margin-bottom:10px;">How you can help today</div>
+      <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;margin-bottom:10px;">How you can help today</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
         <sc-for list="{{ helpWays }}" as="h" hint-placeholder-count="4">
           <div style="background:#fff;border:1px solid #e2e6e3;border-radius:16px;padding:14px;min-height:118px;">
             <div style="width:34px;height:34px;border-radius:11px;background:#eef4f0;display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:18px;color:#2f9169;">{{ h.icon }}</span></div>
-            <div style="font-size:14px;font-weight:800;color:#182420;line-height:18px;margin-top:10px;">{{ h.title }}</div>
+            <div style="font-size:15px;font-weight:800;color:#182420;line-height:18px;margin-top:10px;">{{ h.title }}</div>
             <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:15px;margin-top:2px;">{{ h.sub }}</div>
           </div>
         </sc-for>
@@ -76,7 +76,7 @@
 
     <div>
       <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;">
-        <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">Featured campaigns</div>
+        <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;">Featured campaigns</div>
         <div onClick="{{ openCampaigns }}" style="font-size:12px;font-weight:800;color:#2f9169;cursor:pointer;">View all</div>
       </div>
       <div class="v360-scroll" style="display:flex;gap:10px;overflow-x:auto;margin:0 -16px;padding:0 16px 4px;">
@@ -86,9 +86,9 @@
               <span style="font-size:12px;font-weight:800;color:{{ c.badgeFg }};background:#fff;border-radius:999px;padding:4px 8px;">{{ c.category }}</span>
             </div>
             <div style="padding:12px;">
-              <div style="font-size:14px;font-weight:800;color:#182420;line-height:19px;">{{ c.title }}</div>
+              <div style="font-size:15px;font-weight:800;color:#182420;line-height:19px;">{{ c.title }}</div>
               <div style="font-size:12px;font-weight:400;color:#6b7973;line-height:16px;margin-top:4px;">{{ c.blurb }}</div>
-              <div style="font-size:16px;font-weight:800;color:#1c6b47;line-height:20px;margin-top:10px;white-space:nowrap;">৳ {{ c.raised }}</div>
+              <div style="font-size:15px;font-weight:800;color:#1c6b47;line-height:20px;margin-top:10px;white-space:nowrap;">৳ {{ c.raised }}</div>
               <div style="font-size:12px;font-weight:600;color:#5c6b64;line-height:16px;white-space:nowrap;">raised of ৳ {{ c.goal }} goal</div>
               <div style="height:6px;border-radius:999px;background:#eef2ef;margin-top:8px;overflow:hidden;">
                 <div style="height:6px;border-radius:999px;background:#2f9169;width:{{ c.pct }};"></div>
@@ -105,7 +105,7 @@
 
     <div>
       <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;">
-        <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">Sponsor a life</div>
+        <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;">Sponsor a life</div>
         <div onClick="{{ openSponsor }}" style="font-size:12px;font-weight:800;color:#2f9169;cursor:pointer;">View all</div>
       </div>
       <div class="v360-scroll" style="display:flex;gap:10px;overflow-x:auto;margin:0 -16px;padding:0 16px 4px;">
@@ -117,11 +117,11 @@
             </div>
             <div style="padding:12px;">
               <span style="font-size:12px;font-weight:800;color:{{ b.badgeFg }};background:{{ b.badgeBg }};border-radius:999px;padding:3px 7px;">{{ b.category }}</span>
-              <div style="font-size:14px;font-weight:800;color:#182420;line-height:18px;margin-top:8px;">{{ b.name }}</div>
+              <div style="font-size:15px;font-weight:800;color:#182420;line-height:18px;margin-top:8px;">{{ b.name }}</div>
               <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:15px;">{{ b.meta }}</div>
               <div style="font-size:12px;font-weight:400;color:#6b7973;line-height:16px;margin-top:6px;">{{ b.story }}</div>
               <div style="font-size:12px;font-weight:600;color:#5c6b64;line-height:16px;margin-top:8px;">Monthly support needed</div>
-              <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;white-space:nowrap;">৳ {{ b.amount }}</div>
+              <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;white-space:nowrap;">৳ {{ b.amount }}</div>
               <div style="height:36px;border:1px solid #2f9169;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#1c6b47;margin-top:10px;">Sponsor now</div>
             </div>
           </div>
@@ -130,7 +130,7 @@
     </div>
 
     <div>
-      <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;margin-bottom:10px;">Browse by cause</div>
+      <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;margin-bottom:10px;">Browse by cause</div>
       <div style="display:flex;flex-wrap:wrap;gap:8px;">
         <sc-for list="{{ causes }}" as="c" hint-placeholder-count="9">
           <div style="background:#fff;border:1px solid #e2e6e3;border-radius:14px;padding:12px 10px;width:118px;text-align:center;">
@@ -142,12 +142,12 @@
     </div>
 
     <div style="background:#e8f3ee;border:1px solid #cfe6da;border-radius:20px;padding:16px;">
-      <div style="font-size:16px;font-weight:800;color:#182420;line-height:21px;text-align:center;">Together, we’re making an impact</div>
+      <div style="font-size:15px;font-weight:800;color:#182420;line-height:21px;text-align:center;">Together, we’re making an impact</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;">
         <sc-for list="{{ impact }}" as="i" hint-placeholder-count="4">
           <div style="background:#fff;border-radius:14px;padding:14px;text-align:center;">
             <span class="msi" style="font-size:20px;color:#2f9169;">{{ i.icon }}</span>
-            <div style="font-size:20px;font-weight:800;color:#182420;line-height:24px;margin-top:6px;letter-spacing:-.4px;">{{ i.value }}</div>
+            <div style="font-size:22px;font-weight:800;color:#182420;line-height:24px;margin-top:6px;letter-spacing:-.4px;">{{ i.value }}</div>
             <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:15px;">{{ i.label }}</div>
           </div>
         </sc-for>
@@ -156,13 +156,13 @@
     </div>
 
     <div>
-      <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;margin-bottom:10px;">Explore fundraising</div>
+      <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;margin-bottom:10px;">Explore fundraising</div>
       <div style="display:flex;flex-direction:column;gap:10px;">
         <sc-for list="{{ flows }}" as="fl" hint-placeholder-count="4">
           <div onClick="{{ fl.open }}" style="background:#fff;border:1px solid #e2e6e3;border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;min-height:72px;" style-active="background:#f7faf8;">
             <div style="width:44px;height:44px;flex:none;border-radius:14px;background:{{ fl.tint }};display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:24px;color:{{ fl.metricColor }};">{{ fl.icon }}</span></div>
             <div style="flex:1;min-width:0;">
-              <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">{{ fl.title }}</div>
+              <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;">{{ fl.title }}</div>
               <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:17px;">{{ fl.sub }}</div>
               <div style="font-size:12px;font-weight:800;color:{{ fl.metricColor }};line-height:15px;margin-top:3px;">{{ fl.metric }}</div>
             </div>
@@ -173,12 +173,12 @@
     </div>
 
     <div style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:16px;">
-      <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">Why donate with Voice 360?</div>
+      <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;">Why donate with Voice 360?</div>
       <sc-for list="{{ whyDonate }}" as="w" hint-placeholder-count="5">
         <div style="display:flex;gap:10px;padding:11px 0;border-top:1px solid #f2f4f2;">
           <div style="width:32px;height:32px;flex:none;border-radius:10px;background:#eef4f0;display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:18px;color:#2f9169;">{{ w.icon }}</span></div>
           <div style="flex:1;min-width:0;">
-            <div style="font-size:14px;font-weight:800;color:#182420;line-height:18px;">{{ w.title }}</div>
+            <div style="font-size:15px;font-weight:800;color:#182420;line-height:18px;">{{ w.title }}</div>
             <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:16px;">{{ w.sub }}</div>
           </div>
         </div>
@@ -188,8 +188,8 @@
     <div style="background:#182420;border-radius:20px;padding:18px;">
       <div style="font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#8EDDB6;">Start something</div>
       <div style="font-size:18px;font-weight:800;color:#fff;line-height:24px;margin-top:6px;">Want to start your own fundraiser?</div>
-      <div style="font-size:14px;font-weight:600;color:#9fada7;line-height:19px;margin-top:6px;">Raise funds for a cause you care about and create a meaningful impact in your community.</div>
-      <div style="height:44px;background:#2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:800;color:#fff;margin-top:14px;"><span class="msi" style="font-size:18px;">campaign</span> Request a campaign</div>
+      <div style="font-size:15px;font-weight:600;color:#9fada7;line-height:19px;margin-top:6px;">Raise funds for a cause you care about and create a meaningful impact in your community.</div>
+      <div style="height:44px;background:#2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:15px;font-weight:800;color:#fff;margin-top:14px;"><span class="msi" style="font-size:18px;">campaign</span> Request a campaign</div>
     </div>
 
     <div style="text-align:center;font-size:12px;font-weight:600;color:#5c6b64;padding:4px 0 8px;">© 2026 Voice 360. All rights reserved.</div>
@@ -198,9 +198,9 @@
 
   <sc-if value="{{ isCampaigns }}" hint-placeholder-val="{{ false }}">
   <div style="padding:16px;display:flex;flex-direction:column;gap:14px;">
-    <div style="font-size:14px;font-weight:400;color:#5c6b64;line-height:19px;">Discover and support verified causes that are making a real difference.</div>
+    <div style="font-size:15px;font-weight:400;color:#5c6b64;line-height:19px;">Discover and support verified causes that are making a real difference.</div>
 
-    <div style="height:44px;background:#2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:800;color:#fff;"><span class="msi" style="font-size:18px;">campaign</span> Request a campaign</div>
+    <div style="height:44px;background:#2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:15px;font-weight:800;color:#fff;"><span class="msi" style="font-size:18px;">campaign</span> Request a campaign</div>
 
     <div class="v360-scroll" style="display:flex;gap:8px;overflow-x:auto;margin:0 -16px;padding:0 16px;">
       <sc-for list="{{ campaignChips }}" as="c" hint-placeholder-count="7">
@@ -215,12 +215,12 @@
     </div>
 
     <div style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:16px;">
-      <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">Campaign status</div>
+      <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;">Campaign status</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;">
         <sc-for list="{{ campaignStatus }}" as="s" hint-placeholder-count="4">
           <div style="border:1px solid #eceeec;border-radius:14px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;">
             <span style="font-size:12px;font-weight:600;color:#5c6b64;">{{ s.label }}</span>
-            <span style="font-size:16px;font-weight:800;color:#182420;">{{ s.value }}</span>
+            <span style="font-size:15px;font-weight:800;color:#182420;">{{ s.value }}</span>
           </div>
         </sc-for>
       </div>
@@ -234,9 +234,9 @@
         </div>
         <div style="padding:14px 16px 16px;">
           <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
-            <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;flex:1;">{{ c.title }}</div>
+            <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;flex:1;">{{ c.title }}</div>
             <div style="flex:none;text-align:right;min-width:126px;">
-              <div style="font-size:16px;font-weight:800;color:#1c6b47;line-height:20px;white-space:nowrap;">৳ {{ c.raised }}</div>
+              <div style="font-size:15px;font-weight:800;color:#1c6b47;line-height:20px;white-space:nowrap;">৳ {{ c.raised }}</div>
               <div style="font-size:12px;font-weight:600;color:#5c6b64;line-height:16px;white-space:nowrap;">of ৳ {{ c.goal }}</div>
             </div>
           </div>
@@ -249,7 +249,7 @@
             <span style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:#5c6b64;"><span class="msi" style="font-size:14px;color:#5c6b64;">group</span> {{ c.donors }}</span>
             <span style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:800;color:{{ c.timeColor }};"><span class="msi" style="font-size:14px;">schedule</span> {{ c.time }}</span>
           </div>
-          <div style="height:40px;background:#2f9169;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;margin-top:12px;">View details</div>
+          <div style="height:40px;background:#2f9169;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;margin-top:12px;">View details</div>
         </div>
       </div>
     </sc-for>
@@ -264,10 +264,10 @@
     </div>
 
     <div style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:16px;">
-      <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">Popular categories</div>
+      <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;">Popular categories</div>
       <sc-for list="{{ popularCategories }}" as="p" hint-placeholder-count="6">
         <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid #f2f4f2;">
-          <span style="font-size:14px;font-weight:600;color:#3a4642;">{{ p.label }}</span>
+          <span style="font-size:15px;font-weight:600;color:#3a4642;">{{ p.label }}</span>
           <span style="font-size:12px;font-weight:800;color:#1c6b47;background:#e2f1e9;border-radius:999px;padding:3px 9px;">{{ p.count }}</span>
         </div>
       </sc-for>
@@ -276,11 +276,11 @@
     <div style="background:#e8f3ee;border:1px solid #cfe6da;border-radius:20px;padding:16px;">
       <div style="display:flex;align-items:center;gap:8px;">
         <span class="msi" style="font-size:20px;color:#1c6b47;">verified_user</span>
-        <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">Why support our campaigns?</div>
+        <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;">Why support our campaigns?</div>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
         <sc-for list="{{ whySupport }}" as="w" hint-placeholder-count="4">
-          <div style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#24352d;line-height:19px;"><span class="msi" style="font-size:16px;color:#2f9169;">check_circle</span> {{ w.text }}</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:#24352d;line-height:19px;"><span class="msi" style="font-size:16px;color:#2f9169;">check_circle</span> {{ w.text }}</div>
         </sc-for>
       </div>
     </div>
@@ -292,18 +292,18 @@
     <div style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:20px 16px;text-align:center;">
       <div style="width:64px;height:64px;border-radius:20px;background:#fdf3e0;margin:0 auto;display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:32px;color:#a3760e;">engineering</span></div>
       <div style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:800;color:#8a6a10;background:#fdf3e0;border-radius:999px;padding:6px 12px;margin-top:14px;">COMING SOON</div>
-      <div style="font-size:20px;font-weight:800;color:#182420;line-height:26px;letter-spacing:-.4px;margin-top:12px;">Community Projects</div>
-      <div style="font-size:14px;font-weight:400;color:#5c6b64;line-height:20px;margin-top:8px;">This feature is under development. Soon you will be able to fund and follow projects that your own community proposes and delivers.</div>
-      <div style="height:44px;border:1px solid #2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:800;color:#1c6b47;margin-top:16px;"><span class="msi" style="font-size:18px;">notifications_active</span> Notify me at launch</div>
+      <div style="font-size:22px;font-weight:800;color:#182420;line-height:26px;letter-spacing:-.4px;margin-top:12px;">Community Projects</div>
+      <div style="font-size:15px;font-weight:400;color:#5c6b64;line-height:20px;margin-top:8px;">This feature is under development. Soon you will be able to fund and follow projects that your own community proposes and delivers.</div>
+      <div style="height:44px;border:1px solid #2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:15px;font-weight:800;color:#1c6b47;margin-top:16px;"><span class="msi" style="font-size:18px;">notifications_active</span> Notify me at launch</div>
     </div>
 
     <div style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:16px;">
-      <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">What is coming</div>
+      <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;">What is coming</div>
       <sc-for list="{{ projectFeatures }}" as="p" hint-placeholder-count="5">
         <div style="display:flex;gap:10px;padding:11px 0;border-top:1px solid #f2f4f2;">
           <div style="width:32px;height:32px;flex:none;border-radius:10px;background:#eef4f0;display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:18px;color:#2f9169;">{{ p.icon }}</span></div>
           <div style="flex:1;min-width:0;">
-            <div style="font-size:14px;font-weight:800;color:#182420;line-height:18px;">{{ p.title }}</div>
+            <div style="font-size:15px;font-weight:800;color:#182420;line-height:18px;">{{ p.title }}</div>
             <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:16px;">{{ p.sub }}</div>
           </div>
         </div>
@@ -311,11 +311,11 @@
     </div>
 
     <div style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:16px;">
-      <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">In the meantime</div>
+      <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;">In the meantime</div>
       <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:18px;margin-top:4px;">Projects proposed in your area already live inside Development &amp; Ideas.</div>
       <div style="display:flex;gap:8px;margin-top:12px;">
-        <div onClick="{{ openCampaigns }}" style="flex:1;height:44px;background:#2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;cursor:pointer;">Browse campaigns</div>
-        <div onClick="{{ openSponsor }}" style="flex:1;height:44px;border:1px solid #d8e2dc;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#182420;cursor:pointer;">Sponsor a life</div>
+        <div onClick="{{ openCampaigns }}" style="flex:1;height:44px;background:#2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;cursor:pointer;">Browse campaigns</div>
+        <div onClick="{{ openSponsor }}" style="flex:1;height:44px;border:1px solid #d8e2dc;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#182420;cursor:pointer;">Sponsor a life</div>
       </div>
     </div>
   </div>
@@ -323,22 +323,22 @@
 
   <sc-if value="{{ isSponsor }}" hint-placeholder-val="{{ false }}">
   <div style="padding:16px;display:flex;flex-direction:column;gap:14px;">
-    <div style="font-size:14px;font-weight:400;color:#5c6b64;line-height:19px;">Provide continuous support and help someone build a better future.</div>
+    <div style="font-size:15px;font-weight:400;color:#5c6b64;line-height:19px;">Provide continuous support and help someone build a better future.</div>
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <sc-for list="{{ sponsorValues }}" as="v" hint-placeholder-count="4">
         <div style="background:#fff;border:1px solid #e2e6e3;border-radius:16px;padding:14px;">
           <span class="msi" style="font-size:20px;color:#2f9169;">{{ v.icon }}</span>
-          <div style="font-size:14px;font-weight:800;color:#182420;line-height:18px;margin-top:8px;">{{ v.title }}</div>
+          <div style="font-size:15px;font-weight:800;color:#182420;line-height:18px;margin-top:8px;">{{ v.title }}</div>
           <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:15px;">{{ v.sub }}</div>
         </div>
       </sc-for>
     </div>
 
     <div style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:16px;">
-      <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">Find someone to sponsor</div>
+      <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;">Find someone to sponsor</div>
       <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:17px;margin-top:2px;">Choose a beneficiary and start making a difference today.</div>
-      <div style="height:44px;border:1px solid #d8e2dc;border-radius:12px;display:flex;align-items:center;gap:8px;padding:0 12px;font-size:14px;font-weight:600;color:#5c6b64;margin-top:12px;"><span class="msi" style="font-size:18px;color:#b6c2bb;">search</span> Search by name or keyword…</div>
+      <div style="height:44px;border:1px solid #d8e2dc;border-radius:12px;display:flex;align-items:center;gap:8px;padding:0 12px;font-size:15px;font-weight:600;color:#5c6b64;margin-top:12px;"><span class="msi" style="font-size:18px;color:#b6c2bb;">search</span> Search by name or keyword…</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
         <sc-for list="{{ sponsorFilters }}" as="f" hint-placeholder-count="4">
           <div style="height:38px;border:1px solid #e2e6e3;border-radius:10px;display:flex;align-items:center;justify-content:space-between;padding:0 6px 0 10px;font-size:12px;font-weight:800;color:#182420;"><span>{{ f.label }}</span><span class="msi" style="font-size:18px;color:#b6c2bb;">arrow_drop_down</span></div>
@@ -362,11 +362,11 @@
           </div>
           <div style="padding:12px;">
             <span style="font-size:12px;font-weight:800;color:{{ b.badgeFg }};background:{{ b.badgeBg }};border-radius:999px;padding:3px 7px;">{{ b.category }}</span>
-            <div style="font-size:14px;font-weight:800;color:#182420;line-height:18px;margin-top:8px;">{{ b.name }}</div>
+            <div style="font-size:15px;font-weight:800;color:#182420;line-height:18px;margin-top:8px;">{{ b.name }}</div>
             <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:15px;">{{ b.meta }}</div>
             <div style="font-size:12px;font-weight:400;color:#6b7973;line-height:16px;margin-top:6px;">{{ b.story }}</div>
             <div style="font-size:12px;font-weight:600;color:#5c6b64;line-height:16px;margin-top:8px;">Monthly support</div>
-            <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;white-space:nowrap;">৳ {{ b.amount }}</div>
+            <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;white-space:nowrap;">৳ {{ b.amount }}</div>
             <div style="height:36px;border:1px solid #2f9169;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#1c6b47;margin-top:10px;">Sponsor now</div>
           </div>
         </div>
@@ -374,12 +374,12 @@
     </div>
 
     <div style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:16px;">
-      <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">How it works</div>
+      <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;">How it works</div>
       <sc-for list="{{ howItWorks }}" as="h" hint-placeholder-count="4">
         <div style="display:flex;gap:12px;padding:12px 0;border-top:1px solid #f2f4f2;">
           <div style="width:26px;height:26px;flex:none;border-radius:999px;background:#e2f1e9;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#1c6b47;">{{ h.step }}</div>
           <div style="flex:1;min-width:0;">
-            <div style="font-size:14px;font-weight:800;color:#182420;line-height:18px;">{{ h.title }}</div>
+            <div style="font-size:15px;font-weight:800;color:#182420;line-height:18px;">{{ h.title }}</div>
             <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:16px;">{{ h.sub }}</div>
           </div>
         </div>
@@ -387,20 +387,20 @@
     </div>
 
     <div style="background:#e8f3ee;border:1px solid #cfe6da;border-radius:20px;padding:16px;">
-      <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">Why sponsor a life?</div>
+      <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;">Why sponsor a life?</div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
         <sc-for list="{{ whySponsor }}" as="w" hint-placeholder-count="5">
-          <div style="display:flex;align-items:flex-start;gap:8px;font-size:14px;font-weight:600;color:#24352d;line-height:19px;"><span class="msi" style="font-size:16px;color:#2f9169;">check_circle</span> {{ w.text }}</div>
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:15px;font-weight:600;color:#24352d;line-height:19px;"><span class="msi" style="font-size:16px;color:#2f9169;">check_circle</span> {{ w.text }}</div>
         </sc-for>
       </div>
-      <div style="height:44px;background:#2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;margin-top:14px;">Learn more</div>
+      <div style="height:44px;background:#2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;margin-top:14px;">Learn more</div>
     </div>
 
     <div style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:16px;">
-      <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">Popular categories</div>
+      <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;">Popular categories</div>
       <sc-for list="{{ sponsorCategories }}" as="p" hint-placeholder-count="5">
         <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid #f2f4f2;">
-          <span style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#3a4642;"><span class="msi" style="font-size:18px;color:#2f9169;">{{ p.icon }}</span> {{ p.label }}</span>
+          <span style="display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:#3a4642;"><span class="msi" style="font-size:18px;color:#2f9169;">{{ p.icon }}</span> {{ p.label }}</span>
           <span style="font-size:12px;font-weight:800;color:#6b7973;">{{ p.count }}</span>
         </div>
       </sc-for>
@@ -410,11 +410,11 @@
 
   <sc-if value="{{ isTransparency }}" hint-placeholder-val="{{ false }}">
   <div style="padding:16px;display:flex;flex-direction:column;gap:14px;">
-    <div style="font-size:14px;font-weight:400;color:#5c6b64;line-height:19px;">Real funds. Real impact. 100% transparency.</div>
+    <div style="font-size:15px;font-weight:400;color:#5c6b64;line-height:19px;">Real funds. Real impact. 100% transparency.</div>
 
     <div style="display:flex;gap:8px;">
-      <div style="flex:1;height:44px;border:1px solid #d8e2dc;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:800;color:#182420;"><span class="msi" style="font-size:18px;color:#2f9169;">download</span> Download</div>
-      <div style="flex:1;height:44px;border:1px solid #d8e2dc;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:800;color:#182420;"><span class="msi" style="font-size:18px;color:#2f9169;">share</span> Share</div>
+      <div style="flex:1;height:44px;border:1px solid #d8e2dc;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:15px;font-weight:800;color:#182420;"><span class="msi" style="font-size:18px;color:#2f9169;">download</span> Download</div>
+      <div style="flex:1;height:44px;border:1px solid #d8e2dc;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:15px;font-weight:800;color:#182420;"><span class="msi" style="font-size:18px;color:#2f9169;">share</span> Share</div>
     </div>
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
@@ -440,17 +440,17 @@
     </div>
 
     <div style="background:#fff;border:1px solid #e2e6e3;border-radius:20px;padding:16px;">
-      <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">Transaction history</div>
+      <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;">Transaction history</div>
       <sc-for list="{{ transactions }}" as="t" hint-placeholder-count="8">
         <div style="padding:12px 0;border-top:1px solid #f2f4f2;">
           <div style="display:flex;align-items:flex-start;gap:10px;">
             <div style="width:32px;height:32px;flex:none;border-radius:10px;background:{{ t.tint }};display:flex;align-items:center;justify-content:center;"><span class="msi" style="font-size:18px;color:{{ t.fg }};">{{ t.icon }}</span></div>
             <div style="flex:1;min-width:0;">
-              <div style="font-size:14px;font-weight:800;color:#182420;line-height:18px;">{{ t.title }}</div>
+              <div style="font-size:15px;font-weight:800;color:#182420;line-height:18px;">{{ t.title }}</div>
               <div style="font-size:12px;font-weight:600;color:#6b7973;line-height:15px;">{{ t.source }} · {{ t.when }}</div>
             </div>
             <div style="flex:none;text-align:right;min-width:98px;">
-              <div style="font-size:14px;font-weight:800;color:{{ t.fg }};line-height:20px;white-space:nowrap;">{{ t.amount }}</div>
+              <div style="font-size:15px;font-weight:800;color:{{ t.fg }};line-height:20px;white-space:nowrap;">{{ t.amount }}</div>
               <div style="font-size:12px;font-weight:600;color:#5c6b64;line-height:16px;white-space:nowrap;">bal {{ t.balance }}</div>
             </div>
           </div>
@@ -473,10 +473,10 @@
     <div style="background:#e8f3ee;border:1px solid #cfe6da;border-radius:20px;padding:16px;">
       <div style="display:flex;align-items:center;gap:8px;">
         <span class="msi" style="font-size:20px;color:#1c6b47;">verified_user</span>
-        <div style="font-size:16px;font-weight:800;color:#182420;line-height:20px;">Every taka is recorded</div>
+        <div style="font-size:15px;font-weight:800;color:#182420;line-height:20px;">Every taka is recorded</div>
       </div>
-      <div style="font-size:14px;font-weight:600;color:#24352d;line-height:19px;margin-top:8px;">Every donation and every expense is recorded and verified. We are committed to full transparency and accountability.</div>
-      <div style="height:44px;border:1px solid #2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:800;color:#1c6b47;margin-top:14px;background:#fff;"><span class="msi" style="font-size:18px;">support_agent</span> Questions? Contact support</div>
+      <div style="font-size:15px;font-weight:600;color:#24352d;line-height:19px;margin-top:8px;">Every donation and every expense is recorded and verified. We are committed to full transparency and accountability.</div>
+      <div style="height:44px;border:1px solid #2f9169;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:15px;font-weight:800;color:#1c6b47;margin-top:14px;background:#fff;"><span class="msi" style="font-size:18px;">support_agent</span> Questions? Contact support</div>
     </div>
   </div>
   </sc-if>
