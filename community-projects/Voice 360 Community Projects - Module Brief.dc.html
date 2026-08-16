@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+doc-page:not(:defined){visibility:hidden}
+body{font-family:'Manrope',sans-serif;color:#182420;}
+a{color:#1c6b47;} a:hover{color:#2f9169;}
+.keep{break-inside:avoid;orphans:3;widows:3;}
+</style>
+<script src="./doc-page.js"></script>
+</helmet>
+<doc-page margin="0.8in">
+  <div style="font-size:11px;font-weight:800;letter-spacing:2.4px;text-transform:uppercase;color:#2f9169;">Voice 360 · Fundraising · FR-04</div>
+  <h1 style="font-size:34px;font-weight:800;letter-spacing:-1px;line-height:1.1;margin:6px 0 4px;">Community Projects — Module Brief</h1>
+  <p style="font-size:13px;font-weight:600;color:#5c6b64;margin:0 0 22px;">15 screens · design complete · August 2026 · source: Community Projects Full Flow PDF</p>
+
+  <h2 style="font-size:19px;font-weight:800;letter-spacing:-.4px;margin:26px 0 8px;">1 · What the module is</h2>
+  <p style="font-size:14.5px;line-height:1.65;margin:0 0 10px;">Residents propose, fund, and track local improvement projects — tree plantation drives, wells, road and school repairs, health camps — with transparent budgets in taka. Community Projects sits inside the Fundraising area of Voice 360 as journey FR-04 and reuses Fundraising's shared donation components (FR-06 donation sheet, FR-07 payment steps): one payment component serves campaigns, sponsorships, and projects alike.</p>
+  <p style="font-size:14.5px;line-height:1.65;margin:0;">Transparency is the core theme. A project's expenses, documents, timeline, and funding progress are all public-facing tabs — the Fundraising handover rules apply here too: every capture emits a receipt, organisers never touch money directly, and nothing publishes without verification.</p>
+
+  <h2 style="font-size:19px;font-weight:800;letter-spacing:-.4px;margin:26px 0 8px;">2 · Screen inventory (15 screens, 4 flows)</h2>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;line-height:1.5;">
+    <thead>
+      <tr style="border-bottom:2px solid #182420;text-align:left;">
+        <th style="padding:6px 10px 6px 0;font-weight:800;width:64px;">ID</th>
+        <th style="padding:6px 10px;font-weight:800;">Screen</th>
+        <th style="padding:6px 0;font-weight:800;">What it does</th>
+      </tr>
+    </thead>
+    <tbody style="font-weight:600;color:#2a3733;">
+      <tr><td colspan="3" style="padding:12px 0 4px;font-weight:800;color:#1c6b47;">Flow A · Discover</td></tr>
+      <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">CP-01</td><td style="padding:6px 10px;">Community Projects Home</td><td style="padding:6px 0;">Hero band, four project counters, featured cards with funding progress, category chips, latest-projects list.</td></tr>
+      <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">CP-02</td><td style="padding:6px 10px;">Projects List</td><td style="padding:6px 0;">Search, category filter chips, result count with sort, project cards with status pill and progress bar.</td></tr>
+      <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">CP-03</td><td style="padding:6px 10px;">Project Details</td><td style="padding:6px 0;">Public view — hero, four stats, progress to goal, about, activity checklist, gallery preview, donate + volunteer CTAs.</td></tr>
+      <tr><td colspan="3" style="padding:12px 0 4px;font-weight:800;color:#1c6b47;">Flow B · Create a project (wizard)</td></tr>
+      <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">CP-04</td><td style="padding:6px 10px;">Create — Basic Info</td><td style="padding:6px 0;">Step 1 of 5: title with counter, category and location selects, short description, tip banner.</td></tr>
+      <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">CP-05</td><td style="padding:6px 10px;">Create — Upload Photos / Media</td><td style="padding:6px 0;">Cover photo and gallery upload step of the wizard.</td></tr>
+      <tr><td colspan="3" style="padding:12px 0 4px;font-weight:800;color:#1c6b47;">Flow C · Project tabs (one project)</td></tr>
+      <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">CP-06</td><td style="padding:6px 10px;">Funding Progress</td><td style="padding:6px 0;">Goal ring, raised vs goal, remaining + end date, summary stats, recent donations, funding milestones.</td></tr>
+      <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">CP-07</td><td style="padding:6px 10px;">Volunteers</td><td style="padding:6px 0;">Volunteer roster and join-as-volunteer action.</td></tr>
+      <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">CP-08</td><td style="padding:6px 10px;">Updates</td><td style="padding:6px 0;">Progress posts from the organiser.</td></tr>
+      <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">CP-09</td><td style="padding:6px 10px;">Expenses</td><td style="padding:6px 0;">Itemised public spend record for transparency.</td></tr>
+      <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">CP-10</td><td style="padding:6px 10px;">Timeline</td><td style="padding:6px 0;">Milestone phases — task/activity tracking, distinct from funding progress.</td></tr>
+      <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">CP-11</td><td style="padding:6px 10px;">Community Support</td><td style="padding:6px 0;">Endorsements and comments from residents.</td></tr>
+      <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">CP-12</td><td style="padding:6px 10px;">Documents</td><td style="padding:6px 0;">Permits, quotes, receipts — file attachments.</td></tr>
+      <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">CP-13</td><td style="padding:6px 10px;">Project Gallery</td><td style="padding:6px 0;">Photo grid (images only as designed).</td></tr>
+      <tr><td colspan="3" style="padding:12px 0 4px;font-weight:800;color:#1c6b47;">Flow D · My Projects</td></tr>
+      <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">CP-14</td><td style="padding:6px 10px;">My Projects</td><td style="padding:6px 0;">Created / supported / volunteering lists.</td></tr>
+      <tr style="border-bottom:1px solid #e4e8e6;"><td style="padding:6px 10px 6px 0;font-weight:800;">CP-15</td><td style="padding:6px 10px;">Project Dashboard</td><td style="padding:6px 0;">Organiser-only management view — manage funds, post updates, log expenses, manage milestones.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 style="font-size:19px;font-weight:800;letter-spacing:-.4px;margin:26px 0 8px;">3 · Key user flows</h2>
+  <ul style="font-size:14.5px;line-height:1.65;margin:0;padding-left:20px;">
+    <li style="margin-bottom:6px;"><strong>Donate:</strong> Home → List → Details → Donate — the payment sheet and steps are Fundraising's shared FR-06/FR-07 components.</li>
+    <li style="margin-bottom:6px;"><strong>Volunteer:</strong> Details → Volunteers tab → join as volunteer.</li>
+    <li style="margin-bottom:6px;"><strong>Create:</strong> Home → five-step wizard (Basic Info → Media → budget/timeline/review steps shared with campaign create — see open item 8) → live project.</li>
+    <li><strong>Manage:</strong> My Projects → Project Dashboard — organiser posts updates, logs expenses, tracks milestones; money itself is never handled by the organiser.</li>
+  </ul>
+
+  <h2 style="font-size:19px;font-weight:800;letter-spacing:-.4px;margin:26px 0 8px;">4 · Two progress systems, on purpose</h2>
+  <p style="font-size:14.5px;line-height:1.65;margin:0;"><strong>Money</strong> and <strong>tasks</strong> are tracked separately. The progress bar on every project card (CP-01, CP-02) and the goal ring on CP-06 measure <em>funding</em> — ৳ raised against goal. The activity checklist on CP-03 and the milestone phases on CP-10 measure <em>work done</em>. Cards stay money-only; task progress lives in the Timeline tab.</p>
+
+  <h2 style="font-size:19px;font-weight:800;letter-spacing:-.4px;margin:26px 0 8px;">5 · Rules inherited from Fundraising</h2>
+  <ul style="font-size:14.5px;line-height:1.65;margin:0;padding-left:20px;">
+    <li style="margin-bottom:6px;">One payment component serves all giving flows (campaigns, sponsorships, projects).</li>
+    <li style="margin-bottom:6px;">Every capture emits a receipt; donations appear in the donor's My Donations and annual statement.</li>
+    <li style="margin-bottom:6px;">Nothing publishes without verification — applies to projects, updates, and expenses.</li>
+    <li style="margin-bottom:6px;">Organisers never touch money directly — funds are ledgered; expenses are a public projection.</li>
+    <li>Route: <code style="font-family:ui-monospace,monospace;font-size:13px;background:#eef4f0;border-radius:4px;padding:1px 6px;">/fundraising/projects</code> (FR-04).</li>
+  </ul>
+
+  <div class="keep" style="background:#fdf6ea;border:1px solid #ecdcb8;border-radius:12px;padding:16px 18px;margin-top:26px;">
+    <div style="font-size:13px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#a3760e;">6 · Open items — parked for discussion</div>
+    <ol style="font-size:13.5px;line-height:1.6;font-weight:600;color:#2a3733;margin:10px 0 0;padding-left:18px;">
+      <li style="margin-bottom:5px;">Who creates project activities — organiser via CP-15, with admin verification before publishing? Not yet decided.</li>
+      <li style="margin-bottom:5px;">Community planting/work events — link to Events 360 or model as Timeline milestone + volunteer signup? No event/RSVP mechanic exists in this module today.</li>
+      <li style="margin-bottom:5px;">Gallery file types — designed as images only; video is unspecified. Documents (PDFs, permits, receipts) stay in CP-12.</li>
+      <li style="margin-bottom:5px;">Merge CP-03 Details and CP-15 Dashboard? Currently separate by role (public vs organiser); could become a "Manage" mode of CP-03.</li>
+      <li style="margin-bottom:5px;">Repetition across explore surfaces — CP-01 / CP-02 / Fundraising Overview repeat the same card pattern; candidate fix: thin CP-01 down to stats + featured, push browsing to CP-02.</li>
+      <li style="margin-bottom:5px;">Merge project create with campaign create? They share ~80% of steps; Sponsor a Life has no user creation (beneficiaries are admin-onboarded), so it is out of scope for the merge.</li>
+      <li>Create wizard gap — board declares five steps but only 2 screens exist (CP-04, CP-05). Missing: Budget &amp; Goal, Timeline / Milestones, Review &amp; Submit — or inherit them from the campaign wizard if merged.</li>
+    </ol>
+  </div>
+
+  <p style="font-size:12px;font-weight:600;color:#8b978f;margin-top:26px;">Related artifacts: Voice 360 Mobile : Community Projects Screens (rebuilt board) · Rebuilt vs Source comparison · Fundraising Engineering Handover (FR-04) · Fundraising User Flow.</p>
+</doc-page>
+</x-dc>
+</body>
+</html>

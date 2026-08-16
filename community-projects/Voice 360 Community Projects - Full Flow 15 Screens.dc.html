@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; font-family:'Manrope',sans-serif; background:#0d1512; }
+  a { color:#2f9169; text-decoration:none; }
+  a:hover { color:#006343; }
+</style>
+</helmet>
+
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Cover" data-screen-label="Cover" data-speaker-notes="Community Projects — full flow, 15 screens." style="width:100%;height:100%;background:#fff;box-sizing:border-box;padding:150px 130px;display:flex;flex-direction:column;justify-content:center;font-family:'Manrope',sans-serif;">
+  <div style="font-size:28px;font-weight:800;letter-spacing:6px;text-transform:uppercase;color:#2f9169;">Voice 360</div>
+  <div style="font-size:150px;font-weight:800;letter-spacing:-6px;color:#0d1512;line-height:.97;margin-top:32px;">Community Projects<br>full flow</div>
+  <div style="font-size:42px;font-weight:600;color:#8b978f;margin-top:36px;">Full flow — 15 screens, organised by flow</div>
+  <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:60px;max-width:1500px;">
+    <span style="font-size:26px;font-weight:800;color:#0d1512;background:#eef4f0;border-radius:999px;padding:12px 24px;">Overview & Discovery · 3</span>
+    <span style="font-size:26px;font-weight:800;color:#0d1512;background:#eef4f0;border-radius:999px;padding:12px 24px;">Create a Project · 2</span>
+    <span style="font-size:26px;font-weight:800;color:#0d1512;background:#eef4f0;border-radius:999px;padding:12px 24px;">Project Tabs · 8</span>
+    <span style="font-size:26px;font-weight:800;color:#0d1512;background:#eef4f0;border-radius:999px;padding:12px 24px;">My Projects · 2</span>
+  </div>
+</section>
+
+<section data-label="Screen 1 Community Projects" data-screen-label="Screen 1" data-speaker-notes="Screen 1 — Community Projects home, Overview & Discovery." style="width:100%;height:100%;background:#fff;box-sizing:border-box;padding:52px 90px 0;display:flex;flex-direction:column;align-items:center;font-family:'Manrope',sans-serif;">
+  <div style="flex:none;height:820px;display:flex;align-items:center;justify-content:center;">
+    <img src="screens/cp-01.png" alt="Community Projects" style="max-height:800px;max-width:1700px;object-fit:contain;border-radius:18px;border:1px solid #dfe4e1;box-shadow:0 26px 60px rgba(13,21,18,.18),0 4px 12px rgba(13,21,18,.08);">
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <div style="font-size:24px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:#2f9169;">Screen 1 · Overview & Discovery</div>
+    <div style="font-size:68px;font-weight:800;letter-spacing:-2.4px;color:#0d1512;line-height:1;margin-top:12px;">Community Projects</div>
+  </div>
+</section>
+
+<section data-label="Screen 2 Projects List" data-screen-label="Screen 2" data-speaker-notes="Screen 2 — Projects List, Overview & Discovery." style="width:100%;height:100%;background:#fff;box-sizing:border-box;padding:52px 90px 0;display:flex;flex-direction:column;align-items:center;font-family:'Manrope',sans-serif;">
+  <div style="flex:none;height:820px;display:flex;align-items:center;justify-content:center;">
+    <img src="screens/cp-02.png" alt="Projects List" style="max-height:800px;max-width:1700px;object-fit:contain;border-radius:18px;border:1px solid #dfe4e1;box-shadow:0 26px 60px rgba(13,21,18,.18),0 4px 12px rgba(13,21,18,.08);">
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <div style="font-size:24px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:#2f9169;">Screen 2 · Overview & Discovery</div>
+    <div style="font-size:68px;font-weight:800;letter-spacing:-2.4px;color:#0d1512;line-height:1;margin-top:12px;">Projects List</div>
+  </div>
+</section>
+
+<section data-label="Screen 3 Project Details" data-screen-label="Screen 3" data-speaker-notes="Screen 3 — Project Details, Overview & Discovery." style="width:100%;height:100%;background:#fff;box-sizing:border-box;padding:52px 90px 0;display:flex;flex-direction:column;align-items:center;font-family:'Manrope',sans-serif;">
+  <div style="flex:none;height:820px;display:flex;align-items:center;justify-content:center;">
+    <img src="screens/cp-03.png" alt="Project Details" style="max-height:800px;max-width:1700px;object-fit:contain;border-radius:18px;border:1px solid #dfe4e1;box-shadow:0 26px 60px rgba(13,21,18,.18),0 4px 12px rgba(13,21,18,.08);">
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <div style="font-size:24px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:#2f9169;">Screen 3 · Overview & Discovery</div>
+    <div style="font-size:68px;font-weight:800;letter-spacing:-2.4px;color:#0d1512;line-height:1;margin-top:12px;">Project Details</div>
+  </div>
+</section>
+
+<section data-label="Screen 4 Create Project" data-screen-label="Screen 4" data-speaker-notes="Screen 4 — Create Project, Create a Project." style="width:100%;height:100%;background:#fff;box-sizing:border-box;padding:52px 90px 0;display:flex;flex-direction:column;align-items:center;font-family:'Manrope',sans-serif;">
+  <div style="flex:none;height:820px;display:flex;align-items:center;justify-content:center;">
+    <img src="screens/cp-04.png" alt="Create Project" style="max-height:800px;max-width:1700px;object-fit:contain;border-radius:18px;border:1px solid #dfe4e1;box-shadow:0 26px 60px rgba(13,21,18,.18),0 4px 12px rgba(13,21,18,.08);">
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <div style="font-size:24px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:#2f9169;">Screen 4 · Create a Project</div>
+    <div style="font-size:68px;font-weight:800;letter-spacing:-2.4px;color:#0d1512;line-height:1;margin-top:12px;">Create Project</div>
+  </div>
+</section>
+
+<section data-label="Screen 5 Upload Photos" data-screen-label="Screen 5" data-speaker-notes="Screen 5 — Upload Photos, Create a Project." style="width:100%;height:100%;background:#fff;box-sizing:border-box;padding:52px 90px 0;display:flex;flex-direction:column;align-items:center;font-family:'Manrope',sans-serif;">
+  <div style="flex:none;height:820px;display:flex;align-items:center;justify-content:center;">
+    <img src="screens/cp-05.png" alt="Upload Photos" style="max-height:800px;max-width:1700px;object-fit:contain;border-radius:18px;border:1px solid #dfe4e1;box-shadow:0 26px 60px rgba(13,21,18,.18),0 4px 12px rgba(13,21,18,.08);">
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <div style="font-size:24px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:#2f9169;">Screen 5 · Create a Project</div>
+    <div style="font-size:68px;font-weight:800;letter-spacing:-2.4px;color:#0d1512;line-height:1;margin-top:12px;">Upload Photos</div>
+  </div>
+</section>
+
+<section data-label="Screen 6 Funding Progress" data-screen-label="Screen 6" data-speaker-notes="Screen 6 — Funding Progress, Project Tabs." style="width:100%;height:100%;background:#fff;box-sizing:border-box;padding:52px 90px 0;display:flex;flex-direction:column;align-items:center;font-family:'Manrope',sans-serif;">
+  <div style="flex:none;height:820px;display:flex;align-items:center;justify-content:center;">
+    <img src="screens/cp-06.png" alt="Funding Progress" style="max-height:800px;max-width:1700px;object-fit:contain;border-radius:18px;border:1px solid #dfe4e1;box-shadow:0 26px 60px rgba(13,21,18,.18),0 4px 12px rgba(13,21,18,.08);">
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <div style="font-size:24px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:#2f9169;">Screen 6 · Project Tabs</div>
+    <div style="font-size:68px;font-weight:800;letter-spacing:-2.4px;color:#0d1512;line-height:1;margin-top:12px;">Funding Progress</div>
+  </div>
+</section>
+
+<section data-label="Screen 7 Volunteers" data-screen-label="Screen 7" data-speaker-notes="Screen 7 — Volunteers, Project Tabs." style="width:100%;height:100%;background:#fff;box-sizing:border-box;padding:52px 90px 0;display:flex;flex-direction:column;align-items:center;font-family:'Manrope',sans-serif;">
+  <div style="flex:none;height:820px;display:flex;align-items:center;justify-content:center;">
+    <img src="screens/cp-07.png" alt="Volunteers" style="max-height:800px;max-width:1700px;object-fit:contain;border-radius:18px;border:1px solid #dfe4e1;box-shadow:0 26px 60px rgba(13,21,18,.18),0 4px 12px rgba(13,21,18,.08);">
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <div style="font-size:24px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:#2f9169;">Screen 7 · Project Tabs</div>
+    <div style="font-size:68px;font-weight:800;letter-spacing:-2.4px;color:#0d1512;line-height:1;margin-top:12px;">Volunteers</div>
+  </div>
+</section>
+
+<section data-label="Screen 8 Updates" data-screen-label="Screen 8" data-speaker-notes="Screen 8 — Updates, Project Tabs." style="width:100%;height:100%;background:#fff;box-sizing:border-box;padding:52px 90px 0;display:flex;flex-direction:column;align-items:center;font-family:'Manrope',sans-serif;">
+  <div style="flex:none;height:820px;display:flex;align-items:center;justify-content:center;">
+    <img src="screens/cp-08.png" alt="Updates" style="max-height:800px;max-width:1700px;object-fit:contain;border-radius:18px;border:1px solid #dfe4e1;box-shadow:0 26px 60px rgba(13,21,18,.18),0 4px 12px rgba(13,21,18,.08);">
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <div style="font-size:24px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:#2f9169;">Screen 8 · Project Tabs</div>
+    <div style="font-size:68px;font-weight:800;letter-spacing:-2.4px;color:#0d1512;line-height:1;margin-top:12px;">Updates</div>
+  </div>
+</section>
+
+<section data-label="Screen 9 Expenses" data-screen-label="Screen 9" data-speaker-notes="Screen 9 — Expenses, Project Tabs." style="width:100%;height:100%;background:#fff;box-sizing:border-box;padding:52px 90px 0;display:flex;flex-direction:column;align-items:center;font-family:'Manrope',sans-serif;">
+  <div style="flex:none;height:820px;display:flex;align-items:center;justify-content:center;">
+    <img src="screens/cp-09.png" alt="Expenses" style="max-height:800px;max-width:1700px;object-fit:contain;border-radius:18px;border:1px solid #dfe4e1;box-shadow:0 26px 60px rgba(13,21,18,.18),0 4px 12px rgba(13,21,18,.08);">
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <div style="font-size:24px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:#2f9169;">Screen 9 · Project Tabs</div>
+    <div style="font-size:68px;font-weight:800;letter-spacing:-2.4px;color:#0d1512;line-height:1;margin-top:12px;">Expenses</div>
+  </div>
+</section>
+
+<section data-label="Screen 10 Timeline" data-screen-label="Screen 10" data-speaker-notes="Screen 10 — Timeline, Project Tabs." style="width:100%;height:100%;background:#fff;box-sizing:border-box;padding:52px 90px 0;display:flex;flex-direction:column;align-items:center;font-family:'Manrope',sans-serif;">
+  <div style="flex:none;height:820px;display:flex;align-items:center;justify-content:center;">
+    <img src="screens/cp-10.png" alt="Timeline" style="max-height:800px;max-width:1700px;object-fit:contain;border-radius:18px;border:1px solid #dfe4e1;box-shadow:0 26px 60px rgba(13,21,18,.18),0 4px 12px rgba(13,21,18,.08);">
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <div style="font-size:24px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:#2f9169;">Screen 10 · Project Tabs</div>
+    <div style="font-size:68px;font-weight:800;letter-spacing:-2.4px;color:#0d1512;line-height:1;margin-top:12px;">Timeline</div>
+  </div>
+</section>
+
+<section data-label="Screen 11 Community Support" data-screen-label="Screen 11" data-speaker-notes="Screen 11 — Community Support, Project Tabs." style="width:100%;height:100%;background:#fff;box-sizing:border-box;padding:52px 90px 0;display:flex;flex-direction:column;align-items:center;font-family:'Manrope',sans-serif;">
+  <div style="flex:none;height:820px;display:flex;align-items:center;justify-content:center;">
+    <img src="screens/cp-11.png" alt="Community Support" style="max-height:800px;max-width:1700px;object-fit:contain;border-radius:18px;border:1px solid #dfe4e1;box-shadow:0 26px 60px rgba(13,21,18,.18),0 4px 12px rgba(13,21,18,.08);">
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <div style="font-size:24px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:#2f9169;">Screen 11 · Project Tabs</div>
+    <div style="font-size:68px;font-weight:800;letter-spacing:-2.4px;color:#0d1512;line-height:1;margin-top:12px;">Community Support</div>
+  </div>
+</section>
+
+<section data-label="Screen 12 Documents" data-screen-label="Screen 12" data-speaker-notes="Screen 12 — Documents, Project Tabs." style="width:100%;height:100%;background:#fff;box-sizing:border-box;padding:52px 90px 0;display:flex;flex-direction:column;align-items:center;font-family:'Manrope',sans-serif;">
+  <div style="flex:none;height:820px;display:flex;align-items:center;justify-content:center;">
+    <img src="screens/cp-12.png" alt="Documents" style="max-height:800px;max-width:1700px;object-fit:contain;border-radius:18px;border:1px solid #dfe4e1;box-shadow:0 26px 60px rgba(13,21,18,.18),0 4px 12px rgba(13,21,18,.08);">
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <div style="font-size:24px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:#2f9169;">Screen 12 · Project Tabs</div>
+    <div style="font-size:68px;font-weight:800;letter-spacing:-2.4px;color:#0d1512;line-height:1;margin-top:12px;">Documents</div>
+  </div>
+</section>
+
+<section data-label="Screen 13 Project Gallery" data-screen-label="Screen 13" data-speaker-notes="Screen 13 — Project Gallery, Project Tabs." style="width:100%;height:100%;background:#fff;box-sizing:border-box;padding:52px 90px 0;display:flex;flex-direction:column;align-items:center;font-family:'Manrope',sans-serif;">
+  <div style="flex:none;height:820px;display:flex;align-items:center;justify-content:center;">
+    <img src="screens/cp-13.png" alt="Project Gallery" style="max-height:800px;max-width:1700px;object-fit:contain;border-radius:18px;border:1px solid #dfe4e1;box-shadow:0 26px 60px rgba(13,21,18,.18),0 4px 12px rgba(13,21,18,.08);">
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <div style="font-size:24px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:#2f9169;">Screen 13 · Project Tabs</div>
+    <div style="font-size:68px;font-weight:800;letter-spacing:-2.4px;color:#0d1512;line-height:1;margin-top:12px;">Project Gallery</div>
+  </div>
+</section>
+
+<section data-label="Screen 14 My Projects" data-screen-label="Screen 14" data-speaker-notes="Screen 14 — My Projects." style="width:100%;height:100%;background:#fff;box-sizing:border-box;padding:52px 90px 0;display:flex;flex-direction:column;align-items:center;font-family:'Manrope',sans-serif;">
+  <div style="flex:none;height:820px;display:flex;align-items:center;justify-content:center;">
+    <img src="screens/cp-14.png" alt="My Projects" style="max-height:800px;max-width:1700px;object-fit:contain;border-radius:18px;border:1px solid #dfe4e1;box-shadow:0 26px 60px rgba(13,21,18,.18),0 4px 12px rgba(13,21,18,.08);">
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <div style="font-size:24px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:#2f9169;">Screen 14 · My Projects</div>
+    <div style="font-size:68px;font-weight:800;letter-spacing:-2.4px;color:#0d1512;line-height:1;margin-top:12px;">My Projects</div>
+  </div>
+</section>
+
+<section data-label="Screen 15 Project Dashboard" data-screen-label="Screen 15" data-speaker-notes="Screen 15 — Project Dashboard, My Projects." style="width:100%;height:100%;background:#fff;box-sizing:border-box;padding:52px 90px 0;display:flex;flex-direction:column;align-items:center;font-family:'Manrope',sans-serif;">
+  <div style="flex:none;height:820px;display:flex;align-items:center;justify-content:center;">
+    <img src="screens/cp-15.png" alt="Project Dashboard" style="max-height:800px;max-width:1700px;object-fit:contain;border-radius:18px;border:1px solid #dfe4e1;box-shadow:0 26px 60px rgba(13,21,18,.18),0 4px 12px rgba(13,21,18,.08);">
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <div style="font-size:24px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:#2f9169;">Screen 15 · My Projects</div>
+    <div style="font-size:68px;font-weight:800;letter-spacing:-2.4px;color:#0d1512;line-height:1;margin-top:12px;">Project Dashboard</div>
+  </div>
+</section>
+
+</x-import>
+
+</x-dc>
+</body>
+</html>
